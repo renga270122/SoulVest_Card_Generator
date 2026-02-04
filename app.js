@@ -7,7 +7,8 @@ const state = {
     designPreference: '',
     generatedMessage: '',
     yearsTogether: '',
-    photoData: null
+    photoData: null,
+    isSpouse: false
 };
 
 // Message templates for each event
@@ -25,6 +26,13 @@ const messageTemplates = {
         `Happy Anniversary, {name}! 💑 {years} years ago, we chose each other, and every day since has been {hobbies_adjective}. Here's to forever!`,
         `Celebrating {years} years with you, {name}! 💖 Every moment - whether {hobbies_list} or just being together - is precious. Happy Anniversary!`,
         `{years} years, countless {hobbies_adjective} memories, and a love that grows stronger every day. {name}, you're my forever. Happy Anniversary! ❤️`
+    ],
+    anniversaryFriend: [
+        `Wishing you both a wonderful {years} years of marriage, {name}! 💑 May your love story continue to be filled with {hobbies_adjective} moments and endless happiness. Happy Anniversary!`,
+        `{years} beautiful years together! 🎉 {name}, here's to celebrating your amazing journey with your spouse. Wishing you both all the {hobbies_adjective} adventures ahead!`,
+        `Happy Anniversary, {name}! 💕 {years} years of love and laughter - what a beautiful milestone! Wishing you both continued joy and {hobbies_adjective} memories together!`,
+        `Celebrating {years} years of your beautiful marriage, {name}! 💖 May your bond continue to grow stronger with each {hobbies_adjective} moment you share!`,
+        `{years} years and still going strong! 🌟 {name}, wishing you and your spouse many more {hobbies_adjective} years of love, laughter, and beautiful memories together!`
     ],
     wedding: [
         `{name}, as you begin this new chapter! 💍 May your marriage be filled with {hobbies_adjective} adventures, endless laughter, and unconditional love. Congratulations!`,
@@ -117,6 +125,11 @@ const hobbyOptions = {
 // Initialize
 document.addEventListener('DOMContentLoaded', updateHobbies);
 
+function updateMessageTone() {
+    const isSpouse = document.getElementById('isSpouse').checked;
+    state.isSpouse = isSpouse;
+}
+
 function updateHobbies() {
     const eventType = document.getElementById('eventType').value;
     state.eventType = eventType;
@@ -196,7 +209,13 @@ function startSpeechToText() {
 }
 
 function generateMessage() {
-    const templates = messageTemplates[state.eventType] || [];
+    // For anniversary, select templates based on sender type
+    let templateKey = state.eventType;
+    if (state.eventType === 'anniversary' && !state.isSpouse) {
+        templateKey = 'anniversaryFriend';
+    }
+    
+    const templates = messageTemplates[templateKey] || messageTemplates[state.eventType] || [];
     if (!templates.length) return 'Wishing you all the best!';
     
     const template = templates[Math.floor(Math.random() * templates.length)];
@@ -224,6 +243,12 @@ async function generateCard() {
     state.recipientName = document.getElementById('recipientName').value.trim();
     state.userMessage = document.getElementById('userMessage').value.trim();
     state.designPreference = document.getElementById('designPreference').value.trim();
+    
+    // Get spouse checkbox if it exists (only for anniversary)
+    const isSpouseCheckbox = document.getElementById('isSpouse');
+    if (isSpouseCheckbox) {
+        state.isSpouse = isSpouseCheckbox.checked;
+    }
     
     if (!state.recipientName) {
         showMessage('Please enter recipient name', 'error');
