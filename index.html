@@ -3,700 +3,1423 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anniversary Card Generator</title>
+    <title>SoulVest Card Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 { margin-bottom: 10px; font-size: 2.5em; }
+        .header p { opacity: 0.9; }
+        
+        .api-config-banner {
+            background: #fff3cd;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffc107;
+        }
+        
+        .api-config-banner button {
+            background: #ffc107;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .api-config-banner button:hover {
+            background: #ffb300;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content { grid-template-columns: 1fr; }
+        }
+        
+        .form-section, .preview-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.3em;
+            color: #764ba2;
+            font-weight: bold;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.95em;
+        }
+        
+        input[type="text"], input[type="email"], select, textarea {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .checkbox-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .mic-button {
+            padding: 8px 16px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .mic-button:hover { background: #c0392b; }
+        .mic-button.recording { background: #27ae60; animation: pulse 1s infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .preview-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 20px;
+        }
+        
+        .card-header h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .card-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-message {
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: center;
+            margin: 20px 0;
+            min-height: 80px;
+        }
+        
+        .card-footer {
+            text-align: center;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .export-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .export-buttons button {
+            padding: 10px;
+            font-size: 0.9em;
+        }
+        
+        .gift-links {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .gift-links h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .gift-shops {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .gift-shop-link {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .gift-shop-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-weight: bold;
+            padding: 20px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
+            margin: 10px 0;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #c3e6cb;
+            margin: 10px 0;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal.show {
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        .container {
-            background: white;
-            border-radius: 20px;
+        
+        .modal-content {
+            background-color: white;
             padding: 40px;
-            max-width: 600px;
-            width: 100%;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s;
         }
-        h1 { color: #764ba2; margin-bottom: 30px; text-align: center; }
-        .form-group { margin-bottom: 20px; }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
-        input, select {
+        
+        .modal-header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        .modal-header h2 {
+            color: #764ba2;
+            margin: 0;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-body p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .modal-body input[type="password"] {
             width: 100%;
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1em;
+            margin-bottom: 15px;
         }
-        .hobby-grid {
+        
+        .modal-footer {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-top: 10px;
         }
-        .tone-selector {
-            margin-bottom: 20px;
+        
+        .modal-footer button {
+            padding: 12px;
         }
-
-        .tone-selector label {
-            display: block;
-            margin-bottom: 10px;
+        
+        .close {
+            color: #999;
+            float: right;
+            font-size: 28px;
             font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .close:hover {
             color: #333;
         }
-
-        .tone-options {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .tone-option {
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .tone-option input[type="radio"] {
-            display: none;
-        }
-
-        .tone-option label {
-            display: block;
-            padding: 15px;
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
-            font-weight: normal;
-        }
-
-        .tone-option input[type="radio"]:checked + label {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #667eea;
-            transform: scale(1.05);
-        }
-
-        .tone-option label:hover {
-            border-color: #667eea;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }        .hobby-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .hobby-item:hover {
-            border-color: #667eea;
-            background: #f0f0ff;
-        }
-        .hobby-item input[type="checkbox"] {
-            width: auto;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        .hobby-item label {
-            cursor: pointer;
-            margin: 0;
-            font-weight: normal;
-        }
-        button {
-            width: 100%;
-            padding: 15px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover { background: #5568d3; }
-        .card {
-            margin-top: 30px;
+        
+        .hidden { display: none !important; }
+        
+        /* New Features Section */
+        .features-section {
             padding: 30px;
-            background: #f9f9f9;
-            border-radius: 15px;
-            display: none;
-        }
-        .card.show { display: block; }
-        .card-image {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto 20px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .card-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .card-message {
-            font-size: 18px;
-            line-height: 1.6;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .card-footer {
-            text-align: center;
-            font-size: 14px;
-            color: #764ba2;
-            font-style: italic;
-            margin-top: 20px;
-            padding-top: 15px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             border-top: 2px solid #ddd;
         }
-        .share-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-        .share-buttons button { flex: 1; padding: 12px; font-size: 16px; min-width: 140px; }
-        .whatsapp { background: #25D366; }
-        .whatsapp:hover { background: #20bd5a; }
-        .download { background: #667eea; }
-        .download:hover { background: #5568d3; }
-        .share-image { background: #0088cc; }
-        .share-image:hover { background: #0077b3; }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+            border-top: 4px solid #667eea;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .feature-card-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card h3 {
+            color: #764ba2;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .feature-card p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        /* Sharing Section */
+        .sharing-section {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .sharing-section h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .sharing-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        
+        .share-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .share-facebook {
+            background: #1877f2;
+            color: white;
+        }
+        
+        .share-instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+        }
+        
+        .share-whatsapp {
+            background: #25d366;
+            color: white;
+        }
+        
+        .share-linkedin {
+            background: #0a66c2;
+            color: white;
+        }
+        
+        .share-email {
+            background: #ea4335;
+            color: white;
+        }
+        
+        /* Event Gallery */
+        .event-gallery {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .event-gallery h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .event-badges {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+        }
+        
+        .event-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85em;
+            border: 2px solid transparent;
+        }
+        
+        .event-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .event-badge.selected {
+            border-color: white;
+            box-shadow: inset 0 0 0 2px #667eea;
+        }
+        
+        /* Footer Attribution */
+        .app-footer {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .app-footer p {
+            color: #666;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+        
+        .app-footer strong {
+            color: #764ba2;
+        }
+        
+        /* Tips & Guide Section */
+        .tips-section {
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 1000px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .tip-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+        
+        .tip-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        
+        .tip-card h4 {
+            color: #764ba2;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        
+        .tip-card p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        /* How to Use Section */
+        .how-to-section {
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 20px auto;
+            max-width: 1000px;
+            border-radius: 12px;
+        }
+        
+        .how-to-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .how-to-step {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .how-to-step::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+        }
+        
+        .how-to-step:nth-child(1)::before { content: '1️⃣'; }
+        .how-to-step:nth-child(2)::before { content: '2️⃣'; }
+        .how-to-step:nth-child(3)::before { content: '3️⃣'; }
+        .how-to-step:nth-child(4)::before { content: '4️⃣'; }
+        
+        .how-to-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .how-to-step h4 {
+            color: #764ba2;
+            margin: 30px 0 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .how-to-step p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        /* Testimonials Section */
+        .testimonials-section {
+            padding: 30px;
+            background: white;
+            margin: 20px auto;
+            max-width: 1000px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .testimonial-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #f0f0f0;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .testimonial-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .testimonial-quote {
+            color: #764ba2;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .testimonial-text {
+            color: #555;
+            font-size: 0.95em;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .testimonial-author {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .testimonial-rating {
+            color: #ffc107;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        /* Statistics Section */
+        .stats-section {
+            padding: 40px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 30px auto 0;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        /* Template Gallery */
+        .template-gallery {
+            padding: 40px 30px;
+            background: white;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        
+        .template-preview {
+            border: 3px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #74b9ff 100%);
+            aspect-ratio: 3/4;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .template-preview:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+        
+        .template-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.05);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .template-preview:hover::before {
+            opacity: 1;
+        }
+        
+        .template-name {
+            font-weight: bold;
+            color: white;
+            font-size: 1.1em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        .template-desc {
+            color: white;
+            font-size: 0.85em;
+            text-align: center;
+            opacity: 0.95;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 20px auto;
+            max-width: 1000px;
+            border-radius: 12px;
+        }
+        
+        .faq-item {
+            background: white;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .faq-question {
+            padding: 20px;
+            background: #f9f9f9;
+            cursor: pointer;
+            font-weight: bold;
+            color: #764ba2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        
+        .faq-question:hover {
+            background: #f0f0f0;
+        }
+        
+        .faq-question::after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+        
+        .faq-question.active::after {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .faq-answer.show {
+            max-height: 300px;
+            padding: 20px;
+        }
+        
+        .faq-answer p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>💑 Anniversary Card Generator</h1>
-        <div style="background: linear-gradient(135deg, #667eea22 0%, #764ba233 100%); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #667eea;">
-            <strong>✨ Powered by Soulvest's Personalization Engine</strong><br>
-            <small>Customized messages based on your unique relationship - your names, shared memories, and the perfect tone for your bond.</small>
+        <div class="header">
+            <h1>✨ SoulVest Card Generator</h1>
+            <p>Create personalized AI-powered gift cards for every occasion</p>
         </div>
         
-        <form id="cardForm">
-            <div class="form-group">
-                <label for="name">Partner's Name</label>
-                <input type="text" id="name" required placeholder="Enter your partner's name">
-            </div>
-
-            <div class="form-group">
-                <label for="years">Years Together</label>
-                <input type="number" id="years" required placeholder="How many years?" min="1">
-            </div>
-
-            <div class="form-group">
-                <label>Choose Message Tone:</label>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
-                    <div style="flex: 1; min-width: 150px;">
-                        <input type="radio" id="tone-romantic" name="tone" value="romantic" checked style="display: none;">
-                        <label for="tone-romantic" style="display: block; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: 2px solid #667eea; border-radius: 8px; cursor: pointer; text-align: center;">
-                            💕 Romantic<br><small>Deeply emotional & poetic</small>
-                        </label>
+        <div class="api-config-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-bottom: 2px solid #667eea; color: white;">
+            <span style="color: white;">✨ Spread Love with Beautiful, Personalized Gift Cards</span>
+        </div>
+        
+        <div class="content">
+            <!-- Form Section -->
+            <div class="form-section">
+                <div class="section-title">📝 Create Your Card</div>
+                
+                <div class="form-group">
+                    <label for="recipientName">Recipient Name *</label>
+                    <input type="text" id="recipientName" placeholder="Enter recipient's name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventType">Event Type *</label>
+                    <select id="eventType" onchange="updateHobbies()">
+                        <option value="">Select an event...</option>
+                        <option value="birthday">Birthday</option>
+                        <option value="anniversary">Anniversary</option>
+                        <option value="wedding">Wedding</option>
+                        <option value="graduation">Graduation</option>
+                        <option value="newjob">New Job</option>
+                        <option value="housewarming">House Warming</option>
+                        <option value="promotion">Promotion</option>
+                        <option value="retirement">Retirement</option>
+                        <option value="babyshower">Baby Shower</option>
+                        <option value="getwell">Get Well</option>
+                    </select>
+                </div>
+                
+                <div class="form-group hidden" id="anniversaryYearGroup">
+                    <label for="yearsTogether">Years Together *</label>
+                    <input type="number" id="yearsTogether" placeholder="e.g., 5" min="1" max="100">
+                </div>
+                
+                <div class="form-group">
+                    <label>Hobbies/Interests (Select relevant ones)</label>
+                    <div class="checkbox-group" id="hobbiesContainer">
+                        <!-- Populated by JavaScript -->
                     </div>
-                    <div style="flex: 1; min-width: 150px;">
-                        <input type="radio" id="tone-respectful" name="tone" value="respectful" style="display: none;">
-                        <label for="tone-respectful" style="display: block; padding: 15px; background: white; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s;">
-                            🤝 Respectful<br><small>Warm & appreciative</small>
-                        </label>
-                    </div>
-                    <div style="flex: 1; min-width: 150px;">
-                        <input type="radio" id="tone-lighthearted" name="tone" value="lighthearted" style="display: none;">
-                        <label for="tone-lighthearted" style="display: block; padding: 15px; background: white; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s;">
-                            😊 Light-Hearted<br><small>Fun & playful</small>
-                        </label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userMessage">Your Message (Optional - AI can generate one)</label>
+                    <textarea id="userMessage" placeholder="Write something personal, or leave blank for AI generation..."></textarea>
+                    <button class="btn-secondary" onclick="startSpeechToText()" style="width: fit-content;">
+                        🎤 Speak Message
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="designPreference">Design Preference</label>
+                    <textarea id="designPreference" placeholder="e.g., 'elegant and sophisticated', 'colorful and fun', 'minimalist'"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="photoFile">Photo (Optional)</label>
+                    <input type="file" id="photoFile" accept="image/*" onchange="handlePhotoUpload()">
+                    <small style="color: #666; margin-top: 5px; display: block;">Selected photo will appear in the card preview</small>
+                </div>
+                
+                <div id="messageAlert"></div>
+                
+                <button class="btn-primary" onclick="generateCard()" style="width: 100%; padding: 15px; font-size: 1.1em;">
+                    ✨ Generate Card
+                </button>
+                
+                <div class="gift-links">
+                    <h3>🎁 Shop for Gifts</h3>
+                    <div class="gift-shops">
+                        <a href="https://www.fnp.com" target="_blank" class="gift-shop-link">FNP</a>
+                        <a href="https://www.amazon.in" target="_blank" class="gift-shop-link">Amazon</a>
+                        <a href="https://www.igp.com" target="_blank" class="gift-shop-link">IGP</a>
+                        <a href="https://www.floweraura.com" target="_blank" class="gift-shop-link">FlowerAura</a>
+                        <a href="https://www.giftcart.com" target="_blank" class="gift-shop-link">GiftCart</a>
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label>What You Love Doing Together (Select multiple)</label>
-                <div class="hobby-grid">
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-travel" name="hobby" value="travel">
-                        <label for="hobby-travel">Travel & Adventures</label>
+            
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <div class="section-title">🎨 Card Preview</div>
+                
+                <div id="cardPreview" class="preview-card">
+                    <div class="card-header">
+                        <h2>Your Card</h2>
                     </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-cooking" name="hobby" value="cooking">
-                        <label for="hobby-cooking">Cooking Together</label>
+                    <div class="card-body">
+                        <p style="color: rgba(255,255,255,0.7); text-align: center;">Fill in the form and click "Generate Card" to see your preview here</p>
                     </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-movies" name="hobby" value="movies">
-                        <label for="hobby-movies">Movie Nights</label>
+                    <div class="card-footer">
+                        <p>SoulVest Card Generator</p>
                     </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-music" name="hobby" value="music">
-                        <label for="hobby-music">Music & Concerts</label>
+                </div>
+                
+                <div class="export-buttons hidden" id="exportButtons">
+                    <button class="btn-primary" onclick="downloadPNG()">📥 Download PNG</button>
+                    <button class="btn-primary" onclick="downloadPDF()">📄 Download PDF</button>
+                </div>
+                
+                <!-- Sample Cards Gallery (shown before card generation) -->
+                <div id="sampleCardsGallery" style="margin-top: 20px;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px; text-align: center; font-size: 1.2em;">✨ Sample Cards for Inspiration</h3>
+                    <p style="text-align: center; color: #666; font-size: 0.9em; margin-bottom: 20px;">See what your personalized card could look like</p>
+                    
+                    <div style="display: grid; gap: 15px;">
+                        <!-- Sample Card 1 - Birthday -->
+                        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: white;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 1.3em; text-align: center;">Happy Birthday Sarah! 🎂</h3>
+                            <div style="border-top: 2px solid rgba(255,255,255,0.3); border-bottom: 2px solid rgba(255,255,255,0.3); padding: 15px 0; margin: 15px 0;">
+                                <p style="margin: 0; line-height: 1.6; text-align: center; font-size: 0.95em;">
+                                    Happy Birthday! May your creative spirit shine bright today. Here's to celebrating someone who brings joy through music and art!
+                                </p>
+                            </div>
+                            <p style="margin: 0; text-align: center; font-size: 0.85em; opacity: 0.9;">Made with love for special person ❤️</p>
+                        </div>
+                        
+                        <!-- Sample Card 2 - Anniversary -->
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: white;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 1.3em; text-align: center;">Happy Anniversary John! 💑</h3>
+                            <div style="border-top: 2px solid rgba(255,255,255,0.3); border-bottom: 2px solid rgba(255,255,255,0.3); padding: 15px 0; margin: 15px 0;">
+                                <p style="margin: 0; line-height: 1.6; text-align: center; font-size: 0.95em;">
+                                    5 wonderful years together! Your adventurous soul makes every moment special. Here's to many more years of love and travel!
+                                </p>
+                            </div>
+                            <p style="margin: 0; text-align: center; font-size: 0.85em; opacity: 0.9;">Made with love for special person ❤️</p>
+                        </div>
+                        
+                        <!-- Sample Card 3 - Graduation -->
+                        <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: white;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 1.3em; text-align: center;">Congratulations Emma! 🎓</h3>
+                            <div style="border-top: 2px solid rgba(255,255,255,0.3); border-bottom: 2px solid rgba(255,255,255,0.3); padding: 15px 0; margin: 15px 0;">
+                                <p style="margin: 0; line-height: 1.6; text-align: center; font-size: 0.95em;">
+                                    You did it! Your dedication and hard work have paid off. The future is bright for someone as talented as you!
+                                </p>
+                            </div>
+                            <p style="margin: 0; text-align: center; font-size: 0.85em; opacity: 0.9;">Made with love for special person ❤️</p>
+                        </div>
                     </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-singing" name="hobby" value="singing">
-                        <label for="hobby-singing">Singing Together</label>
+                    
+                    <div style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #fff5e1 0%, #ffe4e1 100%); border-radius: 8px; text-align: center; border: 2px solid #ffd700;">
+                        <p style="color: #667eea; font-weight: bold; margin: 0; font-size: 1.05em;">👆 Fill the form above to create your own personalized card!</p>
                     </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-dancing" name="hobby" value="dancing">
-                        <label for="hobby-dancing">Dancing Together</label>
+                </div>
+                
+                <!-- Sharing Section -->
+                <div class="sharing-section hidden" id="sharingSection">
+                    <h3>📤 Share Your Card</h3>
+                    <div class="sharing-buttons">
+                        <button class="share-btn share-facebook" onclick="shareOnFacebook()" title="Share on Facebook">
+                            👍 Facebook
+                        </button>
+                        <button class="share-btn share-instagram" onclick="shareOnInstagram()" title="Share on Instagram">
+                            📷 Instagram
+                        </button>
+                        <button class="share-btn share-whatsapp" onclick="shareOnWhatsApp()" title="Share on WhatsApp">
+                            💬 WhatsApp
+                        </button>
+                        <button class="share-btn share-email" onclick="shareViaEmail()" title="Share via Email">
+                            ✉️ Email
+                        </button>
+                        <button class="share-btn share-linkedin" onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+                            🔗 LinkedIn
+                        </button>
                     </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-reading" name="hobby" value="reading">
-                        <label for="hobby-reading">Reading Together</label>
-                    </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-sports" name="hobby" value="sports">
-                        <label for="hobby-sports">Sports & Activities</label>
-                    </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-art" name="hobby" value="art">
-                        <label for="hobby-art">Creative Projects</label>
-                    </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-nature" name="hobby" value="nature">
-                        <label for="hobby-nature">Nature Walks</label>
-                    </div>
-                    <div class="hobby-item">
-                        <input type="checkbox" id="hobby-food" name="hobby" value="food">
-                        <label for="hobby-food">Trying New Restaurants</label>
+                </div>
+                
+                <!-- Event Gallery -->
+                <div class="event-gallery hidden" id="eventGallery">
+                    <h3>✨ Browse Event Types</h3>
+                    <div class="event-badges">
+                        <div class="event-badge" onclick="quickSelectEvent('birthday')">🎂 Birthday</div>
+                        <div class="event-badge" onclick="quickSelectEvent('anniversary')">💑 Anniversary</div>
+                        <div class="event-badge" onclick="quickSelectEvent('wedding')">💍 Wedding</div>
+                        <div class="event-badge" onclick="quickSelectEvent('graduation')">🎓 Graduation</div>
+                        <div class="event-badge" onclick="quickSelectEvent('newjob')">🚀 New Job</div>
+                        <div class="event-badge" onclick="quickSelectEvent('housewarming')">🏠 Housewarming</div>
+                        <div class="event-badge" onclick="quickSelectEvent('promotion')">🏆 Promotion</div>
+                        <div class="event-badge" onclick="quickSelectEvent('retirement')">🏖️ Retirement</div>
+                        <div class="event-badge" onclick="quickSelectEvent('babyshower')">👶 Baby Shower</div>
+                        <div class="event-badge" onclick="quickSelectEvent('getwell')">💙 Get Well</div>
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="photo">Upload Photo (Optional)</label>
-                <input type="file" id="photo" accept="image/*">
+        </div>
+        
+        <!-- Quick Start Guide -->
+        <div style="padding: 30px; background: linear-gradient(135deg, #fff5e1 0%, #ffe4e1 100%); border-top: 3px solid #ffd700; margin-top: 0;">
+            <h3 style="text-align: center; color: #764ba2; margin-bottom: 20px; font-size: 1.5em;">⚡ Quick Start Guide</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto;">
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">1️⃣</div>
+                    <h4 style="color: #667eea; margin-bottom: 8px;">Enter Details</h4>
+                    <p style="color: #666; font-size: 0.9em;">Name, event, hobbies</p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">2️⃣</div>
+                    <h4 style="color: #667eea; margin-bottom: 8px;">Choose Design</h4>
+                    <p style="color: #666; font-size: 0.9em;">Pick theme & add photo</p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">3️⃣</div>
+                    <h4 style="color: #667eea; margin-bottom: 8px;">Generate Card</h4>
+                    <p style="color: #666; font-size: 0.9em;">See instant preview</p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">4️⃣</div>
+                    <h4 style="color: #667eea; margin-bottom: 8px;">Share or Download</h4>
+                    <p style="color: #666; font-size: 0.9em;">PNG, PDF, or social</p>
+                </div>
             </div>
-
-            <button type="submit">Generate Anniversary Card</button>
-        </form>
-
-        <div class="card" id="card">
-            <div class="card-image" id="cardImage"></div>
-            <div class="card-message" id="message"></div>
-            <div class="card-footer">💕 Made with love for my special person 💕</div>
-            <div class="share-buttons">
-                <button class="download" onclick="downloadCard()">📥 Download Image</button>
-                <button class="share-image" onclick="shareImage()">📤 Share Image</button>
-                <button class="whatsapp" onclick="shareWhatsApp()">💬 WhatsApp Text</button>
+            
+            <div style="margin-top: 30px; text-align: center; padding: 20px; background: white; border-radius: 10px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <h4 style="color: #764ba2; margin-bottom: 15px;">🎯 Pro Tips for Best Results</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left;">
+                    <div>
+                        <span style="color: #667eea; font-weight: bold;">✨</span> <strong>Hobbies Matter:</strong> Select relevant hobbies for personalized AI messages
+                    </div>
+                    <div>
+                        <span style="color: #667eea; font-weight: bold;">📸</span> <strong>Photo Quality:</strong> Use clear, high-resolution square images (1:1 ratio)
+                    </div>
+                    <div>
+                        <span style="color: #667eea; font-weight: bold;">🎨</span> <strong>Design Choice:</strong> Match theme to occasion (elegant for formal, vibrant for fun)
+                    </div>
+                    <div>
+                        <span style="color: #667eea; font-weight: bold;">💬</span> <strong>Personal Message:</strong> Add your own words alongside AI for extra warmth
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    
+    <!-- Statistics Showcase Section -->
+    <div class="stats-section">
+        <h2 style="margin-bottom: 10px; font-size: 2em;">🚀 Why Thousands Choose SoulVest</h2>
+        <p style="opacity: 0.95; font-size: 1.1em;">Join the community spreading love and joy</p>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Message Templates</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10</div>
+                <div class="stat-label">Event Types</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Design Themes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Offline Capable</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Template Gallery Section -->
+    <div class="template-gallery">
+        <h2 style="text-align: center; color: #764ba2; margin-bottom: 10px;">🎭 Design Theme Preview</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">Explore our beautiful card themes - select your favorite in the form above</p>
+        <div class="template-grid">
+            <div class="template-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="template-name">Elegant</div>
+                <div class="template-desc">Classic purple gradient for sophisticated occasions</div>
+            </div>
+            <div class="template-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="template-name">Romantic</div>
+                <div class="template-desc">Warm pink-red tones for love and celebrations</div>
+            </div>
+            <div class="template-preview" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="template-name">Cool</div>
+                <div class="template-desc">Fresh blue gradient for modern vibes</div>
+            </div>
+            <div class="template-preview" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <div class="template-name">Vibrant</div>
+                <div class="template-desc">Energetic green-cyan for joyful moments</div>
+            </div>
+            <div class="template-preview" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                <div class="template-name">Warm</div>
+                <div class="template-desc">Cheerful pink-yellow for sunny occasions</div>
+            </div>
+            <div class="template-preview" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                <div class="template-name">Mysterious</div>
+                <div class="template-desc">Deep teal-purple for elegant surprises</div>
+            </div>
+            <div class="template-preview" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                <div class="template-name">Soft</div>
+                <div class="template-desc">Gentle pastel tones for tender feelings</div>
+            </div>
+            <div class="template-preview" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                <div class="template-name">Sunset</div>
+                <div class="template-desc">Warm peachy tones for golden moments</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How to Use Section -->
+    <div class="how-to-section">
+        <div class="container" style="max-width: 100%; padding: 0;">
+            <h2 style="text-align: center; color: #764ba2; margin-bottom: 10px;">📖 How to Create Your Perfect Card</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">Just 4 simple steps to spread love and joy</p>
+            <div class="how-to-grid">
+                <div class="how-to-step">
+                    <h4>Fill the Form</h4>
+                    <p>Enter recipient name, select event type, pick hobbies, and optionally add a photo</p>
+                </div>
+                <div class="how-to-step">
+                    <h4>See Preview</h4>
+                    <p>Watch your personalized card come to life with AI-generated or custom messages</p>
+                </div>
+                <div class="how-to-step">
+                    <h4>Export Card</h4>
+                    <p>Download as high-quality PNG image or PDF document - ready to print or share</p>
+                </div>
+                <div class="how-to-step">
+                    <h4>Share & Spread Joy</h4>
+                    <p>Send via email, WhatsApp, Facebook, or any social media platform</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Testimonials Section -->
+    <div class="testimonials-section">
+        <h2 style="text-align: center; color: #764ba2; margin-bottom: 10px;">💬 What People Love About SoulVest</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">Real feedback from happy users</p>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                <div class="testimonial-quote">"</div>
+                <p class="testimonial-text">The cards came out beautifully! My friend loved the personalized touch. Highly recommended!</p>
+                <p class="testimonial-author">- Sarah M.</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                <div class="testimonial-quote">"</div>
+                <p class="testimonial-text">So easy to use and the AI messages are actually thoughtful. Perfect for last-minute gifts!</p>
+                <p class="testimonial-author">- James K.</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                <div class="testimonial-quote">"</div>
+                <p class="testimonial-text">I love that it works offline. Great for creating cards anytime, anywhere without WiFi worries.</p>
+                <p class="testimonial-author">- Priya D.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tips Section -->
+    <div class="tips-section">
+        <h2 style="text-align: center; color: #764ba2; margin-bottom: 10px;">💡 Pro Tips for Amazing Cards</h2>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h4>📸 Photo Selection</h4>
+                <p>Use clear, well-lit photos. Square images (1:1 ratio) work best and create centered cards.</p>
+            </div>
+            <div class="tip-card">
+                <h4>✍️ Personal Touch</h4>
+                <p>Combine AI generation with your own words. Your personal message makes cards extra special.</p>
+            </div>
+            <div class="tip-card">
+                <h4>🎨 Design Themes</h4>
+                <p>Try different design preferences to match the occasion. Elegant for anniversaries, fun for birthdays!</p>
+            </div>
+            <div class="tip-card">
+                <h4>📤 Sharing Strategy</h4>
+                <p>Share on WhatsApp for instant delivery, email for professional touch, or social media for public celebration.</p>
+            </div>
+            <div class="tip-card">
+                <h4>🎁 Combine Wisely</h4>
+                <p>Pair personalized cards with small gifts. Digital cards + physical gift = maximum impact!</p>
+            </div>
+            <div class="tip-card">
+                <h4>🖨️ Print Quality</h4>
+                <p>Download PNG at high scale for best print results. Use glossy paper for a premium feel.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="faq-section">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h2 style="text-align: center; color: #764ba2; margin-bottom: 10px;">❓ Frequently Asked Questions</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">Find answers to common questions</p>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Do I need an internet connection to create cards?</span>
+                </div>
+                <div class="faq-answer">
+                    <p>No! Once the app loads, you can create cards completely offline. Perfect for creating beautiful cards anywhere, anytime.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Is there a limit to how many cards I can create?</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Nope! Create as many personalized cards as you want. There are no limits - spread love freely!</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Can I use my own custom messages instead of AI-generated ones?</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Absolutely! You can write your own heartfelt message in the "Your Message" field. The AI is there to help if you need ideas!</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What file formats can I download my card in?</span>
+                </div>
+                <div class="faq-answer">
+                    <p>You can download your card as PNG (image) or PDF (document). Both are high-quality and ready to print or share digitally.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Can I share the card directly from the app?</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! After creating your card, you'll see sharing options for Facebook, Twitter, WhatsApp, Email, LinkedIn, and Pinterest.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Is my personal information kept private?</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! Everything stays on your device. We don't store, collect, or track any of your data. Complete privacy is guaranteed.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Features Section -->
+    <div class="features-section">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-card-icon">🎨</div>
+                <h3>Beautiful Design</h3>
+                <p>Choose from 8 stunning themes to make your card unique and personalized.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">🤖</div>
+                <h3>AI Powered</h3>
+                <p>Smart message generation based on event type and recipient interests.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">📷</div>
+                <h3>Add Photos</h3>
+                <p>Include a personal photo in your card for extra touch and warmth.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">⚡</div>
+                <h3>Works Offline</h3>
+                <p>No internet required after loading. Fast, private, and always available.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">📥</div>
+                <h3>Multiple Formats</h3>
+                <p>Export as PNG image or PDF document. Print or share digitally.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">❤️</div>
+                <h3>Share Everywhere</h3>
+                <p>Send your card via email, WhatsApp, Facebook, and more social platforms.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Attribution -->
+    <div style="padding: 20px; text-align: center; color: white; font-size: 0.9em;">
+        <p>💖 Crafted with love by <strong>SoulVest Card Generator</strong></p>
+        <p>Bringing people closer through personalized, heartfelt digital cards</p>
+    </div>
 
-    <script>
-        const messages = {
-            romantic: {
-                travel: [
-                    "My dearest {name}, {years} beautiful years of traveling through life together. Let's cherish every sunrise we watched, every road we explored, every adventure that made us stronger. Each journey with you is a treasure, each memory a precious gift. Here's to forever wandering the world, hand in hand. 🌍💕",
-                    "{name}, for {years} wonderful years, we've collected memories like souvenirs. Let's cherish the laughter on long drives, the getting lost together, the quiet moments in new places. You are my favorite destination, my home wherever we roam. Forever grateful for every step beside you. ✨❤️"
-                ],
-                cooking: [
-                    "Sweet {name}, {years} years of creating magic in the kitchen of life. Let's cherish every recipe we perfected, every meal we shared, every laugh over burnt toast. You add flavor to my soul, warmth to my heart. Together, we've cooked up the most beautiful love story. 🍳💕",
-                    "My love {name}, for {years} precious years, we've stirred dreams and seasoned life with love. Let's cherish those moments mixing ingredients, tasting together, creating memories. You're the secret ingredient that makes everything perfect. Forever cooking up happiness with you. 👨‍🍳❤️"
-                ],
-                movies: [
-                    "Dearest {name}, {years} years of our beautiful love story. Let's cherish every movie night, every shared laugh, every comfortable silence. You're the plot twist that made my life perfect, the happy ending I always dreamed of. Forever my favorite story. 🎬💕",
-                    "{name}, for {years} magical years, we've written our own romance. Let's cherish those cozy evenings, those whispered comments, those perfect moments together. You're my leading role, my greatest scene, my eternal love. 🎥❤️"
-                ],
-                music: [
-                    "My beloved {name}, {years} years of the sweetest symphony. Let's cherish every concert we attended, every song that moved us, every melody we hummed together. Your love is the music that fills my soul, the rhythm of my heart. Forever dancing to our song. 🎵💕",
-                    "{name}, for {years} beautiful years, you've been my favorite melody. Let's cherish those moments singing along, discovering new music, creating our soundtrack. You're the harmony to my life, the beat of my dreams. Forever our duet. 🎶❤️"
-                ],
-                dancing: [
-                    "Dearest {name}, {years} years of dancing through life in perfect harmony. Let's cherish every twirl, every step, every moment in your arms. You lead me with grace, hold me with love, move me with your soul. Forever swaying to the music of our love. 💃💕",
-                    "{name}, for {years} magical years, we've waltzed through joy and challenges. Let's cherish those dance floors, those quiet kitchen dances, those moments moving as one. You're my rhythm, my partner, my everything. Forever dancing together. 🕺❤️"
-                ],
-                reading: [
-                    "My beloved {name}, {years} years of sharing stories and dreams. Let's cherish every book we discussed, every page we turned together, every quiet evening reading side by side. You're the poetry my heart recites, the tale I want to read forever. 📚💕",
-                    "{name}, for {years} beautiful years, our love has been my favorite story. Let's cherish those moments lost in books, those conversations about characters, those cozy reading times. You're my greatest chapter, my eternal story. 📖❤️"
-                ],
-                sports: [
-                    "My champion {name}, {years} years of playing life's game together. Let's cherish every victory, every challenge we conquered, every moment we pushed each other to be better. You're my teammate, my strength, my greatest win. Forever cheering for us. 🏆💕",
-                    "{name}, for {years} incredible years, we've been the perfect team. Let's cherish those games watched together, those active moments, those triumphs shared. You're my MVP, my inspiration, my forever partner. Together we're unstoppable. ⚽❤️"
-                ],
-                art: [
-                    "My dearest {name}, {years} years of painting our masterpiece. Let's cherish every creative moment, every color we blended, every beautiful thing we made together. You are the art that takes my breath away, the masterpiece of my heart. Forever creating beauty with you. 🎨💕",
-                    "{name}, for {years} wonderful years, you've been my inspiration. Let's cherish those museum visits, those creative projects, those moments appreciating beauty. You're my greatest work of art, my eternal muse, my everything. 🖌️❤️"
-                ],
-                nature: [
-                    "Beloved {name}, {years} years of growing together like wildflowers. Let's cherish every sunrise we watched, every trail we hiked, every peaceful moment in nature's embrace. You're my sunshine, my earth, my sky. Together we bloom eternal. 🌸💕",
-                    "{name}, for {years} beautiful years, we've walked hand in hand through life. Let's cherish those quiet nature moments, those breathtaking views, those simple joys outdoors. You're my natural wonder, my perfect landscape, my home. 🌿❤️"
-                ],
-                food: [
-                    "My sweetest {name}, {years} years of savoring life together. Let's cherish every meal shared, every new taste discovered, every restaurant memory made. You add flavor to my existence, sweetness to my soul. Every moment with you is delicious. 🍽️💕",
-                    "{name}, for {years} delicious years, you've nourished my heart. Let's cherish those foodie adventures, those perfect bites, those conversations over meals. You're my favorite indulgence, my sweetest craving, my eternal feast. 🥂❤️"
-                ],
-                singing: [
-                    "My darling {name}, {years} years of singing our hearts out together. Let's cherish every song we sang, every moment our voices blended, every car ride concert. You make my soul harmonize, my heart overflow with melody. Forever our duet. 🎤💕",
-                    "{name}, for {years} precious years, we've created our own symphony. Let's cherish those singing moments, those shared melodies, those times music brought us closer. You're the song my heart forever sings, my eternal music. 🎵❤️"
-                ],
-                generic: [
-                    "My beloved {name}, {years} years of the most beautiful journey together. Every moment with you is a treasure, every memory a gift I hold close to my heart. Let's cherish all we've shared and all the beautiful tomorrows ahead. Forever yours. 💕",
-                    "Dearest {name}, for {years} precious years, you've been my everything. Let's cherish every laugh, every tear, every moment that made us who we are. You're my heart, my soul, my eternal love. Here's to forever together. ❤️"
-                ]
-            },
-            respectful: {
-                travel: [
-                    "Dear {name}, {years} wonderful years of exploring the world together. Thank you for every adventure, every new place, every shared experience. Your companionship makes every journey meaningful. Looking forward to many more travels together. 🌍",
-                    "{name}, Happy {years}th anniversary! I'm grateful for all the places we've discovered and the memories we've made along the way. Here's to more adventures and beautiful destinations ahead. ✈️"
-                ],
-                cooking: [
-                    "Dear {name}, {years} years of creating delicious memories together. Thank you for every meal shared, every recipe tried, every kitchen moment. Your presence makes everything taste better. Cheers to many more culinary adventures. 🍳",
-                    "{name}, Happy {years}th anniversary! I appreciate all the times we've cooked together and enjoyed good food. Here's to more shared meals and wonderful flavors. 👨‍🍳"
-                ],
-                movies: [
-                    "Dear {name}, {years} years of enjoying films together. Thank you for every movie night, every shared story, every comfortable evening. Your company makes every show special. Looking forward to many more screenings. 🎬",
-                    "{name}, Happy {years}th anniversary! I value all our movie nights and the discussions we've shared. Here's to more great films and cozy evenings together. 🎥"
-                ],
-                music: [
-                    "Dear {name}, {years} years of sharing the joy of music. Thank you for every concert, every song, every moment we enjoyed together. Your appreciation for music enriches my life. Cheers to more melodies ahead. 🎵",
-                    "{name}, Happy {years}th anniversary! I'm grateful for the music we've shared and the memories created. Here's to more harmonious moments together. 🎶"
-                ],
-                dancing: [
-                    "Dear {name}, {years} years of dancing through life together. Thank you for every step, every moment on the dance floor, every graceful memory. Your partnership means everything. Looking forward to more dances ahead. 💃",
-                    "{name}, Happy {years}th anniversary! I appreciate every dance we've shared and the rhythm we've found together. Here's to more beautiful moments in sync. 🕺"
-                ],
-                reading: [
-                    "Dear {name}, {years} years of sharing stories and ideas. Thank you for every book discussed, every quiet reading time, every meaningful conversation. Your thoughtfulness enriches my life. Cheers to more pages ahead. 📚",
-                    "{name}, Happy {years}th anniversary! I'm grateful for all the books we've shared and the insights gained. Here's to more stories and wonderful discussions. 📖"
-                ],
-                sports: [
-                    "Dear {name}, {years} years of being great teammates. Thank you for every game, every challenge faced, every victory celebrated. Your support makes me stronger. Looking forward to more wins together. 🏆",
-                    "{name}, Happy {years}th anniversary! I appreciate your encouragement and all the active moments we've shared. Here's to more teamwork and achievements. ⚽"
-                ],
-                art: [
-                    "Dear {name}, {years} years of appreciating beauty together. Thank you for every creative moment, every gallery visit, every artistic experience. Your perspective inspires me. Cheers to more artistic adventures. 🎨",
-                    "{name}, Happy {years}th anniversary! I'm grateful for all the art we've enjoyed and the creativity we've shared. Here's to more beautiful experiences. 🖌️"
-                ],
-                nature: [
-                    "Dear {name}, {years} years of enjoying nature together. Thank you for every hike, every sunrise, every peaceful moment outdoors. Your presence makes every view more beautiful. Looking forward to more natural wonders. 🌸",
-                    "{name}, Happy {years}th anniversary! I appreciate all our time in nature and the tranquility we've found. Here's to more outdoor adventures together. 🌿"
-                ],
-                food: [
-                    "Dear {name}, {years} years of enjoying great food together. Thank you for every restaurant visit, every new taste, every shared meal. Your company enhances every flavor. Cheers to more culinary discoveries. 🍽️",
-                    "{name}, Happy {years}th anniversary! I'm grateful for all the delicious experiences we've had. Here's to more wonderful meals and tasty memories. 🥂"
-                ],
-                singing: [
-                    "Dear {name}, {years} years of making music together. Thank you for every song sung, every note shared, every musical moment. Your voice brings joy to my life. Looking forward to more harmonies. 🎤",
-                    "{name}, Happy {years}th anniversary! I appreciate all the times we've sung together and the melodies we've created. Here's to more beautiful music ahead. 🎵"
-                ],
-                generic: [
-                    "Dear {name}, Happy {years}th anniversary! Thank you for all the wonderful memories we've created together. I appreciate your partnership, your support, and everything you bring to my life. Looking forward to many more years together. 💕",
-                    "{name}, {years} years together! I'm grateful for every moment, every experience, every challenge and joy we've shared. Thank you for being such an important part of my life. Here's to our continued journey. ❤️"
-                ]
-            },
-            lighthearted: {
-                travel: [
-                    "Happy {years}th anniversary, {name}! {years} years of adventures (and getting lost in random cities)! Thanks for not using the GPS when I said 'I know a shortcut.' Here's to more travel mishaps and passport stamps! 🌍😄",
-                    "{name}, {years} years together and we haven't killed each other on a road trip yet! That's true love! You're my favorite travel buddy, even when you over-pack. Let's keep exploring! ✈️🎒"
-                ],
-                cooking: [
-                    "Happy {years}th anniversary, {name}! {years} years of kitchen adventures (and smoke alarms)! Thanks for still eating my cooking experiments. You're the best taste-tester ever! Here's to more delicious disasters! 🍳😋",
-                    "{name}, {years} years and we've survived my cooking! From burnt toast to gourmet attempts, you've been a trooper. Love you more than pizza (and that's saying something)! 👨‍🍳🍕"
-                ],
-                movies: [
-                    "Happy {years}th anniversary, {name}! {years} years of movie nights! Thanks for not judging my guilty pleasure films and for sharing your snacks. You're my favorite co-star in this rom-com called life! 🎬🍿",
-                    "{name}, {years} years of arguing over what to watch! Thanks for letting me win sometimes. You're still my favorite person to binge-watch with! 🎥😊"
-                ],
-                music: [
-                    "Happy {years}th anniversary, {name}! {years} years and you haven't complained about my singing yet! That's true love right there! You're on repeat in my heart (unlike my Spotify playlist). 🎵😁",
-                    "{name}, {years} years of car karaoke! Thanks for harmonizing with my off-key notes. You make my heart sing (better than I actually sing)! 🎶🎤"
-                ],
-                dancing: [
-                    "Happy {years}th anniversary, {name}! {years} years of dancing like nobody's watching (but everyone is)! Thanks for not laughing at my moves. You're my perfect partner in crime! 💃😄",
-                    "{name}, {years} years and you still dance with me! From awkward first dances to kitchen boogie sessions, you're the best! Let's keep stepping on each other's toes! 🕺😊"
-                ],
-                reading: [
-                    "Happy {years}th anniversary, {name}! {years} years of sharing books! Thanks for not spoiling endings and for tolerating my reading lamp at 2 AM. You're my favorite plot twist! 📚😋",
-                    "{name}, {years} years together and our love story is still the best book I've read! Thanks for being my bookmark in life (and my night-light). 📖✨"
-                ],
-                sports: [
-                    "Happy {years}th anniversary, {name}! {years} years of being teammates! Thanks for cheering even when I mess up. You're my MVP (Most Valuable Partner)! Let's keep winning at life! 🏆😄",
-                    "{name}, {years} years and we're still crushing it! Thanks for the high-fives and the motivation. We make a killer team (even if we can't play together without arguing)! ⚽🎯"
-                ],
-                art: [
-                    "Happy {years}th anniversary, {name}! {years} years of artsy adventures! Thanks for pretending to understand modern art with me. You're my masterpiece (even when I can't draw stick figures)! 🎨😊",
-                    "{name}, {years} years of gallery dates! Thanks for not falling asleep during exhibits. You add color to my world (and put up with my doodles)! 🖌️✨"
-                ],
-                nature: [
-                    "Happy {years}th anniversary, {name}! {years} years of outdoor fun! Thanks for the hikes (even when I complained). You're my sunshine, even when it rains on our picnic! 🌸😄",
-                    "{name}, {years} years and you haven't given up on making me a nature person! Thanks for the fresh air and bug spray. You make outdoors bearable! 🌿🦋"
-                ],
-                food: [
-                    "Happy {years}th anniversary, {name}! {years} years of foodie adventures! Thanks for sharing your fries (most of the time). You're the ketchup to my fries, the cheese to my pizza! 🍽️😋",
-                    "{name}, {years} years of eating our way through life! Thanks for letting me have the last bite. Love you a latte! ☕🥐"
-                ],
-                singing: [
-                    "Happy {years}th anniversary, {name}! {years} years of shower concerts and car karaoke! Thanks for not telling me to stop singing (or at least pretending not to mind). You're the harmony to my off-key melody! 🎤😊",
-                    "{name}, {years} years and you still duet with me! That's either true love or hearing loss! Either way, you make my heart sing every single day! 🎵😄"
-                ],
-                generic: [
-                    "Happy {years}th anniversary, {name}! {years} years and you still laugh at my jokes! Thanks for putting up with me, loving me, and being my partner in crime. You're the best thing that ever happened to me! 💕😊",
-                    "{name}, {years} years together! Thanks for all the fun, the laughter, the adventures, and for not running away when you realized I'm weird. You're stuck with me now! Love you tons! ❤️😄"
-                ]
-            }
-        };
-
-        let uploadedImage = null;
-
-        document.getElementById('photo').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    uploadedImage = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        function generateCombinedMessage(name, years, hobbies, tone) {
-            const hobbyPhrases = {
-                romantic: {
-                    travel: "exploring the world together",
-                    cooking: "creating culinary magic in our kitchen",
-                    movies: "sharing countless movie nights",
-                    music: "discovering melodies that touch our souls",
-                    dancing: "dancing through life in perfect harmony",
-                    reading: "turning pages and sharing stories",
-                    sports: "cheering each other on in every challenge",
-                    art: "creating and appreciating beauty together",
-                    nature: "walking hand in hand through nature's wonders",
-                    food: "savoring every delicious moment together",
-                    singing: "singing our hearts out in perfect duets"
-                },
-                respectful: {
-                    travel: "traveling and exploring new places",
-                    cooking: "preparing meals and sharing recipes",
-                    movies: "enjoying films and meaningful discussions",
-                    music: "appreciating music and attending concerts",
-                    dancing: "dancing and creating graceful memories",
-                    reading: "reading and discussing books together",
-                    sports: "staying active and supporting each other",
-                    art: "visiting galleries and creating art",
-                    nature: "enjoying nature walks and outdoor time",
-                    food: "trying new restaurants and cuisines",
-                    singing: "singing and making music together"
-                },
-                lighthearted: {
-                    travel: "getting lost on adventures (and blaming the GPS)",
-                    cooking: "experimenting in the kitchen (and setting off smoke alarms)",
-                    movies: "binge-watching and arguing over what to watch next",
-                    music: "jamming out and pretending we can sing",
-                    dancing: "dancing like nobody's watching (but everyone is)",
-                    reading: "sharing books and spoiling endings",
-                    sports: "competing and trash-talking lovingly",
-                    art: "getting artsy and making a mess",
-                    nature: "hiking and complaining about bugs",
-                    food: "eating our way through every menu",
-                    singing: "belting out tunes and cracking up at our off-key notes"
-                }
-            };
-
-            // Get phrases for selected hobbies
-            const phrases = hobbies.map(h => hobbyPhrases[tone][h]);
-            
-            // Create combined message based on tone
-            if (tone === 'romantic') {
-                if (phrases.length === 2) {
-                    return `My dearest {name}, {years} beautiful years of ${phrases[0]} and ${phrases[1]}. Every moment with you is a treasure I hold close to my heart. Let's cherish all these precious memories and create countless more together. You are my everything, my eternal love. 💕❤️`;
-                } else if (phrases.length === 3) {
-                    return `Beloved {name}, {years} wonderful years of ${phrases[0]}, ${phrases[1]}, and ${phrases[2]}. Each memory we've created is a gift I cherish forever. You fill my life with joy, love, and meaning. Here's to our beautiful journey together. 💕✨`;
-                } else {
-                    const first = phrases.slice(0, 2).join(', ');
-                    const rest = phrases.length - 2;
-                    return `My darling {name}, {years} precious years of ${first}, and ${rest} more beautiful ways we've shared our love. Every moment with you writes another chapter in our perfect story. Forever grateful for you, forever yours. 💕🌟`;
-                }
-            } else if (tone === 'respectful') {
-                if (phrases.length === 2) {
-                    return `Dear {name}, Happy {years}th anniversary! Thank you for ${phrases[0]} and ${phrases[1]}. I appreciate every experience we've shared and look forward to many more years of companionship and wonderful memories together. 🤝💕`;
-                } else if (phrases.length === 3) {
-                    return `Dear {name}, {years} years of ${phrases[0]}, ${phrases[1]}, and ${phrases[2]}. I'm grateful for all the moments we've shared and the partnership we've built. Here's to continuing our journey together. 🤝✨`;
-                } else {
-                    const first = phrases.slice(0, 2).join(', ');
-                    const rest = phrases.length - 2;
-                    return `Dear {name}, Happy {years}th anniversary! Thank you for ${first}, and ${rest} other wonderful activities we enjoy together. I value our time together and look forward to more shared experiences. 🤝💕`;
-                }
-            } else { // lighthearted
-                if (phrases.length === 2) {
-                    return `Happy {years}th anniversary, {name}! {years} years of ${phrases[0]} and ${phrases[1]}! You're still my favorite partner in crime, my best friend, and the one who laughs at my jokes. Love you tons! 😄💕`;
-                } else if (phrases.length === 3) {
-                    return `{name}, {years} years of ${phrases[0]}, ${phrases[1]}, and ${phrases[2]}! We've had so much fun together (and you haven't run away yet). That's true love! Here's to more shenanigans! 😄🎉`;
-                } else {
-                    const first = phrases.slice(0, 2).join(', ');
-                    const rest = phrases.length - 2;
-                    return `Happy {years}th anniversary, {name}! {years} years of ${first}, and ${rest} other ways we've had a blast together! You put up with all my quirks and still love me. You're the best! 😄💕🎉`;
-                }
-            }
-        }
-
-        document.getElementById('cardForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const years = document.getElementById('years').value;
-            const tone = document.querySelector('input[name="tone"]:checked').value;
-            
-            // Get all checked hobbies
-            const selectedHobbies = Array.from(document.querySelectorAll('input[name="hobby"]:checked'))
-                .map(checkbox => checkbox.value);
-            
-            let finalMessage;
-            
-            if (selectedHobbies.length === 0) {
-                // No hobbies - use generic
-                const genericMessages = messages[tone]['generic'];
-                finalMessage = genericMessages[Math.floor(Math.random() * genericMessages.length)];
-            } else if (selectedHobbies.length === 1) {
-                // Single hobby - use specific message
-                const hobbyMessages = messages[tone][selectedHobbies[0]];
-                finalMessage = hobbyMessages[Math.floor(Math.random() * hobbyMessages.length)];
-            } else {
-                // Multiple hobbies - create combined message
-                finalMessage = generateCombinedMessage(name, years, selectedHobbies, tone);
-            }
-            
-            finalMessage = finalMessage
-                .replace(/{name}/g, name)
-                .replace(/{years}/g, years);
-            
-            document.getElementById('message').textContent = finalMessage;
-            
-            // Display photo if uploaded
-            const cardImage = document.getElementById('cardImage');
-            if (uploadedImage) {
-                cardImage.innerHTML = '<img src="' + uploadedImage + '" alt="Anniversary Photo">';
-            } else {
-                cardImage.innerHTML = '';
-            }
-            
-            document.getElementById('card').classList.add('show');
-            document.getElementById('card').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        // Handle tone selector styling
-        document.querySelectorAll('input[name="tone"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                document.querySelectorAll('input[name="tone"]').forEach(r => {
-                    const label = document.querySelector(`label[for="${r.id}"]`);
-                    if (r.checked) {
-                        label.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-                        label.style.color = 'white';
-                        label.style.borderColor = '#667eea';
-                        label.style.transform = 'scale(1.05)';
-                    } else {
-                        label.style.background = 'white';
-                        label.style.color = '#333';
-                        label.style.borderColor = '#ddd';
-                        label.style.transform = 'scale(1)';
-                    }
-                });
-            });
-        });
-
-        function shareWhatsApp() {
-            const message = document.getElementById('message').textContent;
-            const text = encodeURIComponent(message + '\n\n💕 Created with Soulvest Anniversary Card Generator');
-            const url = `https://wa.me/?text=${text}`;
-            window.open(url, '_blank');
-        }
-
-        function downloadCard() {
-            const card = document.getElementById('card');
-            const buttons = card.querySelector('.share-buttons');
-            
-            // Hide buttons before screenshot
-            buttons.style.display = 'none';
-            
-            // Add gift-print optimizations
-            card.style.padding = '40px';
-            card.style.minHeight = '600px';
-            
-            html2canvas(card, {
-                backgroundColor: '#ffffff',
-                scale: 3,
-                logging: false,
-                useCORS: true,
-                width: 1200,
-                height: 1200
-            }).then(canvas => {
-                // Reset styles
-                card.style.padding = '30px';
-                card.style.minHeight = 'auto';
-                buttons.style.display = 'flex';
-                
-                // Convert to blob and download
-                canvas.toBlob(function(blob) {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'anniversary-card.png';
-                    a.click();
-                    URL.revokeObjectURL(url);
-                }, 'image/png');
-            });
-        }
-
-        function shareImage() {
-            const card = document.getElementById('card');
-            const buttons = card.querySelector('.share-buttons');
-            
-            // Hide buttons before screenshot
-            buttons.style.display = 'none';
-            
-            // Add gift-print optimizations
-            card.style.padding = '40px';
-            card.style.minHeight = '600px';
-            
-            html2canvas(card, {
-                backgroundColor: '#ffffff',
-                scale: 3,
-                logging: false,
-                useCORS: true,
-                width: 1200,
-                height: 1200
-            }).then(canvas => {
-                // Reset styles
-                card.style.padding = '30px';
-                card.style.minHeight = 'auto';
-                buttons.style.display = 'flex';
-                
-                canvas.toBlob(function(blob) {
-                    const file = new File([blob], 'anniversary-card.png', { type: 'image/png' });
-                    
-                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                            title: 'Anniversary Card',
-                            text: 'Happy Anniversary! 💕',
-                            files: [file]
-                        }).catch(err => {
-                            console.log('Share cancelled or failed:', err);
-                            // Fallback: download the image
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = 'anniversary-card.png';
-                            a.click();
-                            URL.revokeObjectURL(url);
-                            alert('Image downloaded! You can now share it manually via WhatsApp or social media.');
-                        });
-                    } else {
-                        // Fallback: download the image
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'anniversary-card.png';
-                        a.click();
-                        URL.revokeObjectURL(url);
-                        alert('Image downloaded! You can now share it manually via WhatsApp or social media.');
-                    }
-                }, 'image/png');
-            });
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
