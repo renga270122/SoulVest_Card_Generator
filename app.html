@@ -422,12 +422,8 @@
             <p>Create personalized AI-powered gift cards for every occasion</p>
         </div>
         
-        <div class="api-config-banner">
-            <span>🔑 API Configuration</span>
-            <div style=\"display: flex; gap: 10px;\">
-                <button onclick=\"testAPIKey()\" style=\"background: #17a2b8; color: white; padding: 8px 16px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 0.9em;\">🧪 Test API</button>
-                <button onclick=\"showAPIConfig()\">Configure API Key</button>
-            </div>
+        <div class="api-config-banner" style="background: #d4edda; border-bottom: 2px solid #28a745;">
+            <span>✅ AI Message Generator (Works Offline - No API Key Needed)</span>
         </div>
         
         <div class="content">
@@ -529,24 +525,6 @@
         </div>
     </div>
     
-    <!-- API Configuration Modal -->
-    <div id="apiConfigModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeAPIConfig()">&times;</span>
-            <div class="modal-header">
-                <h2>🔑 Configure API Key</h2>
-            </div>
-            <div class="modal-body">
-                <p>Enter your Google Gemini API key. It will be stored locally in your browser only (not sent to any server).</p>
-                <p>Get a free API key at: <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></p>
-                <input type="password" id="apiKeyInput" placeholder="Paste your API key here" value="">
-                <div id="apiKeyStatus"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeAPIConfig()">Cancel</button>
-                <button class="btn-primary" onclick="saveAPIKey()">Save Key</button>
-            </div>
-        </div>
     </div>
 
     <script src="app.js"></script>
