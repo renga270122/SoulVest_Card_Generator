@@ -1,53 +1,76 @@
-# 💕 Anniversary Card Generator
+# � SoulVest Card Generator
 
-A beautiful, personalized anniversary card generator powered by **Soulvest's Personalization Engine**.
+Create beautiful, personalized gift cards for any occasion - completely offline!
 
 ## ✨ Features
 
-- **Three Tone Options**: Choose between Romantic, Respectful, or Light-Hearted messages
-- **11 Hobby Categories**: Travel, Cooking, Movies, Music, Dancing, Reading, Sports, Art, Nature, Food, and Singing
-- **Multi-Hobby Support**: Select multiple hobbies for combined, personalized messages
-- **Photo Upload**: Add your special photo to the card
-- **Gift-Ready Export**: Download high-resolution 1200x1200px images perfect for printing on mugs, water bottles, and other gifts
-- **Share Options**: Download image, share via native share API, or send directly to WhatsApp
+- **10 Event Types**: Birthday, Anniversary, Wedding, Graduation, New Job, Housewarming, Promotion, Retirement, Baby Shower, Get Well
+- **50+ AI Message Templates**: Smart, personalized messages based on event and hobbies
+- **8 Beautiful Design Themes**: Elegant, Romantic, Cool, Vibrant, Warm, Mysterious, Soft, Sunset
+- **Photo Support**: Upload personal photos (280×280px with beautiful styling)
+- **Works 100% Offline**: No API keys, no internet required after loading
+- **Multiple Export Formats**: High-quality PNG (3x scale) and PDF downloads
+- **Social Sharing**: Facebook, Instagram, WhatsApp, Email, LinkedIn
+- **Voice Input**: Speech-to-text for message input
+- **Sample Cards**: Visual inspiration gallery
 
 ## 🚀 Live Demo
 
-Visit the live app: [Anniversary Card Generator](https://yourusername.github.io/Anniversary_Card_Generator/)
+**GitHub Pages**: [https://renga270122.github.io/SoulVest_Card_Generator/](https://renga270122.github.io/SoulVest_Card_Generator/)
 
 ## 💝 How to Use
 
-1. Enter your partner's name
-2. Enter the number of years together
-3. Choose your message tone (Romantic / Respectful / Light-Hearted)
-4. Select hobbies you enjoy together (optional, can select multiple)
-5. Upload a photo (optional)
-6. Click "Generate Anniversary Card"
-7. Download or share your personalized card!
+1. **Enter Details**: Recipient name, select event type
+2. **Choose Hobbies**: Pick 2-3 interests for personalized messages
+3. **Add Photo** (optional): Upload a square image for best results
+4. **Pick Design Theme**: Select from 8 beautiful gradient themes
+5. **Write or Generate Message**: Use AI or write your own
+6. **Generate Card**: See instant preview
+7. **Download & Share**: Export as PNG/PDF or share on social media
 
-## 🎨 Message Personalization
+## 🎨 Design Themes
 
-The app creates unique messages based on:
-- **Your partner's name** - Personalized greeting
-- **Years together** - Celebrates your journey
-- **Selected hobbies** - References your shared experiences
-- **Chosen tone** - Matches your relationship dynamic
+- **Elegant**: Purple gradient for sophisticated occasions
+- **Romantic**: Pink-red tones for love and celebrations  
+- **Cool**: Fresh blue gradient for modern vibes
+- **Vibrant**: Energetic green-cyan for joyful moments
+- **Warm**: Cheerful pink-yellow for sunny occasions
+- **Mysterious**: Deep teal-purple for elegant surprises
+- **Soft**: Gentle pastel tones for tender feelings
+- **Sunset**: Warm peachy tones for golden moments
 
-### Tone Examples
+## 🎁 Perfect For
 
-**Romantic** 💕: "My dearest Sarah, 5 beautiful years of exploring the world together and creating culinary magic in our kitchen..."
+- Birthday celebrations
+- Anniversary milestones
+- Wedding congratulations
+- Graduation achievements
+- Professional promotions
+- New home blessings
+- Baby showers
+- Get well wishes
+- And any special moment!
 
-**Respectful** 🤝: "Dear Sarah, Happy 5th anniversary! Thank you for traveling and exploring new places and preparing meals and sharing recipes..."
+## 🚀 Deployment
 
-**Light-Hearted** 😊: "Happy 5th anniversary, Sarah! 5 years of getting lost on adventures (and blaming the GPS) and experimenting in the kitchen..."
+This app is deployed on GitHub Pages and works completely offline after initial load.
 
-## 🎁 Gift Printing
+### Deploy Your Own:
 
-Downloaded images are optimized for professional gift printing:
-- **1200x1200 pixels** resolution
-- **White background** for better printing
-- **High-quality scale (3x)** for sharp results
-- Perfect for coffee mugs, water bottles, cushions, and more!
+1. Fork this repository
+2. Go to Settings → Pages
+3. Select Source: Deploy from a branch
+4. Select Branch: `main` and folder: `/ (root)`
+5. Click Save
+6. Your app will be live at: `https://yourusername.github.io/SoulVest_Card_Generator/`
+
+## 🛠️ Technologies
+
+- HTML5, CSS3, Vanilla JavaScript
+- html2canvas (PNG export)
+- jsPDF (PDF export)
+- Web Speech API (voice input)
+- No backend required!
 
 ## 🛠️ Technology
 
