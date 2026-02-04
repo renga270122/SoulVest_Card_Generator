@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoulVest Card Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 { margin-bottom: 10px; font-size: 2.5em; }
+        .header p { opacity: 0.9; }
+        
+        .api-config-banner {
+            background: #fff3cd;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffc107;
+        }
+        
+        .api-config-banner button {
+            background: #ffc107;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .api-config-banner button:hover {
+            background: #ffb300;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content { grid-template-columns: 1fr; }
+        }
+        
+        .form-section, .preview-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.3em;
+            color: #764ba2;
+            font-weight: bold;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.95em;
+        }
+        
+        input[type="text"], input[type="email"], select, textarea {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .checkbox-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .mic-button {
+            padding: 8px 16px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .mic-button:hover { background: #c0392b; }
+        .mic-button.recording { background: #27ae60; animation: pulse 1s infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .preview-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 20px;
+        }
+        
+        .card-header h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .card-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-message {
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: center;
+            margin: 20px 0;
+            min-height: 80px;
+        }
+        
+        .card-footer {
+            text-align: center;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .export-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .export-buttons button {
+            padding: 10px;
+            font-size: 0.9em;
+        }
+        
+        .gift-links {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .gift-links h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .gift-shops {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .gift-shop-link {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .gift-shop-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-weight: bold;
+            padding: 20px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
+            margin: 10px 0;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #c3e6cb;
+            margin: 10px 0;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        .modal-header h2 {
+            color: #764ba2;
+            margin: 0;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-body p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .modal-body input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+        
+        .modal-footer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .modal-footer button {
+            padding: 12px;
+        }
+        
+        .close {
+            color: #999;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .close:hover {
+            color: #333;
+        }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ SoulVest Card Generator</h1>
+            <p>Create personalized AI-powered gift cards for every occasion</p>
+        </div>
+        
+        <div class="api-config-banner">
+            <span>🔑 API Configuration</span>
+            <div style=\"display: flex; gap: 10px;\">
+                <button onclick=\"testAPIKey()\" style=\"background: #17a2b8; color: white; padding: 8px 16px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 0.9em;\">🧪 Test API</button>
+                <button onclick=\"showAPIConfig()\">Configure API Key</button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Form Section -->
+            <div class="form-section">
+                <div class="section-title">📝 Create Your Card</div>
+                
+                <div class="form-group">
+                    <label for="recipientName">Recipient Name *</label>
+                    <input type="text" id="recipientName" placeholder="Enter recipient's name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventType">Event Type *</label>
+                    <select id="eventType" onchange="updateHobbies()">
+                        <option value="">Select an event...</option>
+                        <option value="birthday">Birthday</option>
+                        <option value="anniversary">Anniversary</option>
+                        <option value="wedding">Wedding</option>
+                        <option value="graduation">Graduation</option>
+                        <option value="newjob">New Job</option>
+                        <option value="housewarming">House Warming</option>
+                        <option value="promotion">Promotion</option>
+                        <option value="retirement">Retirement</option>
+                        <option value="babyshower">Baby Shower</option>
+                        <option value="getwell">Get Well</option>
+                    </select>
+                </div>
+                
+                <div class="form-group hidden" id="anniversaryYearGroup">
+                    <label for="yearsTogether">Years Together *</label>
+                    <input type="number" id="yearsTogether" placeholder="e.g., 5" min="1" max="100">
+                </div>
+                
+                <div class="form-group">
+                    <label>Hobbies/Interests (Select relevant ones)</label>
+                    <div class="checkbox-group" id="hobbiesContainer">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userMessage">Your Message (Optional - AI can generate one)</label>
+                    <textarea id="userMessage" placeholder="Write something personal, or leave blank for AI generation..."></textarea>
+                    <button class="btn-secondary" onclick="startSpeechToText()" style="width: fit-content;">
+                        🎤 Speak Message
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="designPreference">Design Preference</label>
+                    <textarea id="designPreference" placeholder="e.g., 'elegant and sophisticated', 'colorful and fun', 'minimalist'"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="photoFile">Photo (Optional)</label>
+                    <input type="file" id="photoFile" accept="image/*">
+                </div>
+                
+                <div id="messageAlert"></div>
+                
+                <button class="btn-primary" onclick="generateCard()" style="width: 100%; padding: 15px; font-size: 1.1em;">
+                    ✨ Generate Card
+                </button>
+                
+                <div class="gift-links">
+                    <h3>🎁 Shop for Gifts</h3>
+                    <div class="gift-shops">
+                        <a href="https://www.fnp.com" target="_blank" class="gift-shop-link">FNP</a>
+                        <a href="https://www.amazon.in" target="_blank" class="gift-shop-link">Amazon</a>
+                        <a href="https://www.igp.com" target="_blank" class="gift-shop-link">IGP</a>
+                        <a href="https://www.floweraura.com" target="_blank" class="gift-shop-link">FlowerAura</a>
+                        <a href="https://www.giftcart.com" target="_blank" class="gift-shop-link">GiftCart</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <div class="section-title">🎨 Card Preview</div>
+                
+                <div id="cardPreview" class="preview-card">
+                    <div class="card-header">
+                        <h2>Your Card</h2>
+                    </div>
+                    <div class="card-body">
+                        <p style="color: rgba(255,255,255,0.7); text-align: center;">Fill in the form and click "Generate Card" to see your preview here</p>
+                    </div>
+                    <div class="card-footer">
+                        <p>SoulVest Card Generator</p>
+                    </div>
+                </div>
+                
+                <div class="export-buttons hidden" id="exportButtons">
+                    <button class="btn-primary" onclick="downloadPNG()">📥 Download PNG</button>
+                    <button class="btn-primary" onclick="downloadPDF()">📄 Download PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- API Configuration Modal -->
+    <div id="apiConfigModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAPIConfig()">&times;</span>
+            <div class="modal-header">
+                <h2>🔑 Configure API Key</h2>
+            </div>
+            <div class="modal-body">
+                <p>Enter your Google Gemini API key. It will be stored locally in your browser only (not sent to any server).</p>
+                <p>Get a free API key at: <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></p>
+                <input type="password" id="apiKeyInput" placeholder="Paste your API key here" value="">
+                <div id="apiKeyStatus"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeAPIConfig()">Cancel</button>
+                <button class="btn-primary" onclick="saveAPIKey()">Save Key</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
