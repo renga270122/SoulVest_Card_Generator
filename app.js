@@ -414,6 +414,17 @@ function showMessage(msg, type) {
     }
 }
 
+// FAQ toggle
+function toggleFAQ(questionEl) {
+    const answerEl = questionEl.nextElementSibling;
+    if (!answerEl || !answerEl.classList.contains('faq-answer')) {
+        return;
+    }
+
+    questionEl.classList.toggle('active');
+    answerEl.classList.toggle('show');
+}
+
 // Show sharing and gallery sections when card is generated
 function showSharingAndGallery() {
     document.getElementById('sharingSection').classList.remove('hidden');
