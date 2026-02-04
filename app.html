@@ -480,7 +480,8 @@
                 
                 <div class="form-group">
                     <label for="photoFile">Photo (Optional)</label>
-                    <input type="file" id="photoFile" accept="image/*">
+                    <input type="file" id="photoFile" accept="image/*" onchange="handlePhotoUpload()">
+                    <small style="color: #666; margin-top: 5px; display: block;">Selected photo will appear in the card preview</small>
                 </div>
                 
                 <div id="messageAlert"></div>

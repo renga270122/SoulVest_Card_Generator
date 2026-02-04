@@ -6,7 +6,8 @@ const state = {
     userMessage: '',
     designPreference: '',
     generatedMessage: '',
-    yearsTogether: ''
+    yearsTogether: '',
+    photoData: null
 };
 
 // Message templates for each event
@@ -149,6 +150,23 @@ function updateSelectedHobbies() {
     state.selectedHobbies = Array.from(checkboxes).map(cb => cb.value);
 }
 
+function handlePhotoUpload() {
+    const file = document.getElementById('photoFile').files[0];
+    if (!file) {
+        state.photoData = null;
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        state.photoData = e.target.result;
+        if (state.generatedMessage) {
+            renderCard();
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
 function startSpeechToText() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -247,12 +265,19 @@ function renderCard() {
     const designTheme = parseDesignPreference(state.designPreference);
     const cardPreview = document.getElementById('cardPreview');
     cardPreview.style.background = designTheme.gradient;
+    
+    let photoHTML = '';
+    if (state.photoData) {
+        photoHTML = `<div style="margin-bottom: 20px; text-align: center;"><img src="${state.photoData}" style="width: 100%; max-width: 200px; height: 200px; object-fit: cover; border-radius: 10px; border: 3px solid rgba(255,255,255,0.3);"></div>`;
+    }
+    
     cardPreview.innerHTML = `
         <div class="card-header">
             <h2>${designTheme.emoji} ${state.eventType.charAt(0).toUpperCase() + state.eventType.slice(1)}</h2>
             <p style="font-size: 1.2em; margin-top: 10px;">For ${state.recipientName}</p>
         </div>
         <div class="card-body">
+            ${photoHTML}
             <div class="card-message">${state.generatedMessage}</div>
         </div>
         <div class="card-footer">
