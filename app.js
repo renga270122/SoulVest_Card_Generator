@@ -300,6 +300,7 @@ function renderCard() {
         </div>
         <div class="card-footer">
             <p>${designTheme.tagline}</p>
+            <p style="margin-top: 10px; font-size: 0.9em; font-style: italic; opacity: 0.9;">💖 Made with love for a special person</p>
         </div>
     `;
 }
