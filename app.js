@@ -256,6 +256,7 @@ async function generateCard() {
         renderCard();
         showMessage('Card generated successfully! ✨', 'success');
         document.getElementById('exportButtons').classList.remove('hidden');
+        showSharingAndGallery();
     } catch (error) {
         showMessage('Error: ' + error.message, 'error');
     }
@@ -381,3 +382,60 @@ function showMessage(msg, type) {
         }, 3000);
     }
 }
+
+// Show sharing and gallery sections when card is generated
+function showSharingAndGallery() {
+    document.getElementById('sharingSection').classList.remove('hidden');
+    document.getElementById('eventGallery').classList.remove('hidden');
+}
+
+// Social Media Sharing Functions
+function shareOnFacebook() {
+    const text = `Check out this beautiful ${state.eventType} card I created for ${state.recipientName}! Created with SoulVest Card Generator 💖`;
+    const url = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}&hashtag=%23SoulVest`;
+    window.open(url, 'facebook-share', 'width=600,height=400');
+}
+
+function shareOnTwitter() {
+    const text = `I just created a personalized ${state.eventType} card for ${state.recipientName}! ✨ Made with SoulVest Card Generator - spread love! 💖 #PersonalizedCards`;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=soulvest.com`;
+    window.open(url, 'twitter-share', 'width=600,height=400');
+}
+
+function shareOnWhatsApp() {
+    const text = `Hi! 👋 I created a beautiful personalized ${state.eventType} card for ${state.recipientName}! 🎉 Check it out - made with SoulVest Card Generator! 💖`;
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+}
+
+function shareViaEmail() {
+    const subject = `Beautiful ${state.eventType} Card for ${state.recipientName}`;
+    const body = `Hi!\n\nI created a personalized ${state.eventType} card for ${state.recipientName} using SoulVest Card Generator!\n\nMessage: ${state.generatedMessage || state.userMessage}\n\nDownload your card as PNG or PDF!\n\nMade with 💖\nSoulVest Card Generator`;
+    const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = url;
+}
+
+function shareOnLinkedIn() {
+    const text = `Excited to share that I just created a personalized ${state.eventType} card using SoulVest Card Generator! 🎉 It's amazing how personalized digital greetings can bring people closer. Check it out! 💖 #PersonalizedCards #GiftCards`;
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=soulvest.com`;
+    window.open(url, 'linkedin-share', 'width=600,height=400');
+}
+
+function shareOnPinterest() {
+    const text = `Beautiful ${state.eventType} card idea! Personalized with love using SoulVest Card Generator. Perfect for spreading joy! 💖`;
+    const url = `https://pinterest.com/pin/create/button/?description=${encodeURIComponent(text)}&url=soulvest.com`;
+    window.open(url, 'pinterest-share', 'width=600,height=400');
+}
+
+// Quick Event Selection
+function quickSelectEvent(eventType) {
+    document.getElementById('eventType').value = eventType;
+    updateHobbies();
+    document.getElementById('recipientName').focus();
+    
+    // Visual feedback
+    const badges = document.querySelectorAll('.event-badge');
+    badges.forEach(badge => badge.classList.remove('selected'));
+    event.target.classList.add('selected');
+}
+

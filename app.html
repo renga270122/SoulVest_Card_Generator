@@ -413,6 +413,188 @@
         }
         
         .hidden { display: none !important; }
+        
+        /* New Features Section */
+        .features-section {
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-top: 2px solid #ddd;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+            border-top: 4px solid #667eea;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .feature-card-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card h3 {
+            color: #764ba2;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .feature-card p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        /* Sharing Section */
+        .sharing-section {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .sharing-section h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .sharing-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        
+        .share-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .share-facebook {
+            background: #1877f2;
+            color: white;
+        }
+        
+        .share-twitter {
+            background: #000000;
+            color: white;
+        }
+        
+        .share-whatsapp {
+            background: #25d366;
+            color: white;
+        }
+        
+        .share-linkedin {
+            background: #0a66c2;
+            color: white;
+        }
+        
+        .share-email {
+            background: #ea4335;
+            color: white;
+        }
+        
+        .share-pinterest {
+            background: #e60023;
+            color: white;
+        }
+        
+        /* Event Gallery */
+        .event-gallery {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .event-gallery h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .event-badges {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+        }
+        
+        .event-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85em;
+            border: 2px solid transparent;
+        }
+        
+        .event-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .event-badge.selected {
+            border-color: white;
+            box-shadow: inset 0 0 0 2px #667eea;
+        }
+        
+        /* Footer Attribution */
+        .app-footer {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .app-footer p {
+            color: #666;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+        
+        .app-footer strong {
+            color: #764ba2;
+        }
     </style>
 </head>
 <body>
@@ -422,8 +604,8 @@
             <p>Create personalized AI-powered gift cards for every occasion</p>
         </div>
         
-        <div class="api-config-banner" style="background: #d4edda; border-bottom: 2px solid #28a745;">
-            <span>✅ AI Message Generator (Works Offline - No API Key Needed)</span>
+        <div class="api-config-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-bottom: 2px solid #667eea; color: white;">
+            <span style="color: white;">✨ Spread Love with Beautiful, Personalized Gift Cards</span>
         </div>
         
         <div class="content">
@@ -522,10 +704,92 @@
                     <button class="btn-primary" onclick="downloadPNG()">📥 Download PNG</button>
                     <button class="btn-primary" onclick="downloadPDF()">📄 Download PDF</button>
                 </div>
+                
+                <!-- Sharing Section -->
+                <div class="sharing-section hidden" id="sharingSection">
+                    <h3>📤 Share Your Card</h3>
+                    <div class="sharing-buttons">
+                        <button class="share-btn share-facebook" onclick="shareOnFacebook()" title="Share on Facebook">
+                            👍 Facebook
+                        </button>
+                        <button class="share-btn share-twitter" onclick="shareOnTwitter()" title="Share on Twitter">
+                            𝕏 Twitter
+                        </button>
+                        <button class="share-btn share-whatsapp" onclick="shareOnWhatsApp()" title="Share on WhatsApp">
+                            💬 WhatsApp
+                        </button>
+                        <button class="share-btn share-email" onclick="shareViaEmail()" title="Share via Email">
+                            ✉️ Email
+                        </button>
+                        <button class="share-btn share-linkedin" onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+                            🔗 LinkedIn
+                        </button>
+                        <button class="share-btn share-pinterest" onclick="shareOnPinterest()" title="Share on Pinterest">
+                            📌 Pinterest
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Event Gallery -->
+                <div class="event-gallery hidden" id="eventGallery">
+                    <h3>✨ Browse Event Types</h3>
+                    <div class="event-badges">
+                        <div class="event-badge" onclick="quickSelectEvent('birthday')">🎂 Birthday</div>
+                        <div class="event-badge" onclick="quickSelectEvent('anniversary')">💑 Anniversary</div>
+                        <div class="event-badge" onclick="quickSelectEvent('wedding')">💍 Wedding</div>
+                        <div class="event-badge" onclick="quickSelectEvent('graduation')">🎓 Graduation</div>
+                        <div class="event-badge" onclick="quickSelectEvent('newjob')">🚀 New Job</div>
+                        <div class="event-badge" onclick="quickSelectEvent('housewarming')">🏠 Housewarming</div>
+                        <div class="event-badge" onclick="quickSelectEvent('promotion')">🏆 Promotion</div>
+                        <div class="event-badge" onclick="quickSelectEvent('retirement')">🏖️ Retirement</div>
+                        <div class="event-badge" onclick="quickSelectEvent('babyshower')">👶 Baby Shower</div>
+                        <div class="event-badge" onclick="quickSelectEvent('getwell')">💙 Get Well</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
+    <!-- Features Section -->
+    <div class="features-section">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-card-icon">🎨</div>
+                <h3>Beautiful Design</h3>
+                <p>Choose from 8 stunning themes to make your card unique and personalized.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">🤖</div>
+                <h3>AI Powered</h3>
+                <p>Smart message generation based on event type and recipient interests.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">📷</div>
+                <h3>Add Photos</h3>
+                <p>Include a personal photo in your card for extra touch and warmth.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">⚡</div>
+                <h3>Works Offline</h3>
+                <p>No internet required after loading. Fast, private, and always available.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">📥</div>
+                <h3>Multiple Formats</h3>
+                <p>Export as PNG image or PDF document. Print or share digitally.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">❤️</div>
+                <h3>Share Everywhere</h3>
+                <p>Send your card via email, WhatsApp, Facebook, and more social platforms.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Attribution -->
+    <div style="padding: 20px; text-align: center; color: white; font-size: 0.9em;">
+        <p>💖 Crafted with love by <strong>SoulVest Card Generator</strong></p>
+        <p>Bringing people closer through personalized, heartfelt digital cards</p>
     </div>
 
     <script src="app.js"></script>
