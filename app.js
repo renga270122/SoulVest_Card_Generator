@@ -396,10 +396,15 @@ function shareOnFacebook() {
     window.open(url, 'facebook-share', 'width=600,height=400');
 }
 
-function shareOnTwitter() {
-    const text = `I just created a personalized ${state.eventType} card for ${state.recipientName}! ✨ Made with SoulVest Card Generator - spread love! 💖 #PersonalizedCards`;
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=soulvest.com`;
-    window.open(url, 'twitter-share', 'width=600,height=400');
+function shareOnInstagram() {
+    const text = `Created a personalized ${state.eventType} card for ${state.recipientName}! 🎉✨ Made with love using SoulVest Card Generator 💖\n\nDownload the card and share it on Instagram!\n\n#SoulVest #PersonalizedCards #${state.eventType} #SpreadLove #GiftIdeas`;
+    alert('📱 Instagram Sharing:\n\n1. Download your card as PNG\n2. Open Instagram app\n3. Create a new post\n4. Upload the downloaded card image\n5. Copy this caption:\n\n' + text);
+    // Automatically copy to clipboard
+    navigator.clipboard.writeText(text).then(() => {
+        console.log('Caption copied to clipboard!');
+    }).catch(err => {
+        console.log('Copy caption manually');
+    });
 }
 
 function shareOnWhatsApp() {
@@ -419,12 +424,6 @@ function shareOnLinkedIn() {
     const text = `Excited to share that I just created a personalized ${state.eventType} card using SoulVest Card Generator! 🎉 It's amazing how personalized digital greetings can bring people closer. Check it out! 💖 #PersonalizedCards #GiftCards`;
     const url = `https://www.linkedin.com/sharing/share-offsite/?url=soulvest.com`;
     window.open(url, 'linkedin-share', 'width=600,height=400');
-}
-
-function shareOnPinterest() {
-    const text = `Beautiful ${state.eventType} card idea! Personalized with love using SoulVest Card Generator. Perfect for spreading joy! 💖`;
-    const url = `https://pinterest.com/pin/create/button/?description=${encodeURIComponent(text)}&url=soulvest.com`;
-    window.open(url, 'pinterest-share', 'width=600,height=400');
 }
 
 // Quick Event Selection
