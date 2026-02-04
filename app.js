@@ -304,6 +304,12 @@ function renderCard() {
             <p style="margin-top: 10px; font-size: 0.9em; font-style: italic; opacity: 0.9;">💖 Made with love for a special person</p>
         </div>
     `;
+    
+    // Hide sample cards gallery and show export/sharing sections
+    const sampleGallery = document.getElementById('sampleCardsGallery');
+    if (sampleGallery) {
+        sampleGallery.style.display = 'none';
+    }
 }
 
 function parseDesignPreference(text) {
