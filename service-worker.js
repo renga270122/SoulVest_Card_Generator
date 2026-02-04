@@ -1,8 +1,12 @@
-const CACHE_NAME = 'soulvest-card-v1';
+const CACHE_NAME = 'soulvest-card-v2';
 const urlsToCache = [
   '/',
   '/index.html',
+  '/app.html',
   '/app.js',
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
