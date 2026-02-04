@@ -271,10 +271,28 @@ function renderCard() {
         photoHTML = `<div style="margin: 20px auto; text-align: center;"><img src="${state.photoData}" style="width: 280px; height: 280px; object-fit: cover; border-radius: 15px; border: 4px solid rgba(255,255,255,0.5); box-shadow: 0 8px 16px rgba(0,0,0,0.3);"></div>`;
     }
     
+    // Customize header based on event type
+    let headerText = `${state.eventType.charAt(0).toUpperCase() + state.eventType.slice(1)} for ${state.recipientName}`;
+    const headerEmoji = designTheme.emoji;
+    
+    const eventGreetings = {
+        birthday: `Happy Birthday ${state.recipientName}!`,
+        anniversary: `Happy Anniversary ${state.recipientName}!`,
+        wedding: `Happy Wedding ${state.recipientName}!`,
+        graduation: `Congratulations ${state.recipientName}!`,
+        newjob: `Welcome ${state.recipientName}!`,
+        housewarming: `Welcome Home ${state.recipientName}!`,
+        promotion: `Congratulations ${state.recipientName}!`,
+        retirement: `Happy Retirement ${state.recipientName}!`,
+        babyshower: `Congratulations ${state.recipientName}!`,
+        getwell: `Get Well Soon ${state.recipientName}!`
+    };
+    
+    headerText = eventGreetings[state.eventType] || headerText;
+    
     cardPreview.innerHTML = `
         <div class="card-header">
-            <h2>${designTheme.emoji} ${state.eventType.charAt(0).toUpperCase() + state.eventType.slice(1)}</h2>
-            <p style="font-size: 1.2em; margin-top: 10px;">For ${state.recipientName}</p>
+            <h2>${headerEmoji} ${headerText}</h2>
         </div>
         <div class="card-body">
             ${photoHTML}
