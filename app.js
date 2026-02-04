@@ -278,7 +278,7 @@ function renderCard() {
     
     const eventGreetings = {
         birthday: `Happy Birthday ${state.recipientName}!`,
-        anniversary: `Happy Anniversary ${state.recipientName}!`,
+        anniversary: `Happy Wedding Anniversary ${state.recipientName}!`,
         wedding: `Happy Wedding ${state.recipientName}!`,
         graduation: `Congratulations ${state.recipientName}!`,
         newjob: `Welcome ${state.recipientName}!`,

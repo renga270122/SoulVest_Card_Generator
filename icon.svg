@@ -1,0 +1,24 @@
+<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="192" height="192" rx="40" fill="url(#grad)"/>
+  
+  <!-- Card icon -->
+  <rect x="36" y="56" width="120" height="80" rx="8" fill="white" opacity="0.9"/>
+  
+  <!-- Heart -->
+  <path d="M96 140 C96 140, 75 125, 70 115 C65 105, 65 95, 75 90 C85 85, 90 90, 96 100 C102 90, 107 85, 117 90 C127 95, 127 105, 122 115 C117 125, 96 140, 96 140 Z" fill="#ff6b9d"/>
+  
+  <!-- Sparkles -->
+  <circle cx="160" cy="60" r="4" fill="white" opacity="0.8"/>
+  <circle cx="150" cy="140" r="3" fill="white" opacity="0.8"/>
+  <circle cx="40" cy="135" r="3" fill="white" opacity="0.8"/>
+  <circle cx="35" cy="70" r="4" fill="white" opacity="0.8"/>
+</svg>

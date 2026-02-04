@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoulVest Card Generator</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Create beautiful, personalized gift cards for any occasion - birthdays, anniversaries, weddings and more!">
+    <meta name="theme-color" content="#764ba2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SoulVest">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -955,7 +970,7 @@
                     <select id="eventType" onchange="updateHobbies()">
                         <option value="">Select an event...</option>
                         <option value="birthday">Birthday</option>
-                        <option value="anniversary">Anniversary</option>
+                        <option value="anniversary">Wedding Anniversary</option>
                         <option value="wedding">Wedding</option>
                         <option value="graduation">Graduation</option>
                         <option value="newjob">New Job</option>
@@ -1054,9 +1069,9 @@
                             <p style="margin: 0; text-align: center; font-size: 0.85em; opacity: 0.9;">Made with love for special person ❤️</p>
                         </div>
                         
-                        <!-- Sample Card 2 - Anniversary -->
+                        <!-- Sample Card 2 - Wedding Anniversary -->
                         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: white;">
-                            <h3 style="margin: 0 0 10px 0; font-size: 1.3em; text-align: center;">Happy Anniversary John! 💑</h3>
+                            <h3 style="margin: 0 0 10px 0; font-size: 1.3em; text-align: center;">Happy Wedding Anniversary John! 💑</h3>
                             <div style="border-top: 2px solid rgba(255,255,255,0.3); border-bottom: 2px solid rgba(255,255,255,0.3); padding: 15px 0; margin: 15px 0;">
                                 <p style="margin: 0; line-height: 1.6; text-align: center; font-size: 0.95em;">
                                     5 wonderful years together! Your adventurous soul makes every moment special. Here's to many more years of love and travel!
@@ -1109,7 +1124,7 @@
                     <h3>✨ Browse Event Types</h3>
                     <div class="event-badges">
                         <div class="event-badge" onclick="quickSelectEvent('birthday')">🎂 Birthday</div>
-                        <div class="event-badge" onclick="quickSelectEvent('anniversary')">💑 Anniversary</div>
+                        <div class="event-badge" onclick="quickSelectEvent('anniversary')">💑 Wedding Anniversary</div>
                         <div class="event-badge" onclick="quickSelectEvent('wedding')">💍 Wedding</div>
                         <div class="event-badge" onclick="quickSelectEvent('graduation')">🎓 Graduation</div>
                         <div class="event-badge" onclick="quickSelectEvent('newjob')">🚀 New Job</div>
@@ -1421,5 +1436,43 @@
     </div>
 
     <script src="app.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+        
+        // Install prompt for PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show custom install button or banner (optional)
+            console.log('App can be installed!');
+            
+            // Auto-prompt after 3 seconds (optional)
+            setTimeout(() => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the install prompt');
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+            }, 3000);
+        });
+    </script>
 </body>
 </html>

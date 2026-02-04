@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+</head>
+<body>
+    <h2>PWA Icon Generator</h2>
+    <p>Click buttons to download icons:</p>
+    <button onclick="generateIcon(192)">Download 192x192 Icon</button>
+    <button onclick="generateIcon(512)">Download 512x512 Icon</button>
+    
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <script>
+        function generateIcon(size) {
+            const canvas = document.getElementById('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // White card
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.roundRect(size * 0.2, size * 0.3, size * 0.6, size * 0.4, size * 0.04);
+            ctx.fill();
+            
+            // Heart
+            ctx.fillStyle = '#ff6b9d';
+            ctx.font = `${size * 0.25}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('💖', size / 2, size * 0.72);
+            
+            // Download
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `icon-${size}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+    </script>
+</body>
+</html>
