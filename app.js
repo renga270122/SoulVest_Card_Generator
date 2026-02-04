@@ -268,7 +268,7 @@ function renderCard() {
     
     let photoHTML = '';
     if (state.photoData) {
-        photoHTML = `<div style="margin-bottom: 20px; text-align: center;"><img src="${state.photoData}" style="width: 100%; max-width: 200px; height: 200px; object-fit: cover; border-radius: 10px; border: 3px solid rgba(255,255,255,0.3);"></div>`;
+        photoHTML = `<div style="margin: 20px auto; text-align: center;"><img src="${state.photoData}" style="width: 280px; height: 280px; object-fit: cover; border-radius: 15px; border: 4px solid rgba(255,255,255,0.5); box-shadow: 0 8px 16px rgba(0,0,0,0.3);"></div>`;
     }
     
     cardPreview.innerHTML = `
@@ -308,12 +308,18 @@ function parseDesignPreference(text) {
 
 async function downloadPNG() {
     try {
-        const canvas = await html2canvas(document.getElementById('cardPreview'), { scale: 2, backgroundColor: null });
+        const canvas = await html2canvas(document.getElementById('cardPreview'), { 
+            scale: 3,
+            backgroundColor: null,
+            useCORS: true,
+            allowTaint: true,
+            imageTimeout: 0
+        });
         const link = document.createElement('a');
         link.download = `${state.recipientName}_card.png`;
-        link.href = canvas.toDataURL();
+        link.href = canvas.toDataURL('image/png');
         link.click();
-        showMessage('Downloaded PNG!', 'success');
+        showMessage('Downloaded PNG! (High Quality)', 'success');
     } catch (error) {
         showMessage('Error downloading', 'error');
     }
@@ -321,7 +327,13 @@ async function downloadPNG() {
 
 async function downloadPDF() {
     try {
-        const canvas = await html2canvas(document.getElementById('cardPreview'), { scale: 2, backgroundColor: null });
+        const canvas = await html2canvas(document.getElementById('cardPreview'), { 
+            scale: 3,
+            backgroundColor: null,
+            useCORS: true,
+            allowTaint: true,
+            imageTimeout: 0
+        });
         if (!window.jsPDF) {
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
@@ -329,9 +341,10 @@ async function downloadPDF() {
             await new Promise(resolve => script.onload = resolve);
         }
         const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, 190, 277);
+        const imgData = canvas.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', 10, 10, 190, 277);
         pdf.save(`${state.recipientName}_card.pdf`);
-        showMessage('Downloaded PDF!', 'success');
+        showMessage('Downloaded PDF! (High Quality)', 'success');
     } catch (error) {
         showMessage('Error: Try PNG instead', 'error');
     }
