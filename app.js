@@ -237,11 +237,11 @@ async function generateCard() {
     
     if (state.eventType === 'anniversary') {
         const yearsTogether = document.getElementById('yearsTogether').value.trim();
-        if (!yearsTogether) {
-            showMessage('Please enter years together', 'error');
-            return;
+        if (yearsTogether) {
+            state.yearsTogether = yearsTogether;
+        } else {
+            state.yearsTogether = '';
         }
-        state.yearsTogether = yearsTogether;
     }
     
     showMessage('Generating card...', 'loading');
