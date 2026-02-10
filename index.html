@@ -1,7 +1,38 @@
+        <!-- Seasonal Spotlight Section -->
+        <section class="seasonal-spotlight" style="background: linear-gradient(135deg, #ffe4ec 0%, #fad0c4 100%); padding: 48px 0 32px 0; text-align: center;">
+            <h2 style="color: #d72660; font-size: 2em; margin-bottom: 18px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Valentine’s Day Spotlight</h2>
+            <p style="color: #b23a48; font-size: 1.15em; margin-bottom: 28px;">Show your love with a personalized Valentine’s card. Make it memorable, make it SoulVest.</p>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; max-width: 900px; margin: 0 auto 24px auto;">
+                <div style="flex: 1 1 240px; min-width: 240px; max-width: 320px; background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(215,38,96,0.08); padding: 28px 18px; margin: 8px 0; display: flex; flex-direction: column; align-items: center;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">❤️</div>
+                    <div style="font-weight: bold; color: #d72660; font-size: 1.1em; margin-bottom: 8px;">To My Forever Valentine</div>
+                    <div style="color: #b23a48; font-size: 1em; opacity: 0.92; text-align: center;">Every moment with you is a treasure. Happy Valentine’s Day, my love!</div>
+                </div>
+                <div style="flex: 1 1 240px; min-width: 240px; max-width: 320px; background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(215,38,96,0.08); padding: 28px 18px; margin: 8px 0; display: flex; flex-direction: column; align-items: center;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">💌</div>
+                    <div style="font-weight: bold; color: #d72660; font-size: 1.1em; margin-bottom: 8px;">Secret Admirer</div>
+                    <div style="color: #b23a48; font-size: 1em; opacity: 0.92; text-align: center;">You make my heart skip a beat. Will you be my Valentine?</div>
+                </div>
+                <div style="flex: 1 1 240px; min-width: 240px; max-width: 320px; background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(215,38,96,0.08); padding: 28px 18px; margin: 8px 0; display: flex; flex-direction: column; align-items: center;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🌹</div>
+                    <div style="font-weight: bold; color: #d72660; font-size: 1.1em; margin-bottom: 8px;">Roses & Memories</div>
+                    <div style="color: #b23a48; font-size: 1em; opacity: 0.92; text-align: center;">Roses are red, violets are blue, my world is brighter because of you.</div>
+                </div>
+            </div>
+        </section>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+        <meta charset="UTF-8">
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-75ZF3726F6"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-75ZF3726F6');
+        </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoulVest Card Generator</title>
     
@@ -975,21 +1006,42 @@
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
+    <!-- Hero Section (Redesigned) -->
     <!-- PWA Install Button -->
     <div id="pwa-install-banner" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999;background:#764ba2;color:white;padding:16px 24px;border-radius:12px;box-shadow:0 4px 16px rgba(102,126,234,0.15);">
         <span style="font-size:1.1em;font-weight:bold;margin-right:16px;">Install SoulVest Card Generator?</span>
         <button id="pwa-install-btn" style="background:#667eea;color:white;border:none;border-radius:8px;padding:10px 20px;font-size:1em;font-weight:bold;cursor:pointer;">Install</button>
     </div>
-    <div class="hero-section" style="background: linear-gradient(135deg, #ffb6b9 0%, #fae3d9 100%); padding: 48px 0 32px 0; text-align: center; position: relative;">
-        <img src="soulvest_logo.png" alt="SoulVest Logo" style="width: 90px; height: 90px; border-radius: 50%; box-shadow: 0 4px 16px rgba(102,126,234,0.15); margin-bottom: 18px;">
-        <h1 style="color: #764ba2; font-size: 2.7em; margin-bottom: 12px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">SoulVest Card Generator</h1>
-        <p style="color: #222; font-size: 1.25em; margin-bottom: 18px;">Create beautiful, personalized cards for every occasion—birthdays, anniversaries, weddings, and more!</p>
-        <div style="margin: 0 auto; max-width: 600px;">
-            <button style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; padding: 16px 32px; font-weight: bold; margin: 8px 0; cursor: pointer; box-shadow: 0 2px 8px rgba(102,126,234,0.15);">Start Your Card</button>
-            <button style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #764ba2; border: none; border-radius: 8px; font-size: 1.1em; padding: 16px 32px; font-weight: bold; margin: 8px 0; cursor: pointer; box-shadow: 0 2px 8px rgba(250,112,154,0.15);">Generate a Valentine Card</button>
+    <section class="hero-section" style="background: linear-gradient(135deg, #f8fafc 0%, #e0c3fc 100%); padding: 56px 0 40px 0; text-align: center; position: relative;">
+        <img src="soulvest_logo.png" alt="SoulVest Logo" style="width: 100px; height: 100px; border-radius: 50%; box-shadow: 0 4px 16px rgba(102,126,234,0.15); margin-bottom: 20px;">
+        <h1 style="color: #764ba2; font-size: 2.8em; margin-bottom: 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Craft memories, not just cards.</h1>
+        <p style="color: #444; font-size: 1.3em; margin-bottom: 22px;">Personalized, private, and soulful card creation in seconds.</p>
+        <div style="margin: 0 auto; max-width: 600px; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;">
+            <button class="btn-primary" style="font-size: 1.1em; padding: 16px 32px; font-weight: bold;" onclick="document.getElementById('recipientName').scrollIntoView({behavior: 'smooth', block: 'center'});">Get Started</button>
         </div>
-    </div>
+        <!-- Sample Card Preview -->
+    </section>
+    <!-- Why SoulVest? Section -->
+    <section class="why-soulvest" style="background: #fff; padding: 48px 0 32px 0; text-align: center;">
+        <h2 style="color: #764ba2; font-size: 2.1em; margin-bottom: 18px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Cards that carry emotion, not just design.</h2>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 36px; max-width: 900px; margin: 0 auto;">
+            <div style="flex: 1 1 220px; min-width: 220px; max-width: 300px; background: #f8f9fa; border-radius: 14px; box-shadow: 0 2px 12px rgba(102,126,234,0.06); padding: 32px 18px; margin: 8px 0;">
+                <div style="font-size: 2.2em; margin-bottom: 10px;">🔒</div>
+                <div style="font-weight: bold; color: #764ba2; font-size: 1.15em; margin-bottom: 8px;">Privacy-first</div>
+                <div style="color: #444; font-size: 1em; opacity: 0.92;">No data stored. Everything stays on your device.</div>
+            </div>
+            <div style="flex: 1 1 220px; min-width: 220px; max-width: 300px; background: #f8f9fa; border-radius: 14px; box-shadow: 0 2px 12px rgba(102,126,234,0.06); padding: 32px 18px; margin: 8px 0;">
+                <div style="font-size: 2.2em; margin-bottom: 10px;">🎨</div>
+                <div style="font-weight: bold; color: #764ba2; font-size: 1.15em; margin-bottom: 8px;">Personalized themes</div>
+                <div style="color: #444; font-size: 1em; opacity: 0.92;">Birthdays, anniversaries, Valentine’s, and more.</div>
+            </div>
+            <div style="flex: 1 1 220px; min-width: 220px; max-width: 300px; background: #f8f9fa; border-radius: 14px; box-shadow: 0 2px 12px rgba(102,126,234,0.06); padding: 32px 18px; margin: 8px 0;">
+                <div style="font-size: 2.2em; margin-bottom: 10px;">⚡</div>
+                <div style="font-weight: bold; color: #764ba2; font-size: 1.15em; margin-bottom: 8px;">Instant sharing</div>
+                <div style="color: #444; font-size: 1em; opacity: 0.92;">Share instantly via WhatsApp, Instagram, or email.</div>
+            </div>
+        </div>
+    </section>
 
     <!-- Unified Onboarding & Quick Start Guide -->
     <div class="onboarding-guide" style="background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(102,126,234,0.08); max-width: 900px; margin: 24px auto 0 auto; padding: 32px 24px; text-align: center;">
@@ -1121,6 +1173,14 @@
                             <div>
                                 <div style="font-size: 1.15em; font-weight: 700; color: #2d3436;">Special Offer: Buy 2 Cards, Get 1 Free!</div>
                                 <div style="font-size: 0.95em; color: #636e72;">Limited time only. Make your moments memorable!</div>
+                            </div>
+                        </div>
+                        <!-- SoulVest Love Book Promo Banner -->
+                        <div style="background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%); border-radius: 10px; padding: 18px 24px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(161,140,209,0.12); display: flex; align-items: center;">
+                            <img src="soulvest_logo.png" alt="Love Book" style="width: 48px; height: 48px; margin-right: 18px; border-radius: 8px;">
+                            <div>
+                                <div style="font-size: 1.12em; font-weight: 700; color: #764ba2;">New! SoulVest Love Book</div>
+                                <div style="font-size: 0.97em; color: #333;">Capture your love story in a beautiful, personalized digital book. Perfect for anniversaries, proposals, or just because. <a href="#" style="color: #667eea; text-decoration: underline; font-weight: 500;">Learn More</a></div>
                             </div>
                         </div>
                         <!-- Trending Cards -->
@@ -1514,11 +1574,29 @@
     </div>
     
     <!-- Footer Attribution -->
-    <div style="padding: 20px; text-align: center; color: white; font-size: 0.9em;">
-        <p>💖 Crafted with love by <strong>SoulVest Card Generator</strong></p>
-        <p>Bringing people closer through personalized, heartfelt digital cards</p>
-        <p>© 2026 SoulVest Card Generator. All rights reserved.</p>
-    </div>
+    <footer class="app-footer" style="padding: 28px 10px 18px 10px; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); color: #fffbe9; text-align: center; font-size: 0.98em; margin-top: 40px; text-shadow: 0 1px 4px rgba(60,40,120,0.18), 0 0px 1px #222;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 32px; margin-bottom: 18px;">
+            <nav style="display: flex; gap: 18px; flex-wrap: wrap;">
+                <a href="#" style="color: #fff; text-decoration: none; font-weight: 500;">Home</a>
+                <a href="#" style="color: #fff; text-decoration: none; font-weight: 500;">About</a>
+                <a href="#" style="color: #fff; text-decoration: none; font-weight: 500;">Contact</a>
+                <a href="#" style="color: #fff; text-decoration: none; font-weight: 500;">Privacy</a>
+            </nav>
+            <div style="display: flex; gap: 16px;">
+                <a href="https://instagram.com" target="_blank" title="Instagram" style="color: #fff; font-size: 1.3em;"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.9.2 2.3.4.5.2.8.5 1.1 1.1.2.4.3 1.1.4 2.3.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.9-.4 2.3-.2.5-.5.8-1.1 1.1-.4.2-1.1.3-2.3.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.9-.2-2.3-.4-.5-.2-.8-.5-1.1-1.1-.2-.4-.3-1.1-.4-2.3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.9.4-2.3.2-.5.5-.8 1.1-1.1.4-.2 1.1-.3 2.3-.4C8.4 2.2 8.8 2.2 12 2.2zm0-2.2C8.7 0 8.3 0 7 .1 5.7.2 4.7.4 3.9.7c-.8.3-1.5.8-2.1 1.4C1.1 2.5.6 3.2.3 4c-.3.8-.5 1.8-.6 3.1C0 8.3 0 8.7 0 12c0 3.3 0 3.7.1 5 .1 1.3.3 2.3.6 3.1.3.8.8 1.5 1.4 2.1.6.6 1.3 1.1 2.1 1.4.8.3 1.8.5 3.1.6C8.3 24 8.7 24 12 24s3.7 0 5-.1c1.3-.1 2.3-.3 3.1-.6.8-.3 1.5-.8 2.1-1.4.6-.6 1.1-1.3 1.4-2.1.3-.8.5-1.8.6-3.1.1-1.3.1-1.7.1-5s0-3.7-.1-5c-.1-1.3-.3-2.3-.6-3.1-.3-.8-.8-1.5-1.4-2.1C21.5 1.1 20.8.6 20 .3c-.8-.3-1.8-.5-3.1-.6C15.7 0 15.3 0 12 0z"/><path d="M12 5.8A6.2 6.2 0 1 0 12 18.2 6.2 6.2 0 1 0 12 5.8zm0 10.2A4 4 0 1 1 12 7.8a4 4 0 0 1 0 8.2zm6.4-10.6a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg></a>
+                <a href="https://twitter.com" target="_blank" title="Twitter/X" style="color: #fff; font-size: 1.3em;"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 5.92c-.8.36-1.66.6-2.56.7a4.48 4.48 0 0 0 1.98-2.48 8.93 8.93 0 0 1-2.83 1.08A4.48 4.48 0 0 0 16.1 4c-2.48 0-4.5 2.02-4.5 4.5 0 .35.04.7.1 1.03-3.74-.19-7.06-1.98-9.28-4.7-.39.67-.62 1.45-.62 2.28 0 1.57.8 2.96 2.02 3.77-.74-.02-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.63 4.45-.38.1-.78.16-1.2.16-.29 0-.57-.03-.84-.08.57 1.77 2.23 3.06 4.2 3.1A9.02 9.02 0 0 1 2 19.54c-.6 0-1.18-.04-1.76-.1A12.77 12.77 0 0 0 7.29 21.5c8.3 0 12.85-6.88 12.85-12.85 0-.2 0-.39-.01-.58.88-.64 1.65-1.44 2.26-2.35z"/></svg></a>
+                <a href="https://facebook.com" target="_blank" title="Facebook" style="color: #fff; font-size: 1.3em;"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M22.68 0H1.32A1.32 1.32 0 0 0 0 1.32v21.36A1.32 1.32 0 0 0 1.32 24h11.5v-9.29H9.69v-3.62h3.13V8.41c0-3.1 1.89-4.79 4.65-4.79 1.32 0 2.45.1 2.78.14v3.22h-1.91c-1.5 0-1.79.71-1.79 1.75v2.3h3.58l-.47 3.62h-3.11V24h6.09A1.32 1.32 0 0 0 24 22.68V1.32A1.32 1.32 0 0 0 22.68 0"/></svg></a>
+                <a href="https://linkedin.com" target="_blank" title="LinkedIn" style="color: #fff; font-size: 1.3em;"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85v5.5H9.47V9h3.41v1.56h.05c.48-.91 1.65-1.87 3.4-1.87 3.64 0 4.31 2.4 4.31 5.52v6.24zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.8 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.23 0z"/></svg></a>
+            </div>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <p style="margin: 0; color: #fff; font-weight: 700; font-size: 1.15em;">💖 Crafted with love by <strong style="font-weight: 900; letter-spacing: 0.5px; font-size: 1.25em; color: #222; text-shadow: 0 1px 4px #fff;">SoulVest Card Generator</strong></p>
+            <p style="margin: 0; color: #fff; font-size: 1.05em; font-weight: 500;">Bringing people closer through personalized, heartfelt digital cards</p>
+        </div>
+        <div>
+            <p style="margin: 0; font-size: 1em; color: #fff; font-weight: 700; opacity: 1;">© 2026 SoulVest Card Generator. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script src="app.js"></script>
     
