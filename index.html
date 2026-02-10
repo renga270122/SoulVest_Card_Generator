@@ -8,7 +8,7 @@
     <!-- PWA Meta Tags -->
     <meta name="description" content="Create beautiful, personalized gift cards for any occasion - birthdays, anniversaries, weddings and more!">
     <meta name="theme-color" content="#764ba2">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SoulVest">
     
@@ -976,6 +976,11 @@
 </head>
 <body>
     <!-- Hero Section -->
+    <!-- PWA Install Button -->
+    <div id="pwa-install-banner" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999;background:#764ba2;color:white;padding:16px 24px;border-radius:12px;box-shadow:0 4px 16px rgba(102,126,234,0.15);">
+        <span style="font-size:1.1em;font-weight:bold;margin-right:16px;">Install SoulVest Card Generator?</span>
+        <button id="pwa-install-btn" style="background:#667eea;color:white;border:none;border-radius:8px;padding:10px 20px;font-size:1em;font-weight:bold;cursor:pointer;">Install</button>
+    </div>
     <div class="hero-section" style="background: linear-gradient(135deg, #ffb6b9 0%, #fae3d9 100%); padding: 48px 0 32px 0; text-align: center; position: relative;">
         <img src="soulvest_logo.png" alt="SoulVest Logo" style="width: 90px; height: 90px; border-radius: 50%; box-shadow: 0 4px 16px rgba(102,126,234,0.15); margin-bottom: 18px;">
         <h1 style="color: #764ba2; font-size: 2.7em; margin-bottom: 12px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">SoulVest Card Generator</h1>
@@ -1532,16 +1537,16 @@
         }
         
         // Install prompt for PWA
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Show custom install button or banner (optional)
-            console.log('App can be installed!');
-            
-            // Auto-prompt after 3 seconds (optional)
-            setTimeout(() => {
+        document.addEventListener('DOMContentLoaded', function() {
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                // Show custom install banner
+                document.getElementById('pwa-install-banner').style.display = 'flex';
+            });
+
+            document.getElementById('pwa-install-btn').addEventListener('click', () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
                     deferredPrompt.userChoice.then((choiceResult) => {
@@ -1549,9 +1554,10 @@
                             console.log('User accepted the install prompt');
                         }
                         deferredPrompt = null;
+                        document.getElementById('pwa-install-banner').style.display = 'none';
                     });
                 }
-            }, 3000);
+            });
         });
     </script>
 </body>
