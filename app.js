@@ -84,11 +84,18 @@ const messageTemplates = {
         `{name}, a baby on the way! 🌈 How thrilling! May you experience {{hobbies_adjective} joy, beautiful memories, and all the love parenthood brings!`
     ],
     getwell: [
-        `{name}, sending healing thoughts and {{hobbies_adjective} vibes! 💙 Wishing you a speedy recovery and {{hobbies_list} moments to look forward to. Get well soon!`,
-        `Dear {name}, thinking of you. 🌟 May you heal quickly and feel surrounded by love. Here's to better, healthier, {{hobbies_adjective} days ahead!`,
-        `{name}, wishing you a swift recovery! 💪 Your strength and {{hobbies_adjective} spirit will get you through. Looking forward to your smile again!`,
-        `Sending healing wishes, {name}! ❤️ Rest and recover well. Soon you'll enjoy all the {{hobbies_adjective} things you love. Get well soon!`,
-        `{name}, we're rooting for you! 🌻 Wishing you a speedy recovery and a return to health and {{hobbies_adjective} happiness. You've got this!`
+        `{name}, sending healing thoughts and {hobbies_adjective} vibes! 💙 Wishing you a speedy recovery and {hobbies_list} moments to look forward to. Get well soon!`,
+        `Dear {name}, thinking of you. 🌟 May you heal quickly and feel surrounded by love. Here's to better, healthier, {hobbies_adjective} days ahead!`,
+        `{name}, wishing you a swift recovery! 💪 Your strength and {hobbies_adjective} spirit will get you through. Looking forward to your smile again!`,
+        `Sending healing wishes, {name}! ❤️ Rest and recover well. Soon you'll enjoy all the {hobbies_adjective} things you love. Get well soon!`,
+        `{name}, we're rooting for you! 🌻 Wishing you a speedy recovery and a return to health and {hobbies_adjective} happiness. You've got this!`
+    ],
+    valentines: [
+        `Happy Valentine's Day, {name}! 💘 May your day be filled with love, joy, and {hobbies_adjective} moments together. You are cherished!`,
+        `Dear {name}, sending you all my love this Valentine's Day! 💖 Wishing you {hobbies_adjective} adventures and sweet memories.`,
+        `To {name}, you make every day special! 🌹 Happy Valentine's Day! May your heart be full of happiness and {hobbies_adjective} experiences.`,
+        `Happy Valentine's Day, {name}! 💝 Here's to celebrating love, friendship, and all the {hobbies_adjective} things we share.`,
+        `Dear {name}, wishing you a magical Valentine's Day! May it be filled with {hobbies_adjective} surprises and endless affection.`
     ]
 };
 
@@ -111,6 +118,7 @@ const defaultDescriptor = { adjective: 'wonderful', plural: 'special moments' };
 // Hobbies by event
 const hobbyOptions = {
     birthday: ['Reading', 'Gaming', 'Sports', 'Music', 'Cooking', 'Travel', 'Art', 'Photography', 'Fitness', 'Movies', 'Painting', 'Dancing', 'Yoga', 'Hiking', 'Swimming', 'Gardening', 'Crafts', 'Writing', 'Singing', 'Cycling'],
+    valentines: ['Romantic Dinners', 'Music', 'Art', 'Cooking', 'Travel', 'Photography', 'Dancing', 'Gardening', 'Movies', 'Painting', 'Writing', 'Singing', 'Spa & Wellness', 'Gift Giving', 'Nature Walks', 'Crafts', 'Yoga', 'Meditation', 'Picnics', 'Board Games'],
     anniversary: ['Cooking', 'Travel', 'Music', 'Art', 'Wine Tasting', 'Dancing', 'Gardening', 'Hiking', 'Spa & Wellness', 'Movies', 'Romantic Dinners', 'Photography', 'Beach Walks', 'Painting', 'Yoga', 'Meditation', 'Concerts', 'Singing', 'Museums', 'Book Clubs'],
     wedding: ['Travel', 'Cooking', 'Gardening', 'Wine', 'Art', 'Music', 'Fitness', 'Photography', 'Hiking', 'Spa', 'Beach', 'Camping', 'Yoga', 'Volunteering', 'Dancing', 'Theater', 'Singing', 'Sports', 'Reading', 'Adventure'],
     graduation: ['Career', 'Travel', 'Reading', 'Technology', 'Sports', 'Art', 'Music', 'Volunteering', 'Networking', 'Adventure', 'Entrepreneurship', 'Leadership', 'Innovation', 'Writing', 'Photography', 'Public Speaking', 'Coding', 'Research', 'Teaching'],
@@ -133,6 +141,9 @@ function updateMessageTone() {
 function updateHobbies() {
     const eventType = document.getElementById('eventType').value;
     state.eventType = eventType;
+    console.log('updateHobbies eventType:', eventType);
+    console.log('hobbyOptions keys:', Object.keys(hobbyOptions));
+    console.log('hobbies for event:', hobbyOptions[eventType]);
     
     const container = document.getElementById('hobbiesContainer');
     const anniversaryGroup = document.getElementById('anniversaryYearGroup');
@@ -288,7 +299,37 @@ async function generateCard() {
 }
 
 function renderCard() {
-    const designTheme = parseDesignPreference(state.designPreference);
+    // Event-specific theme overrides
+    let designTheme = parseDesignPreference(state.designPreference);
+    if (!state.designPreference) {
+        // Default event-based themes
+        const valentinesThemes = [
+            // 💌 Classic Romantic
+            { gradient: 'linear-gradient(135deg, #ff5f6d 0%, #ffc371 100%)', emoji: '💌', tagline: 'Classic Romantic: Roses & Hearts' },
+            // 🌹 Elegant & Sophisticated
+            { gradient: 'linear-gradient(135deg, #6a0572 0%, #ab1a1a 100%)', emoji: '🌹', tagline: 'Elegant & Sophisticated: Orchids & Candles' },
+            // 🎉 Playful & Fun
+            { gradient: 'linear-gradient(135deg, #f857a6 0%, #ff5858 100%)', emoji: '🎉', tagline: 'Playful & Fun: Balloons & Candy' },
+            // 🌌 Soulful & Modern
+            { gradient: 'linear-gradient(135deg, #8ec5fc 0%, #e0c3fc 100%)', emoji: '🌌', tagline: 'Soulful & Modern: Abstract & Digital' }
+        ];
+        const eventThemes = {
+            valentines: () => valentinesThemes[Math.floor(Math.random() * valentinesThemes.length)],
+            birthday: () => ({ gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', emoji: '🎂', tagline: 'Fun & Festive' }),
+            anniversary: () => ({ gradient: 'linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%)', emoji: '💑', tagline: 'Cherished Memories' }),
+            wedding: () => ({ gradient: 'linear-gradient(135deg, #fffbd5 0%, #b7f8db 100%)', emoji: '💍', tagline: 'Elegant & Joyful' }),
+            graduation: () => ({ gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', emoji: '🎓', tagline: 'Bright Future' }),
+            newjob: () => ({ gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', emoji: '🚀', tagline: 'New Beginnings' }),
+            housewarming: () => ({ gradient: 'linear-gradient(135deg, #fff5e1 0%, #ffe4e1 100%)', emoji: '🏠', tagline: 'Warm & Welcoming' }),
+            promotion: () => ({ gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)', emoji: '🏆', tagline: 'Success & Achievement' }),
+            retirement: () => ({ gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', emoji: '🏖️', tagline: 'Relax & Enjoy' }),
+            babyshower: () => ({ gradient: 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)', emoji: '👶', tagline: 'Joyful Arrival' }),
+            getwell: () => ({ gradient: 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)', emoji: '💙', tagline: 'Healing & Hope' })
+        };
+        if (eventThemes[state.eventType]) {
+            designTheme = eventThemes[state.eventType]();
+        }
+    }
     const cardPreview = document.getElementById('cardPreview');
     cardPreview.style.background = designTheme.gradient;
     
@@ -303,6 +344,7 @@ function renderCard() {
     
     const eventGreetings = {
         birthday: `Happy Birthday ${state.recipientName}!`,
+        valentines: `Happy Valentine's Day ${state.recipientName}!`,
         anniversary: `Happy Wedding Anniversary ${state.recipientName}!`,
         wedding: `Happy Wedding ${state.recipientName}!`,
         graduation: `Congratulations ${state.recipientName}!`,
