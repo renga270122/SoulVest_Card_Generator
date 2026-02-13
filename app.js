@@ -100,6 +100,41 @@ const messageTemplates = {
 };
 
 // Hobby descriptors
+
+// Hobby to theme mapping
+const hobbyThemes = {
+    'Music': {
+        gradient: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+        emoji: '🎶',
+        tagline: 'Feel the Rhythm',
+        overlay: 'musical-notes' // for future SVG/CSS overlay
+    },
+    'Reading': {
+        gradient: 'linear-gradient(135deg, #f5e9da 0%, #e0c3fc 100%)',
+        emoji: '📖',
+        tagline: 'A New Chapter',
+        overlay: 'books' // for future SVG/CSS overlay
+    },
+    'Cooking': {
+        gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)',
+        emoji: '🍕🍫',
+        tagline: 'Delicious Moments',
+        overlay: 'food' // for future SVG/CSS overlay
+    },
+    'Travel': {
+        gradient: 'linear-gradient(135deg, #43cea2 0%, #185a9d 100%)',
+        emoji: '✈️',
+        tagline: 'Adventure Awaits',
+        overlay: 'map' // for future SVG/CSS overlay
+    },
+    'Sports': {
+        gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)',
+        emoji: '🏆⚽',
+        tagline: 'Game On!',
+        overlay: 'sports' // for future SVG/CSS overlay
+    }
+    // Add more as needed
+};
 const hobbiesDescriptors = {
     'Reading': { adjective: 'thoughtful', plural: 'reading and relaxation' },
     'Gaming': { adjective: 'exciting', plural: 'gaming adventures' },
@@ -299,36 +334,53 @@ async function generateCard() {
 }
 
 function renderCard() {
-    // Event-specific theme overrides
-    let designTheme = parseDesignPreference(state.designPreference);
-    if (!state.designPreference) {
-        // Default event-based themes
-        const valentinesThemes = [
-            // 💌 Classic Romantic
-            { gradient: 'linear-gradient(135deg, #ff5f6d 0%, #ffc371 100%)', emoji: '💌', tagline: 'Classic Romantic: Roses & Hearts' },
-            // 🌹 Elegant & Sophisticated
-            { gradient: 'linear-gradient(135deg, #6a0572 0%, #ab1a1a 100%)', emoji: '🌹', tagline: 'Elegant & Sophisticated: Orchids & Candles' },
-            // 🎉 Playful & Fun
-            { gradient: 'linear-gradient(135deg, #f857a6 0%, #ff5858 100%)', emoji: '🎉', tagline: 'Playful & Fun: Balloons & Candy' },
-            // 🌌 Soulful & Modern
-            { gradient: 'linear-gradient(135deg, #8ec5fc 0%, #e0c3fc 100%)', emoji: '🌌', tagline: 'Soulful & Modern: Abstract & Digital' }
-        ];
-        const eventThemes = {
-            valentines: () => valentinesThemes[Math.floor(Math.random() * valentinesThemes.length)],
-            birthday: () => ({ gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', emoji: '🎂', tagline: 'Fun & Festive' }),
-            anniversary: () => ({ gradient: 'linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%)', emoji: '💑', tagline: 'Cherished Memories' }),
-            wedding: () => ({ gradient: 'linear-gradient(135deg, #fffbd5 0%, #b7f8db 100%)', emoji: '💍', tagline: 'Elegant & Joyful' }),
-            graduation: () => ({ gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', emoji: '🎓', tagline: 'Bright Future' }),
-            newjob: () => ({ gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', emoji: '🚀', tagline: 'New Beginnings' }),
-            housewarming: () => ({ gradient: 'linear-gradient(135deg, #fff5e1 0%, #ffe4e1 100%)', emoji: '🏠', tagline: 'Warm & Welcoming' }),
-            promotion: () => ({ gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)', emoji: '🏆', tagline: 'Success & Achievement' }),
-            retirement: () => ({ gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', emoji: '🏖️', tagline: 'Relax & Enjoy' }),
-            babyshower: () => ({ gradient: 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)', emoji: '👶', tagline: 'Joyful Arrival' }),
-            getwell: () => ({ gradient: 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)', emoji: '💙', tagline: 'Healing & Hope' })
-        };
-        if (eventThemes[state.eventType]) {
-            designTheme = eventThemes[state.eventType]();
+    // Hobby+event theme blending: if hobby selected and mapped, blend with event; else use event
+    let designTheme = null;
+    const matchHobbyTheme = document.getElementById('matchHobbyTheme') ? document.getElementById('matchHobbyTheme').checked : true;
+    // Event themes
+    const valentinesThemes = [
+        { gradient: 'linear-gradient(135deg, #ff5f6d 0%, #ffc371 100%)', emoji: '💌', tagline: 'Classic Romantic: Roses & Hearts' },
+        { gradient: 'linear-gradient(135deg, #6a0572 0%, #ab1a1a 100%)', emoji: '🌹', tagline: 'Elegant & Sophisticated: Orchids & Candles' },
+        { gradient: 'linear-gradient(135deg, #f857a6 0%, #ff5858 100%)', emoji: '🎉', tagline: 'Playful & Fun: Balloons & Candy' },
+        { gradient: 'linear-gradient(135deg, #8ec5fc 0%, #e0c3fc 100%)', emoji: '🌌', tagline: 'Soulful & Modern: Abstract & Digital' }
+    ];
+    const eventThemes = {
+        valentines: () => valentinesThemes[Math.floor(Math.random() * valentinesThemes.length)],
+        birthday: () => ({ gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', emoji: '🎂', tagline: 'Fun & Festive' }),
+        anniversary: () => ({ gradient: 'linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%)', emoji: '💑', tagline: 'Cherished Memories' }),
+        wedding: () => ({ gradient: 'linear-gradient(135deg, #fffbd5 0%, #b7f8db 100%)', emoji: '💍', tagline: 'Elegant & Joyful' }),
+        graduation: () => ({ gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', emoji: '🎓', tagline: 'Bright Future' }),
+        newjob: () => ({ gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', emoji: '🚀', tagline: 'New Beginnings' }),
+        housewarming: () => ({ gradient: 'linear-gradient(135deg, #fff5e1 0%, #ffe4e1 100%)', emoji: '🏠', tagline: 'Warm & Welcoming' }),
+        promotion: () => ({ gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)', emoji: '🏆', tagline: 'Success & Achievement' }),
+        retirement: () => ({ gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', emoji: '🏖️', tagline: 'Relax & Enjoy' }),
+        babyshower: () => ({ gradient: 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)', emoji: '👶', tagline: 'Joyful Arrival' }),
+        getwell: () => ({ gradient: 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)', emoji: '💙', tagline: 'Healing & Hope' })
+    };
+    // If hobby-based theme is enabled and a mapped hobby is selected, blend hobby and event theme
+    let hobbyTheme = null;
+    if (matchHobbyTheme && state.selectedHobbies && state.selectedHobbies.length > 0) {
+        for (const hobby of state.selectedHobbies) {
+            if (hobbyThemes[hobby]) {
+                hobbyTheme = hobbyThemes[hobby];
+                break;
+            }
         }
+    }
+    let eventTheme = eventThemes[state.eventType] ? eventThemes[state.eventType]() : null;
+    if (hobbyTheme && eventTheme) {
+        // Blend: use hobby gradient, hobby emoji + event emoji, hobby tagline + event tagline
+        designTheme = {
+            gradient: hobbyTheme.gradient,
+            emoji: hobbyTheme.emoji + ' ' + eventTheme.emoji,
+            tagline: hobbyTheme.tagline + ' | ' + eventTheme.tagline
+        };
+    } else if (hobbyTheme) {
+        designTheme = hobbyTheme;
+    } else if (eventTheme) {
+        designTheme = eventTheme;
+    } else {
+        designTheme = parseDesignPreference(state.designPreference);
     }
     const cardPreview = document.getElementById('cardPreview');
     cardPreview.style.background = designTheme.gradient;
