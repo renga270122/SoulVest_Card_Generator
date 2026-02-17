@@ -2,8 +2,8 @@ name: Automated Ping
 
 on:
   schedule:
-    # Runs every 30 minutes (adjust as needed)
-    - cron: '*/30 * * * *'
+    # Runs every 15 minutes (adjust as needed)
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -20,3 +20,5 @@ jobs:
         run: pip install requests
       - name: Run ping script
         run: python ping.py
+      - name: Workflow completed
+        run: echo "Ping job finished successfully at $(date)"
