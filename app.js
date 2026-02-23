@@ -90,6 +90,13 @@ const messageTemplates = {
         `Sending healing wishes, {name}! ❤️ Rest and recover well. Soon you'll enjoy all the {hobbies_adjective} things you love. Get well soon!`,
         `{name}, we're rooting for you! 🌻 Wishing you a speedy recovery and a return to health and {hobbies_adjective} happiness. You've got this!`
     ],
+    exam: [
+        `Best of luck, {name}! 📚 Remember, your hard work and dedication will pay off. Stay positive and give it your best shot!`,
+        `Dear {name}, believe in yourself and all that you are. You are capable of amazing things. Wishing you success in your exams! 🌟`,
+        `You’ve prepared well, {name}. Now it’s time to shine! Keep calm, stay focused, and do your best. Good luck on your exams! ✨`,
+        `{name}, exams are just stepping stones to your dreams. Trust your preparation and go for it! Sending you lots of positive vibes! 💪`,
+        `Wishing you all the best, {name}! May your efforts be rewarded and your confidence soar. You’ve got this! 🚀`
+    ],
     valentines: [
         `Happy Valentine's Day, {name}! 💘 May your day be filled with love, joy, and {hobbies_adjective} moments together. You are cherished!`,
         `Dear {name}, sending you all my love this Valentine's Day! 💖 Wishing you {hobbies_adjective} adventures and sweet memories.`,
@@ -145,7 +152,17 @@ const hobbiesDescriptors = {
     'Art': { adjective: 'creative', plural: 'art' },
     'Photography': { adjective: 'picturesque', plural: 'photography' },
     'Fitness': { adjective: 'energetic', plural: 'fitness' },
-    'Movies': { adjective: 'entertaining', plural: 'movies' }
+    'Movies': { adjective: 'entertaining', plural: 'movies' },
+    'Writing': { adjective: 'expressive', plural: 'writing' },
+    'Meditation': { adjective: 'calm', plural: 'meditation' },
+    'Drawing': { adjective: 'artistic', plural: 'drawing' },
+    'Yoga': { adjective: 'peaceful', plural: 'yoga' },
+    'Motivation': { adjective: 'motivated', plural: 'motivation' },
+    'Healthy Eating': { adjective: 'healthy', plural: 'healthy eating' },
+    'Sports': { adjective: 'active', plural: 'sports' },
+    'Walking': { adjective: 'refreshing', plural: 'walking' },
+    'Planning': { adjective: 'organized', plural: 'planning' },
+    'Relaxation': { adjective: 'relaxing', plural: 'relaxation' }
 };
 
 const defaultDescriptor = { adjective: 'wonderful', plural: 'special moments' };
@@ -162,7 +179,8 @@ const hobbyOptions = {
     promotion: ['Career', 'Leadership', 'Technology', 'Networking', 'Professional Dev', 'Reading', 'Mentoring', 'Innovation', 'Public Speaking', 'Strategy', 'Management', 'Coaching', 'Team Building', 'Communication'],
     retirement: ['Travel', 'Gardening', 'Reading', 'Cooking', 'Crafts', 'Hiking', 'Volunteer', 'Photography', 'Relaxation', 'Painting', 'Writing', 'Golf', 'Fishing', 'Yoga', 'Meditation', 'Woodworking', 'Museums', 'Beach'],
     babyshower: ['Parenting', 'Family', 'Reading', 'Crafting', 'Photography', 'Cooking', 'Baby Products', 'Child Development', 'Storytelling', 'Music for Kids', 'Singing', 'Art & Crafts', 'Organization', 'Bonding'],
-    getwell: ['Reading', 'Movies', 'Music', 'Meditation', 'Cooking', 'Art', 'Nature', 'Relaxation', 'Yoga', 'Gardening', 'Photography', 'Singing', 'Gentle Sports', 'Tea', 'Painting', 'Writing', 'Walks']
+    getwell: ['Reading', 'Movies', 'Music', 'Meditation', 'Cooking', 'Art', 'Nature', 'Relaxation', 'Yoga', 'Gardening', 'Photography', 'Singing', 'Gentle Sports', 'Tea', 'Painting', 'Writing', 'Walks'],
+    exam: ['Reading', 'Writing', 'Meditation', 'Music', 'Drawing', 'Yoga', 'Motivation', 'Healthy Eating', 'Sports', 'Walking', 'Planning', 'Relaxation']
 };
 
 // Initialize
@@ -355,7 +373,8 @@ function renderCard() {
         promotion: () => ({ gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)', emoji: '🏆', tagline: 'Success & Achievement' }),
         retirement: () => ({ gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', emoji: '🏖️', tagline: 'Relax & Enjoy' }),
         babyshower: () => ({ gradient: 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)', emoji: '👶', tagline: 'Joyful Arrival' }),
-        getwell: () => ({ gradient: 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)', emoji: '💙', tagline: 'Healing & Hope' })
+        getwell: () => ({ gradient: 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)', emoji: '💙', tagline: 'Healing & Hope' }),
+        exam: () => ({ gradient: 'linear-gradient(135deg, #fceabb 0%, #f8b500 100%)', emoji: '📚', tagline: 'Best of Luck!' })
     };
     // If hobby-based theme is enabled and a mapped hobby is selected, blend hobby and event theme
     let hobbyTheme = null;
@@ -405,7 +424,8 @@ function renderCard() {
         promotion: `Congratulations ${state.recipientName}!`,
         retirement: `Happy Retirement ${state.recipientName}!`,
         babyshower: `Congratulations ${state.recipientName}!`,
-        getwell: `Get Well Soon ${state.recipientName}!`
+        getwell: `Get Well Soon ${state.recipientName}!`,
+        exam: `Best of Luck in Your Exams, ${state.recipientName}!`
     };
     
     headerText = eventGreetings[state.eventType] || headerText;
