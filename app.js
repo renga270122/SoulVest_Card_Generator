@@ -2,6 +2,11 @@
 const state = {
     recipientName: '',
     eventType: '',
+    customEventName: '',
+    customEventEmoji: '🎉',
+    customHobbies: '',
+    relationType: 'friend',
+    messageTone: 'balanced',
     selectedHobbies: [],
     userMessage: '',
     designPreference: '',
@@ -10,6 +15,9 @@ const state = {
     photoData: null,
     isSpouse: false
 };
+
+const DRAFT_STORAGE_KEY = 'soulvest_card_draft_v1';
+const MESSAGE_HISTORY_KEY = 'soulvest_message_history_v1';
 
 // Message templates for each event
 const messageTemplates = {
@@ -51,37 +59,37 @@ const messageTemplates = {
     newjob: [
         `Congratulations on your new job, {name}! 🚀 An exciting new chapter! Wishing you success, growth, and {hobbies_adjective} experiences in this role. You've got this!`,
         `{name}, new job, who dis? 😎 So excited for this amazing opportunity! May your days be filled with {hobbies_adjective} achievements and professional growth. Best wishes!`,
-        `Welcome to your new adventure, {name}! 🎯 Your talent and passion will shine bright. Here's to {{hobbies_adjective} milestones and incredible success!`,
-        `Dear {name}, congratulations on your new job! 🌈 Wishing you every success as you bring your {{hobbies_adjective} energy and skills to this role!`,
-        `{name}, your new job is lucky to have you! 💼 Here's to an amazing journey filled with growth, {{hobbies_adjective} accomplishments, and well-deserved success!`
+        `Welcome to your new adventure, {name}! 🎯 Your talent and passion will shine bright. Here's to {hobbies_adjective} milestones and incredible success!`,
+        `Dear {name}, congratulations on your new job! 🌈 Wishing you every success as you bring your {hobbies_adjective} energy and skills to this role!`,
+        `{name}, your new job is lucky to have you! 💼 Here's to an amazing journey filled with growth, {hobbies_adjective} accomplishments, and well-deserved success!`
     ],
     housewarming: [
-        `Welcome home, {name}! 🏠 May your new space be filled with {{hobbies_adjective} memories, laughter, and love. Making countless beautiful moments here!`,
-        `{name}, congratulations on your new home! 🔑 Wishing you years of happiness, {{hobbies_adjective} gatherings, and cherished memories here. Welcome home!`,
-        `What an exciting chapter, {name}! 🏡 May your home be filled with {{hobbies_adjective} adventures, warm gatherings, and endless joy. Congratulations!`,
-        `To {name} in your new home! 🎉 Here's to creating {{hobbies_adjective} memories, hosting wonderful moments, and building a life full of happiness. Welcome!`,
-        `{name}, welcome to your sanctuary! ✨ May this home be filled with {{hobbies_adjective} experiences, laughter, and the love of family and friends!`
+        `Welcome home, {name}! 🏠 May your new space be filled with {hobbies_adjective} memories, laughter, and love. Making countless beautiful moments here!`,
+        `{name}, congratulations on your new home! 🔑 Wishing you years of happiness, {hobbies_adjective} gatherings, and cherished memories here. Welcome home!`,
+        `What an exciting chapter, {name}! 🏡 May your home be filled with {hobbies_adjective} adventures, warm gatherings, and endless joy. Congratulations!`,
+        `To {name} in your new home! 🎉 Here's to creating {hobbies_adjective} memories, hosting wonderful moments, and building a life full of happiness. Welcome!`,
+        `{name}, welcome to your sanctuary! ✨ May this home be filled with {hobbies_adjective} experiences, laughter, and the love of family and friends!`
     ],
     promotion: [
-        `{name}, you absolutely deserve this! 🎉 Congratulations on your promotion! Here's to more {{hobbies_adjective} achievements, greater success, and recognition!`,
-        `Congratulations on your promotion, {name}! 🚀 Your hard work and {{hobbies_adjective} approach paid off! Wishing you continued success in your new role!`,
-        `{name}, so thrilled for you! 🏆 Your promotion is well-deserved. Here's to reaching new heights and experiencing even more {{hobbies_adjective} victories!`,
-        `Wonderful news about your promotion, {name}! 💼 You've earned this success. Wishing you an amazing journey full of growth and {{hobbies_adjective} triumphs!`,
-        `{name}, congratulations! ⭐ Your new role is lucky to have someone as talented and {{hobbies_adjective} as you. Here's to your continued success!`
+        `{name}, you absolutely deserve this! 🎉 Congratulations on your promotion! Here's to more {hobbies_adjective} achievements, greater success, and recognition!`,
+        `Congratulations on your promotion, {name}! 🚀 Your hard work and {hobbies_adjective} approach paid off! Wishing you continued success in your new role!`,
+        `{name}, so thrilled for you! 🏆 Your promotion is well-deserved. Here's to reaching new heights and experiencing even more {hobbies_adjective} victories!`,
+        `Wonderful news about your promotion, {name}! 💼 You've earned this success. Wishing you an amazing journey full of growth and {hobbies_adjective} triumphs!`,
+        `{name}, congratulations! ⭐ Your new role is lucky to have someone as talented and {hobbies_adjective} as you. Here's to your continued success!`
     ],
     retirement: [
-        `{name}, welcome to this wonderful chapter! 🌅 Retirement is here! May your days be filled with {{hobbies_adjective} adventures, relaxation, and all you love. Enjoy!`,
-        `Congratulations on your retirement, {name}! 🎊 You've earned this time for {{hobbies_adjective} pursuits and beautiful memories. Here's to a life well-lived!`,
-        `{name}, time to celebrate YOU! 🏖️ Retirement looks amazing on you. May it be filled with {{hobbies_adjective} experiences, peace, and all you deserve!`,
-        `Dear {name}, happy retirement! 🌴 You've worked so hard. Now for {{hobbies_adjective} adventures and the life you've dreamed of. Enjoy every second!`,
-        `{name}, retirement begins! ✨ May your days be as {{hobbies_adjective} as you've always hoped. Wishing you health, happiness, and endless joy!`
+        `{name}, welcome to this wonderful chapter! 🌅 Retirement is here! May your days be filled with {hobbies_adjective} adventures, relaxation, and all you love. Enjoy!`,
+        `Congratulations on your retirement, {name}! 🎊 You've earned this time for {hobbies_adjective} pursuits and beautiful memories. Here's to a life well-lived!`,
+        `{name}, time to celebrate YOU! 🏖️ Retirement looks amazing on you. May it be filled with {hobbies_adjective} experiences, peace, and all you deserve!`,
+        `Dear {name}, happy retirement! 🌴 You've worked so hard. Now for {hobbies_adjective} adventures and the life you've dreamed of. Enjoy every second!`,
+        `{name}, retirement begins! ✨ May your days be as {hobbies_adjective} as you've always hoped. Wishing you health, happiness, and endless joy!`
     ],
     babyshower: [
-        `{name}, a bundle of joy is on the way! 👶 May your journey be filled with {{hobbies_adjective} moments, unconditional love, and endless blessings!`,
-        `Congratulations, {name}! 🎉 How exciting! Here's to a pregnancy and parenting journey filled with {{hobbies_adjective} memories and precious moments!`,
-        `{name}, how wonderful you're expecting! 💕 May your journey be as {{hobbies_adjective} and beautiful as you are. Congratulations on this blessing!`,
-        `To {name} on this special occasion! 👼 Wishing you a wonderful pregnancy and a lifetime of {{hobbies_adjective} moments with your little one!`,
-        `{name}, a baby on the way! 🌈 How thrilling! May you experience {{hobbies_adjective} joy, beautiful memories, and all the love parenthood brings!`
+        `{name}, a bundle of joy is on the way! 👶 May your journey be filled with {hobbies_adjective} moments, unconditional love, and endless blessings!`,
+        `Congratulations, {name}! 🎉 How exciting! Here's to a pregnancy and parenting journey filled with {hobbies_adjective} memories and precious moments!`,
+        `{name}, how wonderful you're expecting! 💕 May your journey be as {hobbies_adjective} and beautiful as you are. Congratulations on this blessing!`,
+        `To {name} on this special occasion! 👼 Wishing you a wonderful pregnancy and a lifetime of {hobbies_adjective} moments with your little one!`,
+        `{name}, a baby on the way! 🌈 How thrilling! May you experience {hobbies_adjective} joy, beautiful memories, and all the love parenthood brings!`
     ],
     getwell: [
         `{name}, sending healing thoughts and {hobbies_adjective} vibes! 💙 Wishing you a speedy recovery and {hobbies_list} moments to look forward to. Get well soon!`,
@@ -104,6 +112,30 @@ const messageTemplates = {
         `Happy Valentine's Day, {name}! 💝 Here's to celebrating love, friendship, and all the {hobbies_adjective} things we share.`,
         `Dear {name}, wishing you a magical Valentine's Day! May it be filled with {hobbies_adjective} surprises and endless affection.`
     ]
+};
+
+const customEventTemplates = [
+    `Happy {event_name}, {name}! {event_emoji} Wishing you a day filled with {hobbies_adjective} joy and unforgettable moments.`,
+    `{name}, sending warm wishes for your {event_name}! {event_emoji} May this occasion bring you {hobbies_adjective} memories and happiness.`,
+    `Celebrating {event_name} with you, {name}! {event_emoji} Here's to {hobbies_adjective} moments and all the good things ahead.`,
+    `{name}, best wishes on your {event_name}! {event_emoji} Hope your day is full of love, laughter, and {hobbies_adjective} vibes.`,
+    `To {name} on your {event_name} {event_emoji} — wishing you a truly {hobbies_adjective} celebration and beautiful memories.`
+];
+
+const eventDisplayNames = {
+    birthday: 'Birthday',
+    valentines: "Valentine's Day",
+    anniversary: 'Wedding Anniversary',
+    wedding: 'Wedding',
+    graduation: 'Graduation',
+    newjob: 'New Job',
+    housewarming: 'House Warming',
+    promotion: 'Promotion',
+    retirement: 'Retirement',
+    babyshower: 'Baby Shower',
+    getwell: 'Get Well',
+    exam: 'Exam Wishes',
+    custom: 'Special Event'
 };
 
 // Hobby descriptors
@@ -184,7 +216,283 @@ const hobbyOptions = {
 };
 
 // Initialize
-document.addEventListener('DOMContentLoaded', updateHobbies);
+document.addEventListener('DOMContentLoaded', () => {
+    updateHobbies();
+    applyEventPresetFromUrl();
+    initializeDraftFeature();
+    renderMessageHistory();
+});
+
+function applyEventPresetFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const presetEvent = (params.get('event') || '').toLowerCase().trim();
+    const allowedEvents = new Set([
+        'birthday', 'valentines', 'anniversary', 'wedding', 'graduation', 'newjob',
+        'housewarming', 'promotion', 'retirement', 'babyshower', 'getwell', 'exam', 'custom'
+    ]);
+
+    if (!allowedEvents.has(presetEvent)) {
+        return;
+    }
+
+    const eventTypeField = document.getElementById('eventType');
+    if (!eventTypeField) {
+        return;
+    }
+
+    eventTypeField.value = presetEvent;
+
+    if (presetEvent === 'custom') {
+        const customEventName = params.get('customEventName') || params.get('eventName') || 'Festival';
+        const customEventEmoji = params.get('emoji') || '🎉';
+
+        const customEventNameField = document.getElementById('customEventName');
+        if (customEventNameField) {
+            customEventNameField.value = customEventName;
+        }
+
+        const customEventEmojiField = document.getElementById('customEventEmoji');
+        if (customEventEmojiField) {
+            customEventEmojiField.value = customEventEmoji;
+        }
+    }
+
+    updateHobbies();
+}
+
+function initializeDraftFeature() {
+    const watchedElements = [
+        { id: 'recipientName', eventType: 'input' },
+        { id: 'eventType', eventType: 'change' },
+        { id: 'yearsTogether', eventType: 'input' },
+        { id: 'isSpouse', eventType: 'change' },
+        { id: 'customEventName', eventType: 'input' },
+        { id: 'customEventEmoji', eventType: 'input' },
+        { id: 'customHobbies', eventType: 'input' },
+        { id: 'relationType', eventType: 'change' },
+        { id: 'messageTone', eventType: 'change' },
+        { id: 'userMessage', eventType: 'input' },
+        { id: 'designPreference', eventType: 'input' }
+    ];
+
+    watchedElements.forEach(({ id, eventType }) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener(eventType, saveDraft);
+        }
+    });
+
+    updateRestoreDraftButtonState();
+}
+
+function saveDraft() {
+    try {
+        const checkedHobbies = Array.from(document.querySelectorAll('#hobbiesContainer input[type="checkbox"]:checked')).map(cb => cb.value);
+        const payload = {
+            recipientName: document.getElementById('recipientName')?.value?.trim() || '',
+            eventType: document.getElementById('eventType')?.value || '',
+            customEventName: document.getElementById('customEventName')?.value?.trim() || '',
+            customEventEmoji: document.getElementById('customEventEmoji')?.value?.trim() || '🎉',
+            customHobbies: document.getElementById('customHobbies')?.value?.trim() || '',
+            relationType: document.getElementById('relationType')?.value || 'friend',
+            messageTone: document.getElementById('messageTone')?.value || 'balanced',
+            selectedHobbies: checkedHobbies,
+            userMessage: document.getElementById('userMessage')?.value?.trim() || '',
+            designPreference: document.getElementById('designPreference')?.value?.trim() || '',
+            yearsTogether: document.getElementById('yearsTogether')?.value?.trim() || '',
+            isSpouse: document.getElementById('isSpouse')?.checked || false,
+            updatedAt: Date.now()
+        };
+
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(payload));
+        updateRestoreDraftButtonState();
+    } catch (error) {
+        console.warn('Draft save failed:', error);
+    }
+}
+
+function restoreDraft() {
+    try {
+        const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY);
+        if (!savedDraft) {
+            showMessage('No saved draft found', 'error');
+            updateRestoreDraftButtonState();
+            return;
+        }
+
+        const draft = JSON.parse(savedDraft);
+        document.getElementById('recipientName').value = draft.recipientName || '';
+        document.getElementById('eventType').value = draft.eventType || '';
+        const customEventNameField = document.getElementById('customEventName');
+        if (customEventNameField) {
+            customEventNameField.value = draft.customEventName || '';
+        }
+        const customEventEmojiField = document.getElementById('customEventEmoji');
+        if (customEventEmojiField) {
+            customEventEmojiField.value = draft.customEventEmoji || '🎉';
+        }
+        const customHobbiesField = document.getElementById('customHobbies');
+        if (customHobbiesField) {
+            customHobbiesField.value = draft.customHobbies || '';
+        }
+        const relationTypeField = document.getElementById('relationType');
+        if (relationTypeField) {
+            relationTypeField.value = draft.relationType || 'friend';
+        }
+        const messageToneField = document.getElementById('messageTone');
+        if (messageToneField) {
+            messageToneField.value = draft.messageTone || 'balanced';
+        }
+        document.getElementById('userMessage').value = draft.userMessage || '';
+        document.getElementById('designPreference').value = draft.designPreference || '';
+
+        const yearsField = document.getElementById('yearsTogether');
+        if (yearsField) {
+            yearsField.value = draft.yearsTogether || '';
+        }
+
+        const isSpouseField = document.getElementById('isSpouse');
+        if (isSpouseField) {
+            isSpouseField.checked = Boolean(draft.isSpouse);
+        }
+
+        updateHobbies();
+
+        const selectedHobbies = Array.isArray(draft.selectedHobbies) ? draft.selectedHobbies : [];
+        const hobbyCheckboxes = document.querySelectorAll('#hobbiesContainer input[type="checkbox"]');
+        hobbyCheckboxes.forEach(checkbox => {
+            checkbox.checked = selectedHobbies.includes(checkbox.value);
+        });
+
+        updateSelectedHobbies();
+        showMessage('Draft restored successfully!', 'success');
+        updateRestoreDraftButtonState();
+    } catch (error) {
+        showMessage('Could not restore draft', 'error');
+    }
+}
+
+function clearDraft() {
+    const hasDraft = Boolean(localStorage.getItem(DRAFT_STORAGE_KEY));
+    if (!hasDraft) {
+        showMessage('No saved draft found', 'error');
+        updateRestoreDraftButtonState();
+        return;
+    }
+
+    const confirmed = confirm('Clear your saved draft? This cannot be undone.');
+    if (!confirmed) {
+        return;
+    }
+
+    localStorage.removeItem(DRAFT_STORAGE_KEY);
+    updateRestoreDraftButtonState();
+    showMessage('Saved draft cleared', 'success');
+}
+
+function getMessageHistory() {
+    try {
+        const raw = localStorage.getItem(MESSAGE_HISTORY_KEY);
+        const history = raw ? JSON.parse(raw) : [];
+        return Array.isArray(history) ? history : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function addMessageToHistory(messageText) {
+    const normalized = (messageText || '').trim();
+    if (!normalized) return;
+
+    const current = getMessageHistory();
+    const deduped = current.filter(item => item.text !== normalized);
+    deduped.unshift({ text: normalized, createdAt: Date.now() });
+    const trimmed = deduped.slice(0, 5);
+    localStorage.setItem(MESSAGE_HISTORY_KEY, JSON.stringify(trimmed));
+    renderMessageHistory();
+}
+
+function renderMessageHistory() {
+    const container = document.getElementById('messageHistoryList');
+    if (!container) return;
+
+    const history = getMessageHistory();
+    if (!history.length) {
+        container.innerHTML = '<p style="color: #999; margin: 0;">No recent messages yet</p>';
+        return;
+    }
+
+    container.innerHTML = history.map((item, index) => {
+        const safeText = item.text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return `
+            <div style="padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px; background: #fafafa;">
+                <p style="margin: 0 0 8px 0; color: #444; line-height: 1.4;">${safeText}</p>
+                <button class="btn-secondary" style="padding: 6px 10px; font-size: 0.85em;" onclick="reuseHistoryMessage(${index})">Use This</button>
+            </div>
+        `;
+    }).join('');
+}
+
+function reuseHistoryMessage(index) {
+    const history = getMessageHistory();
+    const item = history[index];
+    if (!item) {
+        showMessage('Selected history item is not available', 'error');
+        return;
+    }
+
+    const userMessageField = document.getElementById('userMessage');
+    if (userMessageField) {
+        userMessageField.value = item.text;
+    }
+    state.userMessage = item.text;
+    state.generatedMessage = item.text;
+    saveDraft();
+    showMessage('Message loaded from history', 'success');
+}
+
+function updateRestoreDraftButtonState() {
+    const restoreButton = document.getElementById('restoreDraftBtn');
+    const clearButton = document.getElementById('clearDraftBtn');
+    if (!restoreButton) return;
+
+    const hasDraft = Boolean(localStorage.getItem(DRAFT_STORAGE_KEY));
+    restoreButton.disabled = !hasDraft;
+    restoreButton.style.opacity = hasDraft ? '1' : '0.6';
+    restoreButton.style.cursor = hasDraft ? 'pointer' : 'not-allowed';
+
+    if (clearButton) {
+        clearButton.disabled = !hasDraft;
+        clearButton.style.opacity = hasDraft ? '1' : '0.6';
+        clearButton.style.cursor = hasDraft ? 'pointer' : 'not-allowed';
+    }
+
+    updateDraftStatusText();
+}
+
+function updateDraftStatusText() {
+    const draftStatusEl = document.getElementById('draftStatus');
+    if (!draftStatusEl) return;
+
+    const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!savedDraft) {
+        draftStatusEl.textContent = 'No draft saved yet';
+        return;
+    }
+
+    try {
+        const draft = JSON.parse(savedDraft);
+        if (!draft.updatedAt) {
+            draftStatusEl.textContent = 'Draft saved';
+            return;
+        }
+
+        const formattedDate = new Date(draft.updatedAt).toLocaleString();
+        draftStatusEl.textContent = `Last saved: ${formattedDate}`;
+    } catch (error) {
+        draftStatusEl.textContent = 'Draft saved';
+    }
+}
 
 function updateMessageTone() {
     const isSpouse = document.getElementById('isSpouse').checked;
@@ -200,31 +508,53 @@ function updateHobbies() {
     
     const container = document.getElementById('hobbiesContainer');
     const anniversaryGroup = document.getElementById('anniversaryYearGroup');
+    const customEventGroup = document.getElementById('customEventGroup');
     
     if (eventType === 'anniversary') {
         anniversaryGroup.classList.remove('hidden');
     } else {
         anniversaryGroup.classList.add('hidden');
     }
+
+    if (customEventGroup) {
+        if (eventType === 'custom') {
+            customEventGroup.classList.remove('hidden');
+        } else {
+            customEventGroup.classList.add('hidden');
+        }
+    }
     
     container.innerHTML = '';
     if (!eventType) {
         container.innerHTML = '<p style="color: #999;">Select an event first</p>';
+        saveDraft();
         return;
     }
-    
-    const hobbies = hobbyOptions[eventType] || [];
+
+    let hobbies = hobbyOptions[eventType] || [];
+    if (eventType === 'custom') {
+        const customHobbiesInput = document.getElementById('customHobbies')?.value || '';
+        const parsedHobbies = customHobbiesInput
+            .split(',')
+            .map(item => item.trim())
+            .filter(Boolean);
+        hobbies = parsedHobbies.length > 0 ? [...new Set(parsedHobbies)] : ['Celebration', 'Family', 'Friends', 'Music', 'Travel', 'Food'];
+    }
+
     hobbies.forEach(hobby => {
         const label = document.createElement('label');
         label.className = 'checkbox-item';
         label.innerHTML = `<input type="checkbox" value="${hobby}" onchange="updateSelectedHobbies()"><span>${hobby}</span>`;
         container.appendChild(label);
     });
+
+    saveDraft();
 }
 
 function updateSelectedHobbies() {
     const checkboxes = document.querySelectorAll('#hobbiesContainer input[type="checkbox"]:checked');
     state.selectedHobbies = Array.from(checkboxes).map(cb => cb.value);
+    saveDraft();
 }
 
 function handlePhotoUpload() {
@@ -237,6 +567,7 @@ function handlePhotoUpload() {
     const reader = new FileReader();
     reader.onload = (e) => {
         state.photoData = e.target.result;
+        saveDraft();
         if (state.generatedMessage) {
             renderCard();
         }
@@ -277,9 +608,13 @@ function generateMessage() {
     let templateKey = state.eventType;
     if (state.eventType === 'anniversary' && !state.isSpouse) {
         templateKey = 'anniversaryFriend';
+    } else if (state.eventType === 'custom') {
+        templateKey = 'custom';
     }
-    
-    const templates = messageTemplates[templateKey] || messageTemplates[state.eventType] || [];
+
+    const templates = templateKey === 'custom'
+        ? customEventTemplates
+        : (messageTemplates[templateKey] || messageTemplates[state.eventType] || []);
     if (!templates.length) return 'Wishing you all the best!';
     
     const template = templates[Math.floor(Math.random() * templates.length)];
@@ -296,17 +631,25 @@ function generateMessage() {
     
     let message = template
         .replace(/{name}/g, state.recipientName)
+        .replace(/{event_name}/g, getEventDisplayName())
+        .replace(/{event_emoji}/g, state.customEventEmoji || '🎉')
         .replace(/{hobbies_adjective}/g, hobbiesAdjective)
         .replace(/{hobbies_list}/g, hobbiesList)
         .replace(/{years}/g, state.yearsTogether || '');
     
-    return message.replace(/\{\{/g, '{').replace(/\}\}/g, '}').replace(/\s+/g, ' ').trim();
+    message = message.replace(/\{\{/g, '{').replace(/\}\}/g, '}').replace(/\s+/g, ' ').trim();
+    return applyToneToMessage(message);
 }
 
 async function generateCard() {
     state.recipientName = document.getElementById('recipientName').value.trim();
     state.userMessage = document.getElementById('userMessage').value.trim();
     state.designPreference = document.getElementById('designPreference').value.trim();
+    state.customEventName = document.getElementById('customEventName')?.value.trim() || '';
+    state.customEventEmoji = document.getElementById('customEventEmoji')?.value.trim() || '🎉';
+    state.customHobbies = document.getElementById('customHobbies')?.value.trim() || '';
+    state.relationType = document.getElementById('relationType')?.value || 'friend';
+    state.messageTone = document.getElementById('messageTone')?.value || 'balanced';
     
     // Get spouse checkbox if it exists (only for anniversary)
     const isSpouseCheckbox = document.getElementById('isSpouse');
@@ -321,6 +664,11 @@ async function generateCard() {
     
     if (!state.eventType) {
         showMessage('Please select an event type', 'error');
+        return;
+    }
+
+    if (state.eventType === 'custom' && !state.customEventName) {
+        showMessage('Please enter a custom event name', 'error');
         return;
     }
     
@@ -339,8 +687,10 @@ async function generateCard() {
         if (!state.userMessage) {
             state.generatedMessage = generateMessage();
         } else {
-            state.generatedMessage = state.userMessage;
+            state.generatedMessage = applyToneToMessage(state.userMessage);
         }
+
+        addMessageToHistory(state.generatedMessage);
         
         renderCard();
         showMessage('Card generated successfully! ✨', 'success');
@@ -374,7 +724,8 @@ function renderCard() {
         retirement: () => ({ gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', emoji: '🏖️', tagline: 'Relax & Enjoy' }),
         babyshower: () => ({ gradient: 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)', emoji: '👶', tagline: 'Joyful Arrival' }),
         getwell: () => ({ gradient: 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)', emoji: '💙', tagline: 'Healing & Hope' }),
-        exam: () => ({ gradient: 'linear-gradient(135deg, #fceabb 0%, #f8b500 100%)', emoji: '📚', tagline: 'Best of Luck!' })
+        exam: () => ({ gradient: 'linear-gradient(135deg, #fceabb 0%, #f8b500 100%)', emoji: '📚', tagline: 'Best of Luck!' }),
+        custom: () => ({ gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', emoji: state.customEventEmoji || '🎉', tagline: `${getEventDisplayName()} Celebration` })
     };
     // If hobby-based theme is enabled and a mapped hobby is selected, blend hobby and event theme
     let hobbyTheme = null;
@@ -425,7 +776,8 @@ function renderCard() {
         retirement: `Happy Retirement ${state.recipientName}!`,
         babyshower: `Congratulations ${state.recipientName}!`,
         getwell: `Get Well Soon ${state.recipientName}!`,
-        exam: `Best of Luck in Your Exams, ${state.recipientName}!`
+        exam: `Best of Luck in Your Exams, ${state.recipientName}!`,
+        custom: `Happy ${getEventDisplayName()} ${state.recipientName}!`
     };
     
     headerText = eventGreetings[state.eventType] || headerText;
@@ -449,6 +801,204 @@ function renderCard() {
     if (sampleGallery) {
         sampleGallery.style.display = 'none';
     }
+}
+
+function getEventDisplayName() {
+    if (state.eventType === 'custom') {
+        return state.customEventName || 'Special Event';
+    }
+    return eventDisplayNames[state.eventType] || state.eventType || 'Special Event';
+}
+
+function getEventTag() {
+    return getEventDisplayName().replace(/[^a-zA-Z0-9\s]/g, '').trim().replace(/\s+/g, '') || 'SpecialEvent';
+}
+
+function applyToneToMessage(message) {
+    if (!message) return message;
+
+    const relationLabels = {
+        friend: 'friend',
+        family: 'family member',
+        spouse: 'partner',
+        colleague: 'colleague',
+        mentor: 'mentor'
+    };
+
+    let tunedMessage = message;
+
+    if (state.relationType && state.relationType !== 'friend') {
+        const relationLabel = relationLabels[state.relationType] || state.relationType;
+        tunedMessage = `${tunedMessage} You are such a wonderful ${relationLabel}.`;
+    }
+
+    switch (state.messageTone) {
+        case 'heartfelt':
+            tunedMessage = `${tunedMessage} Sending you lots of love and warm wishes always.`;
+            break;
+        case 'playful':
+            tunedMessage = `${tunedMessage} 😄🎉`; 
+            break;
+        case 'formal':
+            tunedMessage = tunedMessage
+                .replace(/\bYou're\b/g, 'You are')
+                .replace(/\bI\'m\b/g, 'I am')
+                .replace(/\bHere\'s\b/g, 'Here is')
+                .replace(/\bcan\'t\b/gi, 'cannot');
+            break;
+        case 'short': {
+            const firstSentence = tunedMessage.split(/(?<=[.!?])\s+/)[0] || tunedMessage;
+            tunedMessage = firstSentence.length > 160 ? `${firstSentence.slice(0, 157)}...` : firstSentence;
+            break;
+        }
+        default:
+            break;
+    }
+
+    return tunedMessage.replace(/\s+/g, ' ').trim();
+}
+
+function generateAnotherMessage() {
+    state.recipientName = document.getElementById('recipientName').value.trim();
+    state.eventType = document.getElementById('eventType').value;
+    state.customEventName = document.getElementById('customEventName')?.value.trim() || '';
+    state.customEventEmoji = document.getElementById('customEventEmoji')?.value.trim() || '🎉';
+    state.relationType = document.getElementById('relationType')?.value || 'friend';
+    state.messageTone = document.getElementById('messageTone')?.value || 'balanced';
+
+    if (!state.recipientName || !state.eventType) {
+        showMessage('Fill recipient and event before regenerating message', 'error');
+        return;
+    }
+
+    if (state.eventType === 'custom' && !state.customEventName) {
+        showMessage('Please enter a custom event name', 'error');
+        return;
+    }
+
+    const message = generateMessage();
+    state.generatedMessage = message;
+    document.getElementById('userMessage').value = message;
+    addMessageToHistory(message);
+    renderCard();
+    showMessage('New message suggestion generated!', 'success');
+}
+
+function copyMessageText() {
+    const message = state.generatedMessage || document.getElementById('userMessage')?.value?.trim();
+    if (!message) {
+        showMessage('No message available to copy', 'error');
+        return;
+    }
+
+    navigator.clipboard.writeText(message).then(() => {
+        showMessage('Message copied to clipboard!', 'success');
+    }).catch(() => {
+        showMessage('Could not copy message', 'error');
+    });
+}
+
+function exportCardData() {
+    try {
+        const payload = {
+            recipientName: document.getElementById('recipientName')?.value?.trim() || '',
+            eventType: document.getElementById('eventType')?.value || '',
+            customEventName: document.getElementById('customEventName')?.value?.trim() || '',
+            customEventEmoji: document.getElementById('customEventEmoji')?.value?.trim() || '🎉',
+            customHobbies: document.getElementById('customHobbies')?.value?.trim() || '',
+            relationType: document.getElementById('relationType')?.value || 'friend',
+            messageTone: document.getElementById('messageTone')?.value || 'balanced',
+            selectedHobbies: Array.from(document.querySelectorAll('#hobbiesContainer input[type="checkbox"]:checked')).map(cb => cb.value),
+            userMessage: document.getElementById('userMessage')?.value?.trim() || '',
+            designPreference: document.getElementById('designPreference')?.value?.trim() || '',
+            yearsTogether: document.getElementById('yearsTogether')?.value?.trim() || '',
+            isSpouse: document.getElementById('isSpouse')?.checked || false,
+            exportedAt: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `soulvest-card-data-${Date.now()}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+        showMessage('Card data exported!', 'success');
+    } catch (error) {
+        showMessage('Could not export card data', 'error');
+    }
+}
+
+function importCardData() {
+    const importInput = document.getElementById('importCardDataFile');
+    if (!importInput) {
+        showMessage('Import input not found', 'error');
+        return;
+    }
+    importInput.value = '';
+    importInput.click();
+}
+
+function handleImportCardData(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (loadEvent) => {
+        try {
+            const payload = JSON.parse(loadEvent.target.result);
+            document.getElementById('recipientName').value = payload.recipientName || '';
+            document.getElementById('eventType').value = payload.eventType || '';
+
+            const customEventNameField = document.getElementById('customEventName');
+            if (customEventNameField) {
+                customEventNameField.value = payload.customEventName || '';
+            }
+            const customEventEmojiField = document.getElementById('customEventEmoji');
+            if (customEventEmojiField) {
+                customEventEmojiField.value = payload.customEventEmoji || '🎉';
+            }
+            const customHobbiesField = document.getElementById('customHobbies');
+            if (customHobbiesField) {
+                customHobbiesField.value = payload.customHobbies || '';
+            }
+
+            const relationTypeField = document.getElementById('relationType');
+            if (relationTypeField) {
+                relationTypeField.value = payload.relationType || 'friend';
+            }
+            const messageToneField = document.getElementById('messageTone');
+            if (messageToneField) {
+                messageToneField.value = payload.messageTone || 'balanced';
+            }
+
+            document.getElementById('userMessage').value = payload.userMessage || '';
+            document.getElementById('designPreference').value = payload.designPreference || '';
+
+            const yearsField = document.getElementById('yearsTogether');
+            if (yearsField) {
+                yearsField.value = payload.yearsTogether || '';
+            }
+            const isSpouseField = document.getElementById('isSpouse');
+            if (isSpouseField) {
+                isSpouseField.checked = Boolean(payload.isSpouse);
+            }
+
+            updateHobbies();
+
+            const selectedHobbies = Array.isArray(payload.selectedHobbies) ? payload.selectedHobbies : [];
+            const hobbyCheckboxes = document.querySelectorAll('#hobbiesContainer input[type="checkbox"]');
+            hobbyCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectedHobbies.includes(checkbox.value);
+            });
+            updateSelectedHobbies();
+            saveDraft();
+            showMessage('Card data imported successfully!', 'success');
+        } catch (error) {
+            showMessage('Invalid card data file', 'error');
+        }
+    };
+    reader.readAsText(file);
 }
 
 function parseDesignPreference(text) {
@@ -543,17 +1093,23 @@ function toggleFAQ(questionEl) {
 function showSharingAndGallery() {
     document.getElementById('sharingSection').classList.remove('hidden');
     document.getElementById('eventGallery').classList.remove('hidden');
+    const quickActions = document.getElementById('quickActionsGroup');
+    if (quickActions) {
+        quickActions.classList.remove('hidden');
+    }
 }
 
 // Social Media Sharing Functions
 function shareOnFacebook() {
-    const text = `Check out this beautiful ${state.eventType} card I created for ${state.recipientName}! Created with SoulVest Card Generator 💖`;
+    const eventName = getEventDisplayName();
+    const text = `Check out this beautiful ${eventName} card I created for ${state.recipientName}! Created with SoulVest Card Generator 💖`;
     const url = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}&hashtag=%23SoulVest`;
     window.open(url, 'facebook-share', 'width=600,height=400');
 }
 
 function shareOnInstagram() {
-    const text = `Created a personalized ${state.eventType} card for ${state.recipientName}! 🎉✨ Made with love using SoulVest Card Generator 💖\n\nDownload the card and share it on Instagram!\n\n#SoulVest #PersonalizedCards #${state.eventType} #SpreadLove #GiftIdeas`;
+    const eventName = getEventDisplayName();
+    const text = `Created a personalized ${eventName} card for ${state.recipientName}! 🎉✨ Made with love using SoulVest Card Generator 💖\n\nDownload the card and share it on Instagram!\n\n#SoulVest #PersonalizedCards #${getEventTag()} #SpreadLove #GiftIdeas`;
     alert('📱 Instagram Sharing:\n\n1. Download your card as PNG\n2. Open Instagram app\n3. Create a new post\n4. Upload the downloaded card image\n5. Copy this caption:\n\n' + text);
     // Automatically copy to clipboard
     navigator.clipboard.writeText(text).then(() => {
@@ -564,26 +1120,29 @@ function shareOnInstagram() {
 }
 
 function shareOnWhatsApp() {
-    const text = `Hi! 👋 I created a beautiful personalized ${state.eventType} card for ${state.recipientName}! 🎉 Check it out - made with SoulVest Card Generator! 💖`;
+    const eventName = getEventDisplayName();
+    const text = `Hi! 👋 I created a beautiful personalized ${eventName} card for ${state.recipientName}! 🎉 Check it out - made with SoulVest Card Generator! 💖`;
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
 }
 
 function shareViaEmail() {
-    const subject = `Beautiful ${state.eventType} Card for ${state.recipientName}`;
-    const body = `Hi!\n\nI created a personalized ${state.eventType} card for ${state.recipientName} using SoulVest Card Generator!\n\nMessage: ${state.generatedMessage || state.userMessage}\n\nDownload your card as PNG or PDF!\n\nMade with 💖\nSoulVest Card Generator`;
+    const eventName = getEventDisplayName();
+    const subject = `Beautiful ${eventName} Card for ${state.recipientName}`;
+    const body = `Hi!\n\nI created a personalized ${eventName} card for ${state.recipientName} using SoulVest Card Generator!\n\nMessage: ${state.generatedMessage || state.userMessage}\n\nDownload your card as PNG or PDF!\n\nMade with 💖\nSoulVest Card Generator`;
     const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = url;
 }
 
 function shareOnLinkedIn() {
-    const text = `Excited to share that I just created a personalized ${state.eventType} card using SoulVest Card Generator! 🎉 It's amazing how personalized digital greetings can bring people closer. Check it out! 💖 #PersonalizedCards #GiftCards`;
+    const eventName = getEventDisplayName();
+    const text = `Excited to share that I just created a personalized ${eventName} card using SoulVest Card Generator! 🎉 It's amazing how personalized digital greetings can bring people closer. Check it out! 💖 #PersonalizedCards #GiftCards`;
     const url = `https://www.linkedin.com/sharing/share-offsite/?url=soulvest.com`;
     window.open(url, 'linkedin-share', 'width=600,height=400');
 }
 
 // Quick Event Selection
-function quickSelectEvent(eventType) {
+function quickSelectEvent(eventType, clickedElement) {
     document.getElementById('eventType').value = eventType;
     updateHobbies();
     document.getElementById('recipientName').focus();
@@ -591,6 +1150,8 @@ function quickSelectEvent(eventType) {
     // Visual feedback
     const badges = document.querySelectorAll('.event-badge');
     badges.forEach(badge => badge.classList.remove('selected'));
-    event.target.classList.add('selected');
+    if (clickedElement) {
+        clickedElement.classList.add('selected');
+    }
 }
 

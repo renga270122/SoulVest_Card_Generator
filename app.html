@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoulVest Card Generator</title>
+    <title>Greeting Card Builder | SoulVest App</title>
     
     <!-- PWA Meta Tags -->
-    <meta name="description" content="Create beautiful, personalized gift cards for any occasion - birthdays, anniversaries, weddings and more!">
+    <meta name="description" content="Build personalized greeting cards with SoulVest app. Fast card creation for birthdays, anniversaries, weddings, festivals, and custom events.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://renga270122.github.io/SoulVest_Card_Generator/">
     <meta name="theme-color" content="#764ba2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1011,6 +1013,7 @@
                         <option value="babyshower">Baby Shower</option>
                         <option value="getwell">Get Well</option>
                         <option value="exam">Exam Wishes</option>
+                        <option value="custom">Custom Event</option>
                     </select>
                 </div>
                 
@@ -1024,12 +1027,45 @@
                     </label>
                     <p style="color: #999; font-size: 0.85em; margin-top: 8px;">If unchecked, message will be sent as friend/family</p>
                 </div>
+
+                <div class="form-group hidden" id="customEventGroup">
+                    <label for="customEventName">Custom Event Name *</label>
+                    <input type="text" id="customEventName" placeholder="e.g., Diwali, Mother's Day, Friendship Day">
+
+                    <label for="customEventEmoji" style="margin-top: 10px;">Custom Event Emoji (Optional)</label>
+                    <input type="text" id="customEventEmoji" placeholder="e.g., 🎉" value="🎉" maxlength="4">
+
+                    <label for="customHobbies" style="margin-top: 10px;">Custom Interests (Optional, comma-separated)</label>
+                    <input type="text" id="customHobbies" placeholder="e.g., Music, Family, Food, Travel" onchange="updateHobbies()">
+                </div>
                 
                 <div class="form-group">
                     <label>Hobbies/Interests (Select relevant ones)</label>
                     <div class="checkbox-group" id="hobbiesContainer">
                         <!-- Populated by JavaScript -->
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="relationType">Relationship</label>
+                    <select id="relationType">
+                        <option value="friend">Friend</option>
+                        <option value="family">Family</option>
+                        <option value="spouse">Spouse/Partner</option>
+                        <option value="colleague">Colleague</option>
+                        <option value="mentor">Mentor/Teacher</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="messageTone">Message Tone</label>
+                    <select id="messageTone">
+                        <option value="balanced">Balanced</option>
+                        <option value="heartfelt">Heartfelt</option>
+                        <option value="playful">Playful</option>
+                        <option value="formal">Formal</option>
+                        <option value="short">Short & Crisp</option>
+                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -1038,6 +1074,13 @@
                     <button class="btn-secondary" onclick="startSpeechToText()" style="width: fit-content;">
                         🎤 Speak Message
                     </button>
+                </div>
+
+                <div class="form-group">
+                    <label>Recent Messages (Last 5)</label>
+                    <div id="messageHistoryList">
+                        <p style="color: #999; margin: 0;">No recent messages yet</p>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -1056,6 +1099,38 @@
                 <button class="btn-primary" onclick="generateCard()" style="width: 100%; padding: 15px; font-size: 1.1em;">
                     ✨ Generate Card
                 </button>
+
+                <div class="button-group hidden" id="quickActionsGroup">
+                    <button class="btn-secondary" onclick="generateAnotherMessage()">
+                        🔄 Another Suggestion
+                    </button>
+                    <button class="btn-secondary" onclick="copyMessageText()">
+                        📋 Copy Message
+                    </button>
+                </div>
+
+                <div class="button-group" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <button class="btn-secondary" id="restoreDraftBtn" onclick="restoreDraft()" disabled>
+                        ♻️ Restore Last Draft
+                    </button>
+                    <button class="btn-secondary" onclick="saveDraft()">
+                        💾 Save Draft
+                    </button>
+                    <button class="btn-secondary" id="clearDraftBtn" onclick="clearDraft()" disabled>
+                        🗑️ Clear Draft
+                    </button>
+                </div>
+                <small id="draftStatus" style="color: #666; text-align: center; display: block; margin-top: 6px;">No draft saved yet</small>
+
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="exportCardData()">
+                        📤 Export Card Data
+                    </button>
+                    <button class="btn-secondary" onclick="importCardData()">
+                        📥 Import Card Data
+                    </button>
+                </div>
+                <input type="file" id="importCardDataFile" accept="application/json" onchange="handleImportCardData(event)" class="hidden">
                 
                 <div class="gift-links">
                     <h3>🎁 Shop for Gifts</h3>
@@ -1161,18 +1236,19 @@
                 <div class="event-gallery hidden" id="eventGallery">
                     <h3>✨ Browse Event Types</h3>
                     <div class="event-badges">
-                        <div class="event-badge" onclick="quickSelectEvent('birthday')">🎂 Birthday</div>
-                        <div class="event-badge" onclick="quickSelectEvent('valentines')">💘 Valentine's Day</div>
-                        <div class="event-badge" onclick="quickSelectEvent('anniversary')">💑 Wedding Anniversary</div>
-                        <div class="event-badge" onclick="quickSelectEvent('wedding')">💍 Wedding</div>
-                        <div class="event-badge" onclick="quickSelectEvent('graduation')">🎓 Graduation</div>
-                        <div class="event-badge" onclick="quickSelectEvent('newjob')">🚀 New Job</div>
-                        <div class="event-badge" onclick="quickSelectEvent('housewarming')">🏠 Housewarming</div>
-                        <div class="event-badge" onclick="quickSelectEvent('promotion')">🏆 Promotion</div>
-                        <div class="event-badge" onclick="quickSelectEvent('retirement')">🏖️ Retirement</div>
-                        <div class="event-badge" onclick="quickSelectEvent('babyshower')">👶 Baby Shower</div>
-                        <div class="event-badge" onclick="quickSelectEvent('getwell')">💙 Get Well</div>
-                        <div class="event-badge" onclick="quickSelectEvent('exam')">📚 Exam Wishes</div>
+                        <div class="event-badge" onclick="quickSelectEvent('birthday', this)">🎂 Birthday</div>
+                        <div class="event-badge" onclick="quickSelectEvent('valentines', this)">💘 Valentine's Day</div>
+                        <div class="event-badge" onclick="quickSelectEvent('anniversary', this)">💑 Wedding Anniversary</div>
+                        <div class="event-badge" onclick="quickSelectEvent('wedding', this)">💍 Wedding</div>
+                        <div class="event-badge" onclick="quickSelectEvent('graduation', this)">🎓 Graduation</div>
+                        <div class="event-badge" onclick="quickSelectEvent('newjob', this)">🚀 New Job</div>
+                        <div class="event-badge" onclick="quickSelectEvent('housewarming', this)">🏠 Housewarming</div>
+                        <div class="event-badge" onclick="quickSelectEvent('promotion', this)">🏆 Promotion</div>
+                        <div class="event-badge" onclick="quickSelectEvent('retirement', this)">🏖️ Retirement</div>
+                        <div class="event-badge" onclick="quickSelectEvent('babyshower', this)">👶 Baby Shower</div>
+                        <div class="event-badge" onclick="quickSelectEvent('getwell', this)">💙 Get Well</div>
+                        <div class="event-badge" onclick="quickSelectEvent('exam', this)">📚 Exam Wishes</div>
+                        <div class="event-badge" onclick="quickSelectEvent('custom', this)">✨ Custom Event</div>
                     </div>
                 </div>
             </div>

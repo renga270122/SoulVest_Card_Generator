@@ -4,14 +4,17 @@ Create beautiful, personalized gift cards for any occasion - completely offline!
 
 ## ✨ Features
 
-- **10 Event Types**: Birthday, Anniversary, Wedding, Graduation, New Job, Housewarming, Promotion, Retirement, Baby Shower, Get Well
+- **12+ Event Types + Custom Event**: Includes core events plus exam wishes and fully custom events
 - **50+ AI Message Templates**: Smart, personalized messages based on event and hobbies
+- **Tone & Relationship Personalization**: Balanced, heartfelt, playful, formal, or short style with relationship context
 - **8 Beautiful Design Themes**: Elegant, Romantic, Cool, Vibrant, Warm, Mysterious, Soft, Sunset
 - **Photo Support**: Upload personal photos (280×280px with beautiful styling)
 - **Works 100% Offline**: No API keys, no internet required after loading
 - **Multiple Export Formats**: High-quality PNG (3x scale) and PDF downloads
+- **Card Data Portability**: Export/import card setup as JSON for reuse
 - **Social Sharing**: Facebook, Instagram, WhatsApp, Email, LinkedIn
 - **Voice Input**: Speech-to-text for message input
+- **Quick Actions**: One-click regenerate suggestion and copy message text
 - **Sample Cards**: Visual inspiration gallery
 
 ## 🚀 Live Demo

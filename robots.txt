@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://renga270122.github.io/SoulVest_Card_Generator/sitemap.xml
