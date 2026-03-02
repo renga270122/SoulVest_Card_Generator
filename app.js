@@ -111,6 +111,71 @@ const messageTemplates = {
         `To {name}, you make every day special! 🌹 Happy Valentine's Day! May your heart be full of happiness and {hobbies_adjective} experiences.`,
         `Happy Valentine's Day, {name}! 💝 Here's to celebrating love, friendship, and all the {hobbies_adjective} things we share.`,
         `Dear {name}, wishing you a magical Valentine's Day! May it be filled with {hobbies_adjective} surprises and endless affection.`
+    ],
+    diwali: [
+        `Happy Diwali, {name}! 🪔 May your life shine with {hobbies_adjective} joy, prosperity, and beautiful new beginnings.`,
+        `{name}, wishing you and your family a bright and blessed Diwali! ✨ May this festival fill your home with happiness and peace.`,
+        `May the lights of Diwali bring success, health, and {hobbies_adjective} memories to you, {name}! 🌟`
+    ],
+    holi: [
+        `Happy Holi, {name}! 🎨 May your life be filled with vibrant colors, laughter, and {hobbies_adjective} celebrations.`,
+        `{name}, wishing you a joyful Holi full of fun, love, and unforgettable moments with loved ones! 🌈`,
+        `Let this Holi paint your year with happiness and success, {name}! Have a colorful and {hobbies_adjective} celebration!`
+    ],
+    eid: [
+        `Eid Mubarak, {name}! 🌙 May this blessed day bring you peace, prosperity, and {hobbies_adjective} happiness.`,
+        `{name}, sending warm Eid wishes to you and your family. May your heart be filled with gratitude and joy. ✨`,
+        `On this Eid, may Allah bless you with health, love, and {hobbies_adjective} moments, {name}. Eid Mubarak!`
+    ],
+    christmas: [
+        `Merry Christmas, {name}! 🎄 May your holiday season be filled with {hobbies_adjective} joy, love, and warmth.`,
+        `{name}, wishing you peace, happiness, and magical moments this Christmas and always! 🎁`,
+        `May your Christmas sparkle with laughter, family time, and {hobbies_adjective} memories, {name}!`
+    ],
+    newyear: [
+        `Happy New Year, {name}! 🎉 Wishing you a year full of {hobbies_adjective} opportunities, success, and happiness.`,
+        `{name}, may this New Year bring fresh energy, positivity, and wonderful memories with your loved ones. ✨`,
+        `Cheers to a bright and {hobbies_adjective} year ahead, {name}! Happy New Year! 🥳`
+    ],
+    navratri: [
+        `Happy Navratri, {name}! 🙏 May Maa Durga bless you with strength, peace, and {hobbies_adjective} joy.`,
+        `{name}, wishing you nine nights of devotion, celebration, and divine blessings. Happy Navratri! 🌸`,
+        `May this Navratri fill your life with positivity and {hobbies_adjective} energy, {name}!`
+    ],
+    dussehra: [
+        `Happy Dussehra, {name}! 🏹 May good always triumph in your life and bring {hobbies_adjective} success.`,
+        `{name}, wishing you courage, happiness, and victory in every step this Dussehra. ✨`,
+        `May this Dussehra inspire new beginnings and {hobbies_adjective} moments for you, {name}.`
+    ],
+    ganeshchaturthi: [
+        `Happy Ganesh Chaturthi, {name}! 🐘 May Lord Ganesha remove obstacles and bless you with {hobbies_adjective} prosperity.`,
+        `{name}, wishing you and your family joy, wisdom, and abundance this Ganesh Chaturthi! 🙏`,
+        `Ganpati Bappa Morya! May your life be filled with happiness and {hobbies_adjective} blessings, {name}.`
+    ],
+    rakshabandhan: [
+        `Happy Raksha Bandhan, {name}! 🎀 Celebrating the beautiful bond of love, trust, and lifelong support.`,
+        `{name}, may this Rakhi bring warmth, happiness, and {hobbies_adjective} memories with family.`,
+        `Wishing you a joyful Raksha Bandhan filled with love and togetherness, {name}! 💖`
+    ],
+    janmashtami: [
+        `Happy Janmashtami, {name}! 🦚 May Lord Krishna bless you with peace, love, and {hobbies_adjective} joy.`,
+        `{name}, wishing you a divine and cheerful Janmashtami filled with devotion and celebration. 🙏`,
+        `May this Janmashtami bring harmony, happiness, and {hobbies_adjective} blessings into your life, {name}.`
+    ],
+    onam: [
+        `Happy Onam, {name}! 🌼 May this harvest festival bring abundance, happiness, and {hobbies_adjective} celebrations.`,
+        `{name}, wishing you and your family a prosperous Onam filled with joy and togetherness.`,
+        `May your Onam be as colorful and {hobbies_adjective} as your dreams, {name}! 🌾`
+    ],
+    pongal: [
+        `Happy Pongal, {name}! 🌾 Wishing you prosperity, health, and {hobbies_adjective} happiness this festive season.`,
+        `{name}, may this Pongal bring sweet moments, new hopes, and joyful celebrations with loved ones.`,
+        `Wishing you a bright and bountiful Pongal, {name}! ✨`
+    ],
+    lohri: [
+        `Happy Lohri, {name}! 🔥 May this festival fill your life with warmth, joy, and {hobbies_adjective} blessings.`,
+        `{name}, wishing you a vibrant Lohri full of celebration, music, and happiness!`,
+        `May the Lohri bonfire bring positivity and success to your year, {name}! 🎉`
     ]
 };
 
@@ -135,7 +200,57 @@ const eventDisplayNames = {
     babyshower: 'Baby Shower',
     getwell: 'Get Well',
     exam: 'Exam Wishes',
+    diwali: 'Diwali',
+    holi: 'Holi',
+    eid: 'Eid',
+    christmas: 'Christmas',
+    newyear: 'New Year',
+    navratri: 'Navratri',
+    dussehra: 'Dussehra',
+    ganeshchaturthi: 'Ganesh Chaturthi',
+    rakshabandhan: 'Raksha Bandhan',
+    janmashtami: 'Janmashtami',
+    onam: 'Onam',
+    pongal: 'Pongal',
+    lohri: 'Lohri',
     custom: 'Special Event'
+};
+
+const festivalEvents = new Set([
+    'diwali', 'holi', 'eid', 'christmas', 'newyear', 'navratri', 'dussehra',
+    'ganeshchaturthi', 'rakshabandhan', 'janmashtami', 'onam', 'pongal', 'lohri'
+]);
+
+const festivalWarmClosings = {
+    diwali: 'Warm wishes to you and your family this Diwali! 🪔',
+    holi: 'Warm wishes for a joyful and colorful Holi! 🎨',
+    eid: 'Warm wishes for peace and blessings this Eid! 🌙',
+    christmas: 'Warm wishes for a merry and peaceful Christmas! 🎄',
+    newyear: 'Warm wishes for a bright and successful New Year! 🎆',
+    navratri: 'Warm wishes for a blessed Navratri celebration! 🙏',
+    dussehra: 'Warm wishes for victory and happiness this Dussehra! 🏹',
+    ganeshchaturthi: 'Warm wishes for prosperity and wisdom this Ganesh Chaturthi! 🐘',
+    rakshabandhan: 'Warm wishes for love and togetherness this Raksha Bandhan! 🎀',
+    janmashtami: 'Warm wishes for peace and joy this Janmashtami! 🦚',
+    onam: 'Warm wishes for a prosperous and joyful Onam! 🌼',
+    pongal: 'Warm wishes for abundance and happiness this Pongal! 🌾',
+    lohri: 'Warm wishes for warmth and celebration this Lohri! 🔥'
+};
+
+const festivalImageTheme = {
+    diwali: { emoji: '🪔', c1: '#ff9a3c', c2: '#ffcc70' },
+    holi: { emoji: '🎨', c1: '#ff6fd8', c2: '#6ec3f4' },
+    eid: { emoji: '🌙', c1: '#1d976c', c2: '#93f9b9' },
+    christmas: { emoji: '🎄', c1: '#0f9b0f', c2: '#ff512f' },
+    newyear: { emoji: '🎆', c1: '#667eea', c2: '#764ba2' },
+    navratri: { emoji: '🙏', c1: '#ff9966', c2: '#ff5e62' },
+    dussehra: { emoji: '🏹', c1: '#f7971e', c2: '#ffd200' },
+    ganeshchaturthi: { emoji: '🐘', c1: '#f12711', c2: '#f5af19' },
+    rakshabandhan: { emoji: '🎀', c1: '#f953c6', c2: '#b91d73' },
+    janmashtami: { emoji: '🦚', c1: '#4facfe', c2: '#00f2fe' },
+    onam: { emoji: '🌼', c1: '#f6d365', c2: '#fda085' },
+    pongal: { emoji: '🌾', c1: '#d4fc79', c2: '#96e6a1' },
+    lohri: { emoji: '🔥', c1: '#f46b45', c2: '#eea849' }
 };
 
 // Hobby descriptors
@@ -212,7 +327,20 @@ const hobbyOptions = {
     retirement: ['Travel', 'Gardening', 'Reading', 'Cooking', 'Crafts', 'Hiking', 'Volunteer', 'Photography', 'Relaxation', 'Painting', 'Writing', 'Golf', 'Fishing', 'Yoga', 'Meditation', 'Woodworking', 'Museums', 'Beach'],
     babyshower: ['Parenting', 'Family', 'Reading', 'Crafting', 'Photography', 'Cooking', 'Baby Products', 'Child Development', 'Storytelling', 'Music for Kids', 'Singing', 'Art & Crafts', 'Organization', 'Bonding'],
     getwell: ['Reading', 'Movies', 'Music', 'Meditation', 'Cooking', 'Art', 'Nature', 'Relaxation', 'Yoga', 'Gardening', 'Photography', 'Singing', 'Gentle Sports', 'Tea', 'Painting', 'Writing', 'Walks'],
-    exam: ['Reading', 'Writing', 'Meditation', 'Music', 'Drawing', 'Yoga', 'Motivation', 'Healthy Eating', 'Sports', 'Walking', 'Planning', 'Relaxation']
+    exam: ['Reading', 'Writing', 'Meditation', 'Music', 'Drawing', 'Yoga', 'Motivation', 'Healthy Eating', 'Sports', 'Walking', 'Planning', 'Relaxation'],
+    diwali: ['Family Gatherings', 'Home Decoration', 'Sweets', 'Puja', 'Rangoli', 'Music', 'Festive Shopping', 'Photography', 'Cooking', 'Lighting Diyas'],
+    holi: ['Colors', 'Music', 'Dance', 'Sweets', 'Family Gatherings', 'Photography', 'Outdoor Fun', 'Travel', 'Festive Food', 'Celebration'],
+    eid: ['Prayer', 'Family Time', 'Charity', 'Festive Food', 'Traditional Wear', 'Photography', 'Community Gatherings', 'Cooking', 'Sweets', 'Travel'],
+    christmas: ['Family Time', 'Gifts', 'Decorations', 'Cooking', 'Music', 'Travel', 'Photography', 'Baking', 'Prayer', 'Celebration'],
+    newyear: ['Goal Setting', 'Travel', 'Parties', 'Fitness', 'Family Time', 'Music', 'Celebration', 'Planning', 'Photography', 'Self Improvement'],
+    navratri: ['Garba', 'Dandiya', 'Devotion', 'Music', 'Traditional Wear', 'Fasting', 'Photography', 'Family Time', 'Dance', 'Celebration'],
+    dussehra: ['Tradition', 'Family Gatherings', 'Festive Food', 'Community Events', 'Prayer', 'Celebration', 'Photography', 'Travel', 'Cultural Programs'],
+    ganeshchaturthi: ['Puja', 'Modak', 'Family Time', 'Decoration', 'Music', 'Community Gatherings', 'Photography', 'Tradition', 'Art & Crafts'],
+    rakshabandhan: ['Family Bonding', 'Gift Giving', 'Sweets', 'Celebration', 'Photography', 'Tradition', 'Cooking', 'Travel'],
+    janmashtami: ['Devotion', 'Bhajans', 'Fasting', 'Temple Visit', 'Family Gatherings', 'Festive Food', 'Photography', 'Celebration'],
+    onam: ['Pookalam', 'Onam Sadhya', 'Boat Race', 'Family Gatherings', 'Traditional Wear', 'Photography', 'Cooking', 'Dance'],
+    pongal: ['Harvest Celebration', 'Traditional Cooking', 'Family Time', 'Decoration', 'Travel', 'Cultural Events', 'Photography'],
+    lohri: ['Bonfire', 'Music', 'Dance', 'Festive Food', 'Family Gatherings', 'Celebration', 'Photography', 'Tradition']
 };
 
 // Initialize
@@ -228,7 +356,9 @@ function applyEventPresetFromUrl() {
     const presetEvent = (params.get('event') || '').toLowerCase().trim();
     const allowedEvents = new Set([
         'birthday', 'valentines', 'anniversary', 'wedding', 'graduation', 'newjob',
-        'housewarming', 'promotion', 'retirement', 'babyshower', 'getwell', 'exam', 'custom'
+        'housewarming', 'promotion', 'retirement', 'babyshower', 'getwell', 'exam',
+        'diwali', 'holi', 'eid', 'christmas', 'newyear', 'navratri', 'dussehra',
+        'ganeshchaturthi', 'rakshabandhan', 'janmashtami', 'onam', 'pongal', 'lohri', 'custom'
     ]);
 
     if (!allowedEvents.has(presetEvent)) {
@@ -638,7 +768,37 @@ function generateMessage() {
         .replace(/{years}/g, state.yearsTogether || '');
     
     message = message.replace(/\{\{/g, '{').replace(/\}\}/g, '}').replace(/\s+/g, ' ').trim();
+
+        if (festivalEvents.has(state.eventType)) {
+                const warmClosing = festivalWarmClosings[state.eventType];
+                if (warmClosing && !message.includes(warmClosing)) {
+                        message = `${message} ${warmClosing}`.trim();
+                }
+        }
+
     return applyToneToMessage(message);
+}
+
+function getFestivalImageData(eventType) {
+        const theme = festivalImageTheme[eventType];
+        if (!theme) return null;
+
+        const festivalName = getEventDisplayName();
+        const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="560" viewBox="0 0 560 560">
+    <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="${theme.c1}"/>
+            <stop offset="100%" stop-color="${theme.c2}"/>
+        </linearGradient>
+    </defs>
+    <rect width="560" height="560" rx="28" fill="url(#g)"/>
+    <text x="50%" y="42%" text-anchor="middle" font-size="120" font-family="Segoe UI, Arial">${theme.emoji}</text>
+    <text x="50%" y="58%" text-anchor="middle" font-size="42" font-weight="700" fill="#ffffff" font-family="Segoe UI, Arial">${festivalName}</text>
+    <text x="50%" y="68%" text-anchor="middle" font-size="24" fill="#ffffff" opacity="0.95" font-family="Segoe UI, Arial">Warm festive wishes</text>
+</svg>`;
+
+        return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
 async function generateCard() {
@@ -725,6 +885,19 @@ function renderCard() {
         babyshower: () => ({ gradient: 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)', emoji: '👶', tagline: 'Joyful Arrival' }),
         getwell: () => ({ gradient: 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)', emoji: '💙', tagline: 'Healing & Hope' }),
         exam: () => ({ gradient: 'linear-gradient(135deg, #fceabb 0%, #f8b500 100%)', emoji: '📚', tagline: 'Best of Luck!' }),
+        diwali: () => ({ gradient: 'linear-gradient(135deg, #ff9a3c 0%, #ffcc70 100%)', emoji: '🪔', tagline: 'Light, Joy & Prosperity' }),
+        holi: () => ({ gradient: 'linear-gradient(135deg, #ff6fd8 0%, #6ec3f4 50%, #8be15d 100%)', emoji: '🎨', tagline: 'Colors of Celebration' }),
+        eid: () => ({ gradient: 'linear-gradient(135deg, #1d976c 0%, #93f9b9 100%)', emoji: '🌙', tagline: 'Peace & Blessings' }),
+        christmas: () => ({ gradient: 'linear-gradient(135deg, #0f9b0f 0%, #ff512f 100%)', emoji: '🎄', tagline: 'Joyful Holiday Spirit' }),
+        newyear: () => ({ gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', emoji: '🎆', tagline: 'Fresh Start & New Dreams' }),
+        navratri: () => ({ gradient: 'linear-gradient(135deg, #ff9966 0%, #ff5e62 100%)', emoji: '🙏', tagline: 'Devotion & Celebration' }),
+        dussehra: () => ({ gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)', emoji: '🏹', tagline: 'Victory of Good' }),
+        ganeshchaturthi: () => ({ gradient: 'linear-gradient(135deg, #f12711 0%, #f5af19 100%)', emoji: '🐘', tagline: 'Wisdom & Prosperity' }),
+        rakshabandhan: () => ({ gradient: 'linear-gradient(135deg, #f953c6 0%, #b91d73 100%)', emoji: '🎀', tagline: 'Bond of Love' }),
+        janmashtami: () => ({ gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', emoji: '🦚', tagline: 'Divine Joy' }),
+        onam: () => ({ gradient: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)', emoji: '🌼', tagline: 'Harvest & Happiness' }),
+        pongal: () => ({ gradient: 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)', emoji: '🌾', tagline: 'Prosperity & Harvest' }),
+        lohri: () => ({ gradient: 'linear-gradient(135deg, #f46b45 0%, #eea849 100%)', emoji: '🔥', tagline: 'Warmth & Celebration' }),
         custom: () => ({ gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', emoji: state.customEventEmoji || '🎉', tagline: `${getEventDisplayName()} Celebration` })
     };
     // If hobby-based theme is enabled and a mapped hobby is selected, blend hobby and event theme
@@ -758,6 +931,11 @@ function renderCard() {
     let photoHTML = '';
     if (state.photoData) {
         photoHTML = `<div style="margin: 20px auto; text-align: center;"><img src="${state.photoData}" style="width: 280px; height: 280px; object-fit: cover; border-radius: 15px; border: 4px solid rgba(255,255,255,0.5); box-shadow: 0 8px 16px rgba(0,0,0,0.3);"></div>`;
+    } else if (festivalEvents.has(state.eventType)) {
+        const generatedFestivalImage = getFestivalImageData(state.eventType);
+        if (generatedFestivalImage) {
+            photoHTML = `<div style="margin: 20px auto; text-align: center;"><img src="${generatedFestivalImage}" alt="${getEventDisplayName()} greeting" style="width: 280px; height: 280px; object-fit: cover; border-radius: 15px; border: 4px solid rgba(255,255,255,0.5); box-shadow: 0 8px 16px rgba(0,0,0,0.3);"></div>`;
+        }
     }
     
     // Customize header based on event type
@@ -777,6 +955,19 @@ function renderCard() {
         babyshower: `Congratulations ${state.recipientName}!`,
         getwell: `Get Well Soon ${state.recipientName}!`,
         exam: `Best of Luck in Your Exams, ${state.recipientName}!`,
+        diwali: `Happy Diwali ${state.recipientName}!`,
+        holi: `Happy Holi ${state.recipientName}!`,
+        eid: `Eid Mubarak ${state.recipientName}!`,
+        christmas: `Merry Christmas ${state.recipientName}!`,
+        newyear: `Happy New Year ${state.recipientName}!`,
+        navratri: `Happy Navratri ${state.recipientName}!`,
+        dussehra: `Happy Dussehra ${state.recipientName}!`,
+        ganeshchaturthi: `Happy Ganesh Chaturthi ${state.recipientName}!`,
+        rakshabandhan: `Happy Raksha Bandhan ${state.recipientName}!`,
+        janmashtami: `Happy Janmashtami ${state.recipientName}!`,
+        onam: `Happy Onam ${state.recipientName}!`,
+        pongal: `Happy Pongal ${state.recipientName}!`,
+        lohri: `Happy Lohri ${state.recipientName}!`,
         custom: `Happy ${getEventDisplayName()} ${state.recipientName}!`
     };
     
