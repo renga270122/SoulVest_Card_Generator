@@ -1124,8 +1124,17 @@
     <div class="container">
         <!-- ...header removed, hero section above covers this... -->
         
-        <div class="api-config-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-bottom: 2px solid #667eea; color: white;">
+        <div class="api-config-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-bottom: 2px solid #667eea; color: white; gap: 12px; flex-wrap: wrap;">
             <span style="color: white;">✨ Spread Love with Beautiful, Personalized Gift Cards</span>
+            <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                <select id="aiProvider" style="padding: 8px 10px; border-radius: 6px; border: none; font-weight: 600;">
+                    <option value="auto">AI: Auto</option>
+                    <option value="openai">AI: ChatGPT</option>
+                    <option value="gemini">AI: Gemini</option>
+                </select>
+                <button type="button" onclick="configureAIEndpoint()">Configure AI</button>
+            </div>
+            <small id="aiConfigStatus" style="width: 100%; opacity: 0.9;">AI endpoint: local (/api). Use Configure AI for external backend URL.</small>
         </div>
         
         <div class="content">
@@ -1208,7 +1217,7 @@
                 <div class="form-group">
                     <label for="photoFile">Photo (Optional)</label>
                     <input type="file" id="photoFile" accept="image/*" onchange="handlePhotoUpload()">
-                    <small style="color: #666; margin-top: 5px; display: block;">Selected photo will appear in the card preview</small>
+                    <small style="color: #666; margin-top: 5px; display: block;">If no photo is uploaded, SoulVest auto-generates an event/festival image for your card.</small>
                 </div>
                 
                 <div id="messageAlert"></div>
@@ -1216,6 +1225,10 @@
                 <button class="btn-primary" onclick="generateCard()" style="width: 100%; padding: 15px; font-size: 1.1em;">
                     ✨ Generate Card
                 </button>
+                <div class="button-group" style="margin-top: 10px;">
+                    <button class="btn-secondary" type="button" onclick="generateAIMessage()">🤖 AI Message</button>
+                    <button class="btn-secondary" type="button" onclick="generateAIImage()">🖼️ AI Image</button>
+                </div>
                 
                 <div class="gift-links">
                     <h3>🎁 Shop for Gifts</h3>

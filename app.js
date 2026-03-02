@@ -18,6 +18,7 @@ const state = {
 
 const DRAFT_STORAGE_KEY = 'soulvest_card_draft_v1';
 const MESSAGE_HISTORY_KEY = 'soulvest_message_history_v1';
+const AI_ENDPOINT_STORAGE_KEY = 'soulvest_ai_base_url_v1';
 
 // Message templates for each event
 const messageTemplates = {
@@ -349,6 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyEventPresetFromUrl();
     initializeDraftFeature();
     renderMessageHistory();
+    updateAIConfigStatus();
 });
 
 function applyEventPresetFromUrl() {
@@ -733,6 +735,200 @@ function startSpeechToText() {
     recognition.start();
 }
 
+function getSelectedAIProvider() {
+    return document.getElementById('aiProvider')?.value || 'auto';
+}
+
+function getAIBaseUrl() {
+    const configured = (localStorage.getItem(AI_ENDPOINT_STORAGE_KEY) || '').trim();
+    if (!configured) return '';
+    return configured.replace(/\/$/, '');
+}
+
+function buildAIUrl(path) {
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    const base = getAIBaseUrl();
+    return base ? `${base}${normalizedPath}` : normalizedPath;
+}
+
+function configureAIEndpoint() {
+    const current = getAIBaseUrl();
+    const value = prompt('Set AI backend URL (leave empty for same-origin /api). Example: https://your-ai-backend.vercel.app', current);
+    if (value === null) {
+        return;
+    }
+
+    const trimmed = value.trim();
+    if (!trimmed) {
+        localStorage.removeItem(AI_ENDPOINT_STORAGE_KEY);
+        updateAIConfigStatus();
+        showMessage('AI endpoint reset to local /api', 'success');
+        return;
+    }
+
+    localStorage.setItem(AI_ENDPOINT_STORAGE_KEY, trimmed.replace(/\/$/, ''));
+    updateAIConfigStatus();
+    showMessage('AI endpoint saved', 'success');
+}
+
+function updateAIConfigStatus() {
+    const status = document.getElementById('aiConfigStatus');
+    if (!status) return;
+
+    const base = getAIBaseUrl();
+    status.textContent = base
+        ? `AI endpoint: ${base}`
+        : 'AI endpoint: local (/api). Use Configure AI for external backend URL.';
+}
+
+function hydrateStateFromForm() {
+    state.recipientName = document.getElementById('recipientName')?.value.trim() || '';
+    state.eventType = document.getElementById('eventType')?.value || '';
+    state.userMessage = document.getElementById('userMessage')?.value.trim() || '';
+    state.designPreference = document.getElementById('designPreference')?.value.trim() || '';
+    state.customEventName = document.getElementById('customEventName')?.value.trim() || '';
+    state.customEventEmoji = document.getElementById('customEventEmoji')?.value.trim() || '🎉';
+    state.customHobbies = document.getElementById('customHobbies')?.value.trim() || '';
+    state.relationType = document.getElementById('relationType')?.value || 'friend';
+    state.messageTone = document.getElementById('messageTone')?.value || 'balanced';
+    state.yearsTogether = document.getElementById('yearsTogether')?.value.trim() || '';
+    state.selectedHobbies = Array.from(
+        document.querySelectorAll('#hobbiesContainer input[type="checkbox"]:checked')
+    ).map(cb => cb.value);
+
+    const isSpouseCheckbox = document.getElementById('isSpouse');
+    if (isSpouseCheckbox) {
+        state.isSpouse = isSpouseCheckbox.checked;
+    }
+}
+
+function buildAIPayload() {
+    return {
+        provider: getSelectedAIProvider(),
+        recipientName: state.recipientName,
+        eventType: state.eventType,
+        eventDisplayName: getEventDisplayName(),
+        relationType: state.relationType,
+        messageTone: state.messageTone,
+        selectedHobbies: state.selectedHobbies,
+        userMessage: state.userMessage,
+        designPreference: state.designPreference
+    };
+}
+
+async function requestAIMessage(payload) {
+    const data = await callAIEndpoint('/api/generate-message', payload);
+    const aiMessage = (data.message || '').trim();
+    if (!aiMessage) {
+        throw new Error('AI returned an empty message');
+    }
+    return { message: aiMessage, providerUsed: data.providerUsed || 'provider' };
+}
+
+async function requestAIImage(payload) {
+    const data = await callAIEndpoint('/api/generate-image', payload);
+    if (!data.imageDataUrl) {
+        throw new Error('AI returned no image');
+    }
+    return { imageDataUrl: data.imageDataUrl, providerUsed: data.providerUsed || 'provider' };
+}
+
+async function callAIEndpoint(path, payload) {
+    const response = await fetch(buildAIUrl(path), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    let data = {};
+    try {
+        data = await response.json();
+    } catch (error) {
+        data = {};
+    }
+
+    if (!response.ok) {
+        throw new Error(data.error || `Request failed with status ${response.status}`);
+    }
+
+    return data;
+}
+
+async function generateAIMessage() {
+    hydrateStateFromForm();
+
+    if (!state.recipientName) {
+        showMessage('Enter recipient name before AI generation', 'error');
+        return;
+    }
+
+    if (!state.eventType) {
+        showMessage('Select event type before AI generation', 'error');
+        return;
+    }
+
+    showMessage('Generating AI message...', 'loading');
+
+    try {
+        const payload = buildAIPayload();
+        const data = await requestAIMessage(payload);
+        const aiMessage = data.message;
+
+        state.generatedMessage = aiMessage;
+        state.userMessage = aiMessage;
+        const userMessageField = document.getElementById('userMessage');
+        if (userMessageField) {
+            userMessageField.value = aiMessage;
+        }
+
+        addMessageToHistory(aiMessage);
+        saveDraft();
+
+        if (state.eventType && state.recipientName) {
+            renderCard();
+            document.getElementById('exportButtons')?.classList.remove('hidden');
+            showSharingAndGallery();
+        }
+
+        showMessage(`AI message ready (${data.providerUsed || 'provider'})`, 'success');
+    } catch (error) {
+        showMessage(`AI message failed: ${error.message}`, 'error');
+    }
+}
+
+async function generateAIImage() {
+    hydrateStateFromForm();
+
+    if (!state.recipientName) {
+        showMessage('Enter recipient name before AI image generation', 'error');
+        return;
+    }
+
+    if (!state.eventType) {
+        showMessage('Select event type before AI image generation', 'error');
+        return;
+    }
+
+    showMessage('Generating AI image...', 'loading');
+
+    try {
+        const payload = buildAIPayload();
+        const data = await requestAIImage(payload);
+
+        state.photoData = data.imageDataUrl;
+        if (!state.generatedMessage) {
+            state.generatedMessage = state.userMessage || generateMessage();
+        }
+
+        renderCard();
+        document.getElementById('exportButtons')?.classList.remove('hidden');
+        showSharingAndGallery();
+        showMessage(`AI image ready (${data.providerUsed || 'provider'})`, 'success');
+    } catch (error) {
+        showMessage(`AI image failed: ${error.message}`, 'error');
+    }
+}
+
 function generateMessage() {
     // For anniversary, select templates based on sender type
     let templateKey = state.eventType;
@@ -801,21 +997,50 @@ function getFestivalImageData(eventType) {
         return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
-async function generateCard() {
-    state.recipientName = document.getElementById('recipientName').value.trim();
-    state.userMessage = document.getElementById('userMessage').value.trim();
-    state.designPreference = document.getElementById('designPreference').value.trim();
-    state.customEventName = document.getElementById('customEventName')?.value.trim() || '';
-    state.customEventEmoji = document.getElementById('customEventEmoji')?.value.trim() || '🎉';
-    state.customHobbies = document.getElementById('customHobbies')?.value.trim() || '';
-    state.relationType = document.getElementById('relationType')?.value || 'friend';
-    state.messageTone = document.getElementById('messageTone')?.value || 'balanced';
-    
-    // Get spouse checkbox if it exists (only for anniversary)
-    const isSpouseCheckbox = document.getElementById('isSpouse');
-    if (isSpouseCheckbox) {
-        state.isSpouse = isSpouseCheckbox.checked;
+function getEventFallbackImageData(eventType) {
+    const festivalImage = getFestivalImageData(eventType);
+    if (festivalImage) {
+        return festivalImage;
     }
+
+    const eventImageTheme = {
+        birthday: { emoji: '🎂', c1: '#f093fb', c2: '#f5576c' },
+        valentines: { emoji: '💌', c1: '#ff5f6d', c2: '#ffc371' },
+        anniversary: { emoji: '💑', c1: '#ffafbd', c2: '#ffc3a0' },
+        wedding: { emoji: '💍', c1: '#fffbd5', c2: '#b7f8db' },
+        graduation: { emoji: '🎓', c1: '#43e97b', c2: '#38f9d7' },
+        newjob: { emoji: '🚀', c1: '#4facfe', c2: '#00f2fe' },
+        housewarming: { emoji: '🏠', c1: '#fff5e1', c2: '#ffe4e1' },
+        promotion: { emoji: '🏆', c1: '#f7971e', c2: '#ffd200' },
+        retirement: { emoji: '🏖️', c1: '#a8edea', c2: '#fed6e3' },
+        babyshower: { emoji: '👶', c1: '#fbc2eb', c2: '#a6c1ee' },
+        getwell: { emoji: '💙', c1: '#cfd9df', c2: '#e2ebf0' },
+        exam: { emoji: '📚', c1: '#fceabb', c2: '#f8b500' },
+        custom: { emoji: state.customEventEmoji || '🎉', c1: '#667eea', c2: '#764ba2' }
+    };
+
+    const theme = eventImageTheme[eventType] || { emoji: '✨', c1: '#667eea', c2: '#764ba2' };
+    const eventName = getEventDisplayName();
+    const safeName = (eventName || 'Special Event').replace(/[<>&]/g, '').slice(0, 28);
+    const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="560" viewBox="0 0 560 560">
+    <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="${theme.c1}"/>
+            <stop offset="100%" stop-color="${theme.c2}"/>
+        </linearGradient>
+    </defs>
+    <rect width="560" height="560" rx="28" fill="url(#g)"/>
+    <text x="50%" y="42%" text-anchor="middle" font-size="120" font-family="Segoe UI, Arial">${theme.emoji}</text>
+    <text x="50%" y="58%" text-anchor="middle" font-size="42" font-weight="700" fill="#ffffff" font-family="Segoe UI, Arial">${safeName}</text>
+    <text x="50%" y="68%" text-anchor="middle" font-size="24" fill="#ffffff" opacity="0.95" font-family="Segoe UI, Arial">Warm wishes from SoulVest</text>
+</svg>`;
+
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+async function generateCard() {
+    hydrateStateFromForm();
     
     if (!state.recipientName) {
         showMessage('Please enter recipient name', 'error');
@@ -833,7 +1058,7 @@ async function generateCard() {
     }
     
     if (state.eventType === 'anniversary') {
-        const yearsTogether = document.getElementById('yearsTogether').value.trim();
+        const yearsTogether = document.getElementById('yearsTogether')?.value.trim();
         if (yearsTogether) {
             state.yearsTogether = yearsTogether;
         } else {
@@ -844,16 +1069,45 @@ async function generateCard() {
     showMessage('Generating card...', 'loading');
     
     try {
+        let messageMode = 'manual';
+        let imageMode = state.photoData ? 'uploaded photo' : 'none';
+
         if (!state.userMessage) {
-            state.generatedMessage = generateMessage();
+            try {
+                const aiMessage = await requestAIMessage(buildAIPayload());
+                state.generatedMessage = aiMessage.message;
+                state.userMessage = aiMessage.message;
+                const userMessageField = document.getElementById('userMessage');
+                if (userMessageField) {
+                    userMessageField.value = aiMessage.message;
+                }
+                messageMode = `AI (${aiMessage.providerUsed})`;
+            } catch (error) {
+                state.generatedMessage = generateMessage();
+                messageMode = 'template fallback';
+            }
         } else {
             state.generatedMessage = applyToneToMessage(state.userMessage);
+        }
+
+        if (!state.photoData) {
+            try {
+                const aiImage = await requestAIImage(buildAIPayload());
+                state.photoData = aiImage.imageDataUrl;
+                imageMode = `AI (${aiImage.providerUsed})`;
+            } catch (error) {
+                const fallbackImage = getEventFallbackImageData(state.eventType);
+                if (fallbackImage) {
+                    state.photoData = fallbackImage;
+                    imageMode = 'event fallback';
+                }
+            }
         }
 
         addMessageToHistory(state.generatedMessage);
         
         renderCard();
-        showMessage('Card generated successfully! ✨', 'success');
+        showMessage(`Card generated! Message: ${messageMode}, Image: ${imageMode} ✨`, 'success');
         document.getElementById('exportButtons').classList.remove('hidden');
         showSharingAndGallery();
     } catch (error) {
