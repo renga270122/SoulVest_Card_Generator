@@ -1,4 +1,4 @@
-const CACHE_NAME = 'soulvest-card-v2';
+const CACHE_NAME = 'soulvest-card-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -25,32 +25,44 @@ self.addEventListener('install', event => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request).then(
-          response => {
-            // Check if valid response
-            if(!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
+  const requestUrl = new URL(event.request.url);
+  const isNavigationRequest = event.request.mode === 'navigate';
+  const isHtmlFile = requestUrl.pathname.endsWith('.html') || requestUrl.pathname === '/';
 
-            // Clone the response
-            const responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
+  if (isNavigationRequest || isHtmlFile) {
+    event.respondWith(
+      fetch(event.request)
+        .then(networkResponse => {
+          if (networkResponse && networkResponse.status === 200) {
+            const networkCopy = networkResponse.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, networkCopy));
           }
-        );
-      })
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request).then(cached => cached || caches.match('/index.html')))
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(event.request).then(cachedResponse => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      return fetch(event.request).then(networkResponse => {
+        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+          return networkResponse;
+        }
+
+        const responseToCache = networkResponse.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseToCache);
+        });
+
+        return networkResponse;
+      });
+    })
   );
 });
 
