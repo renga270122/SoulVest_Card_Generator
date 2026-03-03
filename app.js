@@ -29,6 +29,13 @@ const messageTemplates = {
         `To {name} on your birthday - may your day be as {hobbies_adjective} as you are! Here's to making more incredible memories. Happy Birthday! 🎁`,
         `Happy Birthday, {name}! 🌟 Celebrating you and all the {hobbies_adjective} moments we share. Wishing you a year full of joy and unforgettable adventures!`
     ],
+    award: [
+        `Congratulations, {name}! 🏅 Winning {event_name} is a proud milestone. Wishing you many more {hobbies_adjective} achievements ahead!`,
+        `{name}, what an amazing achievement! 🎉 You truly deserve {event_name}. Keep shining and inspiring everyone around you!`,
+        `Big congratulations, {name}! 🌟 {event_name} is proof of your hard work and talent. Wishing you even more success!`,
+        `So proud of you, {name}! 🏆 On your {event_name}, may this moment open doors to bigger dreams and {hobbies_adjective} wins.`,
+        `Dear {name}, heartfelt wishes on {event_name}! ✨ Your dedication has paid off beautifully. Celebrate this special moment!`
+    ],
     anniversary: [
         `To {name}, our amazing partner for {years} beautiful years! 💕 Here's to a lifetime of {hobbies_adjective} moments, endless love, and countless memories. Happy Anniversary!`,
         `{years} years of love, laughter, and {hobbies_adjective} adventures together! 🎉 {name}, thank you for making every moment special. Happy Anniversary!`,
@@ -190,6 +197,7 @@ const customEventTemplates = [
 
 const eventDisplayNames = {
     birthday: 'Birthday',
+    award: 'Award Achievement',
     valentines: "Valentine's Day",
     anniversary: 'Wedding Anniversary',
     wedding: 'Wedding',
@@ -318,6 +326,7 @@ const defaultDescriptor = { adjective: 'wonderful', plural: 'special moments' };
 // Hobbies by event
 const hobbyOptions = {
     birthday: ['Reading', 'Gaming', 'Sports', 'Music', 'Cooking', 'Travel', 'Art', 'Photography', 'Fitness', 'Movies', 'Painting', 'Dancing', 'Yoga', 'Hiking', 'Swimming', 'Gardening', 'Crafts', 'Writing', 'Singing', 'Cycling'],
+    award: ['Music', 'Dance', 'Sports', 'Public Speaking', 'Leadership', 'Creativity', 'Writing', 'Art', 'Technology', 'Academics', 'Performance', 'Innovation', 'Research', 'Teamwork', 'Discipline'],
     valentines: ['Romantic Dinners', 'Music', 'Art', 'Cooking', 'Travel', 'Photography', 'Dancing', 'Gardening', 'Movies', 'Painting', 'Writing', 'Singing', 'Spa & Wellness', 'Gift Giving', 'Nature Walks', 'Crafts', 'Yoga', 'Meditation', 'Picnics', 'Board Games'],
     anniversary: ['Cooking', 'Travel', 'Music', 'Art', 'Wine Tasting', 'Dancing', 'Gardening', 'Hiking', 'Spa & Wellness', 'Movies', 'Romantic Dinners', 'Photography', 'Beach Walks', 'Painting', 'Yoga', 'Meditation', 'Concerts', 'Singing', 'Museums', 'Book Clubs'],
     wedding: ['Travel', 'Cooking', 'Gardening', 'Wine', 'Art', 'Music', 'Fitness', 'Photography', 'Hiking', 'Spa', 'Beach', 'Camping', 'Yoga', 'Volunteering', 'Dancing', 'Theater', 'Singing', 'Sports', 'Reading', 'Adventure'],
@@ -357,7 +366,7 @@ function applyEventPresetFromUrl() {
     const params = new URLSearchParams(window.location.search);
     const presetEvent = (params.get('event') || '').toLowerCase().trim();
     const allowedEvents = new Set([
-        'birthday', 'valentines', 'anniversary', 'wedding', 'graduation', 'newjob',
+        'birthday', 'award', 'valentines', 'anniversary', 'wedding', 'graduation', 'newjob',
         'housewarming', 'promotion', 'retirement', 'babyshower', 'getwell', 'exam',
         'diwali', 'holi', 'eid', 'christmas', 'newyear', 'navratri', 'dussehra',
         'ganeshchaturthi', 'rakshabandhan', 'janmashtami', 'onam', 'pongal', 'lohri', 'custom'
@@ -649,7 +658,7 @@ function updateHobbies() {
     }
 
     if (customEventGroup) {
-        if (eventType === 'custom') {
+        if (eventType === 'custom' || eventType === 'award') {
             customEventGroup.classList.remove('hidden');
         } else {
             customEventGroup.classList.add('hidden');
@@ -664,7 +673,7 @@ function updateHobbies() {
     }
 
     let hobbies = hobbyOptions[eventType] || [];
-    if (eventType === 'custom') {
+    if (eventType === 'custom' || eventType === 'award') {
         const customHobbiesInput = document.getElementById('customHobbies')?.value || '';
         const parsedHobbies = customHobbiesInput
             .split(',')
@@ -753,7 +762,7 @@ function buildAIUrl(path) {
 
 function configureAIEndpoint() {
     const current = getAIBaseUrl();
-    const value = prompt('Set AI backend URL (leave empty for same-origin /api). Example: https://your-ai-backend.vercel.app', current);
+    const value = prompt('Set AI server URL (leave empty to use local /api). Example: https://your-ai-backend.vercel.app', current);
     if (value === null) {
         return;
     }
@@ -762,13 +771,13 @@ function configureAIEndpoint() {
     if (!trimmed) {
         localStorage.removeItem(AI_ENDPOINT_STORAGE_KEY);
         updateAIConfigStatus();
-        showMessage('AI endpoint reset to local /api', 'success');
+        showMessage('AI server reset to local /api', 'success');
         return;
     }
 
     localStorage.setItem(AI_ENDPOINT_STORAGE_KEY, trimmed.replace(/\/$/, ''));
     updateAIConfigStatus();
-    showMessage('AI endpoint saved', 'success');
+    showMessage('AI server saved', 'success');
 }
 
 function updateAIConfigStatus() {
@@ -777,8 +786,8 @@ function updateAIConfigStatus() {
 
     const base = getAIBaseUrl();
     status.textContent = base
-        ? `AI endpoint: ${base}`
-        : 'AI endpoint: local (/api). Use Configure AI for external backend URL.';
+        ? `AI server: ${base}`
+        : 'AI server: local (/api). Use Set AI Server if your backend is hosted separately.';
 }
 
 function hydrateStateFromForm() {
@@ -834,11 +843,16 @@ async function requestAIImage(payload) {
 }
 
 async function callAIEndpoint(path, payload) {
-    const response = await fetch(buildAIUrl(path), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
+    let response;
+    try {
+        response = await fetch(buildAIUrl(path), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+    } catch (error) {
+        throw new Error('Unable to reach AI service right now. Please try again.');
+    }
 
     let data = {};
     try {
@@ -980,6 +994,24 @@ function getFestivalImageData(eventType) {
         if (!theme) return null;
 
         const festivalName = getEventDisplayName();
+        const festivalAccents = {
+            diwali: ['✨', '🕯️'],
+            holi: ['🌈', '🎉'],
+            eid: ['⭐', '🕌'],
+            christmas: ['🎁', '❄️'],
+            newyear: ['🥳', '🎊'],
+            navratri: ['🌸', '🪔'],
+            dussehra: ['🏹', '✨'],
+            ganeshchaturthi: ['🙏', '🌼'],
+            rakshabandhan: ['💖', '🎁'],
+            janmashtami: ['🪈', '🌟'],
+            onam: ['🌼', '🍃'],
+            pongal: ['🌾', '☀️'],
+            lohri: ['🔥', '🎶']
+        };
+
+        const title = (festivalName || 'Festival Wishes').replace(/[<>&]/g, '').slice(0, 30);
+        const accents = festivalAccents[eventType] || ['✨', '🎉'];
         const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="560" height="560" viewBox="0 0 560 560">
     <defs>
@@ -987,11 +1019,21 @@ function getFestivalImageData(eventType) {
             <stop offset="0%" stop-color="${theme.c1}"/>
             <stop offset="100%" stop-color="${theme.c2}"/>
         </linearGradient>
+        <radialGradient id="glow" cx="50%" cy="30%" r="65%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.28"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
     </defs>
     <rect width="560" height="560" rx="28" fill="url(#g)"/>
-    <text x="50%" y="42%" text-anchor="middle" font-size="120" font-family="Segoe UI, Arial">${theme.emoji}</text>
-    <text x="50%" y="58%" text-anchor="middle" font-size="42" font-weight="700" fill="#ffffff" font-family="Segoe UI, Arial">${festivalName}</text>
-    <text x="50%" y="68%" text-anchor="middle" font-size="24" fill="#ffffff" opacity="0.95" font-family="Segoe UI, Arial">Warm festive wishes</text>
+    <rect width="560" height="560" rx="28" fill="url(#glow)"/>
+    <circle cx="105" cy="105" r="58" fill="#ffffff" fill-opacity="0.14"/>
+    <circle cx="462" cy="458" r="74" fill="#ffffff" fill-opacity="0.12"/>
+    <rect x="58" y="150" width="444" height="260" rx="24" fill="#ffffff" fill-opacity="0.14" stroke="#ffffff" stroke-opacity="0.35"/>
+    <text x="28%" y="25%" text-anchor="middle" font-size="38" font-family="Segoe UI Emoji, Segoe UI, Arial">${accents[0]}</text>
+    <text x="72%" y="25%" text-anchor="middle" font-size="38" font-family="Segoe UI Emoji, Segoe UI, Arial">${accents[1]}</text>
+    <text x="50%" y="44%" text-anchor="middle" font-size="118" font-family="Segoe UI Emoji, Segoe UI, Arial">${theme.emoji}</text>
+    <text x="50%" y="58%" text-anchor="middle" font-size="42" font-weight="700" fill="#ffffff" font-family="Segoe UI, Arial">${title}</text>
+    <text x="50%" y="67.5%" text-anchor="middle" font-size="23" fill="#ffffff" opacity="0.97" font-family="Segoe UI, Arial">Festive wishes from SoulVest</text>
 </svg>`;
 
         return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
@@ -1004,22 +1046,23 @@ function getEventFallbackImageData(eventType) {
     }
 
     const eventImageTheme = {
-        birthday: { emoji: '🎂', c1: '#f093fb', c2: '#f5576c' },
-        valentines: { emoji: '💌', c1: '#ff5f6d', c2: '#ffc371' },
-        anniversary: { emoji: '💑', c1: '#ffafbd', c2: '#ffc3a0' },
-        wedding: { emoji: '💍', c1: '#fffbd5', c2: '#b7f8db' },
-        graduation: { emoji: '🎓', c1: '#43e97b', c2: '#38f9d7' },
-        newjob: { emoji: '🚀', c1: '#4facfe', c2: '#00f2fe' },
-        housewarming: { emoji: '🏠', c1: '#fff5e1', c2: '#ffe4e1' },
-        promotion: { emoji: '🏆', c1: '#f7971e', c2: '#ffd200' },
-        retirement: { emoji: '🏖️', c1: '#a8edea', c2: '#fed6e3' },
-        babyshower: { emoji: '👶', c1: '#fbc2eb', c2: '#a6c1ee' },
-        getwell: { emoji: '💙', c1: '#cfd9df', c2: '#e2ebf0' },
-        exam: { emoji: '📚', c1: '#fceabb', c2: '#f8b500' },
-        custom: { emoji: state.customEventEmoji || '🎉', c1: '#667eea', c2: '#764ba2' }
+        birthday: { emoji: '🎂', c1: '#f093fb', c2: '#f5576c', accents: ['🎈', '🎁'] },
+        award: { emoji: '🏅', c1: '#f6d365', c2: '#fda085', accents: ['🏆', '👏'] },
+        valentines: { emoji: '💌', c1: '#ff5f6d', c2: '#ffc371', accents: ['🌹', '💖'] },
+        anniversary: { emoji: '💑', c1: '#ffafbd', c2: '#ffc3a0', accents: ['🥂', '✨'] },
+        wedding: { emoji: '💍', c1: '#fffbd5', c2: '#b7f8db', accents: ['💐', '🎊'] },
+        graduation: { emoji: '🎓', c1: '#43e97b', c2: '#38f9d7', accents: ['📘', '🎉'] },
+        newjob: { emoji: '🚀', c1: '#4facfe', c2: '#00f2fe', accents: ['💼', '⭐'] },
+        housewarming: { emoji: '🏠', c1: '#fff5e1', c2: '#ffe4e1', accents: ['🪴', '🕯️'] },
+        promotion: { emoji: '🏆', c1: '#f7971e', c2: '#ffd200', accents: ['📈', '🎖️'] },
+        retirement: { emoji: '🏖️', c1: '#a8edea', c2: '#fed6e3', accents: ['🌴', '☀️'] },
+        babyshower: { emoji: '👶', c1: '#fbc2eb', c2: '#a6c1ee', accents: ['🍼', '🧸'] },
+        getwell: { emoji: '💙', c1: '#cfd9df', c2: '#e2ebf0', accents: ['🌼', '☀️'] },
+        exam: { emoji: '📚', c1: '#fceabb', c2: '#f8b500', accents: ['✍️', '🌟'] },
+        custom: { emoji: state.customEventEmoji || '🎉', c1: '#667eea', c2: '#764ba2', accents: ['✨', '🎊'] }
     };
 
-    const theme = eventImageTheme[eventType] || { emoji: '✨', c1: '#667eea', c2: '#764ba2' };
+    const theme = eventImageTheme[eventType] || { emoji: '✨', c1: '#667eea', c2: '#764ba2', accents: ['✨', '🎉'] };
     const eventName = getEventDisplayName();
     const safeName = (eventName || 'Special Event').replace(/[<>&]/g, '').slice(0, 28);
     const svg = `
@@ -1029,14 +1072,142 @@ function getEventFallbackImageData(eventType) {
             <stop offset="0%" stop-color="${theme.c1}"/>
             <stop offset="100%" stop-color="${theme.c2}"/>
         </linearGradient>
+        <radialGradient id="glow" cx="50%" cy="30%" r="65%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.28"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
     </defs>
     <rect width="560" height="560" rx="28" fill="url(#g)"/>
-    <text x="50%" y="42%" text-anchor="middle" font-size="120" font-family="Segoe UI, Arial">${theme.emoji}</text>
+    <rect width="560" height="560" rx="28" fill="url(#glow)"/>
+    <circle cx="102" cy="104" r="56" fill="#ffffff" fill-opacity="0.14"/>
+    <circle cx="462" cy="456" r="76" fill="#ffffff" fill-opacity="0.12"/>
+    <rect x="58" y="150" width="444" height="260" rx="24" fill="#ffffff" fill-opacity="0.14" stroke="#ffffff" stroke-opacity="0.35"/>
+    <text x="28%" y="25%" text-anchor="middle" font-size="38" font-family="Segoe UI Emoji, Segoe UI, Arial">${theme.accents[0]}</text>
+    <text x="72%" y="25%" text-anchor="middle" font-size="38" font-family="Segoe UI Emoji, Segoe UI, Arial">${theme.accents[1]}</text>
+    <text x="50%" y="44%" text-anchor="middle" font-size="118" font-family="Segoe UI Emoji, Segoe UI, Arial">${theme.emoji}</text>
     <text x="50%" y="58%" text-anchor="middle" font-size="42" font-weight="700" fill="#ffffff" font-family="Segoe UI, Arial">${safeName}</text>
-    <text x="50%" y="68%" text-anchor="middle" font-size="24" fill="#ffffff" opacity="0.95" font-family="Segoe UI, Arial">Warm wishes from SoulVest</text>
+    <text x="50%" y="67.5%" text-anchor="middle" font-size="23" fill="#ffffff" opacity="0.97" font-family="Segoe UI, Arial">Special wishes from SoulVest</text>
 </svg>`;
 
     return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+const onlineImageKeywords = {
+    birthday: 'birthday celebration balloons cake party',
+    award: 'award ceremony trophy winner celebration achievement',
+    valentines: 'valentine romantic flowers hearts',
+    anniversary: 'anniversary couple celebration flowers',
+    wedding: 'wedding celebration flowers decor',
+    graduation: 'graduation cap celebration confetti',
+    newjob: 'office success celebration',
+    housewarming: 'new home cozy decor celebration',
+    promotion: 'career success celebration office',
+    retirement: 'retirement beach travel celebration',
+    babyshower: 'baby shower pastel celebration',
+    getwell: 'flowers wellness calm',
+    exam: 'study books success motivation',
+    diwali: 'diwali lights diyas rangoli festival',
+    holi: 'holi colors festival celebration',
+    eid: 'eid moon lanterns celebration',
+    christmas: 'christmas tree lights celebration',
+    newyear: 'new year fireworks celebration',
+    navratri: 'navratri garba festive celebration',
+    dussehra: 'dussehra festival celebration',
+    ganeshchaturthi: 'ganesh chaturthi festival decoration',
+    rakshabandhan: 'raksha bandhan festival celebration',
+    janmashtami: 'janmashtami festival celebration',
+    onam: 'onam pookalam festival celebration',
+    pongal: 'pongal harvest festival celebration',
+    lohri: 'lohri bonfire festival celebration',
+    custom: 'festival celebration decoration background'
+};
+
+function buildWikimediaSearchUrl(eventType) {
+    const eventName = getEventDisplayName();
+    const keyword = onlineImageKeywords[eventType] || `${eventName} festival celebration decoration`;
+    const searchQuery = encodeURIComponent(`${keyword} filetype:bitmap`);
+    return `https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit=10&gsrsearch=${searchQuery}&prop=imageinfo&iiprop=url|mime&iiurlwidth=1024`;
+}
+
+function scoreTitleRelevance(title, eventType) {
+    const normalizedTitle = (title || '').toLowerCase();
+    const eventName = getEventDisplayName().toLowerCase();
+    const keyText = (onlineImageKeywords[eventType] || `${eventType} ${eventName}`).toLowerCase();
+    const tokens = keyText.split(/\s+/).filter(token => token.length > 3);
+
+    let score = 0;
+    for (const token of tokens) {
+        if (normalizedTitle.includes(token)) {
+            score += 1;
+        }
+    }
+    return score;
+}
+
+function pickBestWikimediaImageUrl(pages, eventType) {
+    if (!pages || typeof pages !== 'object') return null;
+
+    const ranked = Object.values(pages)
+        .map(page => {
+            const info = page?.imageinfo?.[0] || {};
+            const imageUrl = info.thumburl || info.url || '';
+            const mimeType = info.mime || '';
+            return {
+                imageUrl,
+                mimeType,
+                score: scoreTitleRelevance(page?.title, eventType)
+            };
+        })
+        .filter(item => item.imageUrl && item.mimeType.startsWith('image/'))
+        .sort((a, b) => b.score - a.score);
+
+    return ranked[0]?.imageUrl || null;
+}
+
+async function fetchWithTimeout(url, timeoutMs = 9000) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        return await fetch(url, { signal: controller.signal, cache: 'no-store' });
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('Failed to convert image blob'));
+        reader.readAsDataURL(blob);
+    });
+}
+
+async function getOnlineEventImageData(eventType) {
+    try {
+        const searchResponse = await fetchWithTimeout(buildWikimediaSearchUrl(eventType));
+        if (!searchResponse.ok) return null;
+
+        const data = await searchResponse.json();
+        const imageUrl = pickBestWikimediaImageUrl(data?.query?.pages, eventType);
+        if (!imageUrl) return null;
+
+        const imageResponse = await fetchWithTimeout(imageUrl);
+        if (!imageResponse.ok) return null;
+
+        const contentType = imageResponse.headers.get('content-type') || '';
+        if (!contentType.startsWith('image/')) return null;
+
+        const imageBlob = await imageResponse.blob();
+        const dataUrl = await blobToDataUrl(imageBlob);
+        if (typeof dataUrl === 'string' && dataUrl.startsWith('data:image/')) {
+            return dataUrl;
+        }
+    } catch (error) {
+        return null;
+    }
+
+    return null;
 }
 
 async function generateCard() {
@@ -1052,8 +1223,8 @@ async function generateCard() {
         return;
     }
 
-    if (state.eventType === 'custom' && !state.customEventName) {
-        showMessage('Please enter a custom event name', 'error');
+    if ((state.eventType === 'custom' || state.eventType === 'award') && !state.customEventName) {
+        showMessage('Please enter an event name', 'error');
         return;
     }
     
@@ -1073,6 +1244,7 @@ async function generateCard() {
         let imageMode = state.photoData ? 'uploaded photo' : 'none';
 
         if (!state.userMessage) {
+            showMessage('Generating message...', 'loading');
             try {
                 const aiMessage = await requestAIMessage(buildAIPayload());
                 state.generatedMessage = aiMessage.message;
@@ -1091,15 +1263,29 @@ async function generateCard() {
         }
 
         if (!state.photoData) {
+            showMessage('Preparing image...', 'loading');
             try {
                 const aiImage = await requestAIImage(buildAIPayload());
                 state.photoData = aiImage.imageDataUrl;
                 imageMode = `AI (${aiImage.providerUsed})`;
             } catch (error) {
-                const fallbackImage = getEventFallbackImageData(state.eventType);
-                if (fallbackImage) {
-                    state.photoData = fallbackImage;
-                    imageMode = 'event fallback';
+                showMessage('Finalizing image...', 'loading');
+                const shouldUseOnlineFallback = state.eventType === 'custom';
+
+                if (shouldUseOnlineFallback) {
+                    const onlineImage = await getOnlineEventImageData(state.eventType);
+                    if (onlineImage) {
+                        state.photoData = onlineImage;
+                        imageMode = 'online image';
+                    }
+                }
+
+                if (!state.photoData) {
+                    const fallbackImage = getEventFallbackImageData(state.eventType);
+                    if (fallbackImage) {
+                        state.photoData = fallbackImage;
+                        imageMode = 'event fallback';
+                    }
                 }
             }
         }
@@ -1107,7 +1293,7 @@ async function generateCard() {
         addMessageToHistory(state.generatedMessage);
         
         renderCard();
-        showMessage(`Card generated! Message: ${messageMode}, Image: ${imageMode} ✨`, 'success');
+        showMessage('Card generated successfully! ✨', 'success');
         document.getElementById('exportButtons').classList.remove('hidden');
         showSharingAndGallery();
     } catch (error) {
@@ -1129,6 +1315,7 @@ function renderCard() {
     const eventThemes = {
         valentines: () => valentinesThemes[Math.floor(Math.random() * valentinesThemes.length)],
         birthday: () => ({ gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', emoji: '🎂', tagline: 'Fun & Festive' }),
+        award: () => ({ gradient: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)', emoji: '🏅', tagline: 'Pride & Achievement' }),
         anniversary: () => ({ gradient: 'linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%)', emoji: '💑', tagline: 'Cherished Memories' }),
         wedding: () => ({ gradient: 'linear-gradient(135deg, #fffbd5 0%, #b7f8db 100%)', emoji: '💍', tagline: 'Elegant & Joyful' }),
         graduation: () => ({ gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', emoji: '🎓', tagline: 'Bright Future' }),
@@ -1198,6 +1385,7 @@ function renderCard() {
     
     const eventGreetings = {
         birthday: `Happy Birthday ${state.recipientName}!`,
+        award: `Congratulations ${state.recipientName}!`,
         valentines: `Happy Valentine's Day ${state.recipientName}!`,
         anniversary: `Happy Wedding Anniversary ${state.recipientName}!`,
         wedding: `Happy Wedding ${state.recipientName}!`,
@@ -1237,7 +1425,7 @@ function renderCard() {
         </div>
         <div class="card-footer">
             <p>${designTheme.tagline}</p>
-            <p style="margin-top: 10px; font-size: 0.9em; font-style: italic; opacity: 0.9;">💖 Made with love for a special person</p>
+            <p style="margin-top: 10px; font-size: 0.9em; font-style: italic; opacity: 0.9;">💖 Made with love using Soulvest Card</p>
         </div>
     `;
     
@@ -1249,7 +1437,7 @@ function renderCard() {
 }
 
 function getEventDisplayName() {
-    if (state.eventType === 'custom') {
+    if (state.eventType === 'custom' || state.eventType === 'award') {
         return state.customEventName || 'Special Event';
     }
     return eventDisplayNames[state.eventType] || state.eventType || 'Special Event';
@@ -1316,8 +1504,8 @@ function generateAnotherMessage() {
         return;
     }
 
-    if (state.eventType === 'custom' && !state.customEventName) {
-        showMessage('Please enter a custom event name', 'error');
+    if ((state.eventType === 'custom' || state.eventType === 'award') && !state.customEventName) {
+        showMessage('Please enter an event name', 'error');
         return;
     }
 
