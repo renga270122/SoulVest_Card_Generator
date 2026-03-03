@@ -658,11 +658,7 @@ function updateHobbies() {
     }
 
     if (customEventGroup) {
-        if (eventType === 'custom' || eventType === 'award') {
-            customEventGroup.classList.remove('hidden');
-        } else {
-            customEventGroup.classList.add('hidden');
-        }
+        customEventGroup.classList.remove('hidden');
     }
     
     container.innerHTML = '';
