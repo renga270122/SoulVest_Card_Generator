@@ -1,0 +1,28 @@
+{
+  "name": "soulvest-card-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SoulVest Greeting Card Generator - Android wrapper via Capacitor",
+  "scripts": {
+    "prepare:web": "node scripts/prepare-web.js",
+    "prepare:assets": "node scripts/prepare-capacitor-assets.js",
+    "android:assets": "npm run prepare:assets && npx capacitor-assets generate --android",
+    "android:precheck": "node scripts/android-release-precheck.js",
+    "cap:sync": "npm run prepare:web && npx cap sync",
+    "cap:add:android": "npm run prepare:web && npx cap add android",
+    "cap:open:android": "npx cap open android",
+    "android:init": "npm run cap:add:android && npm run cap:sync",
+    "android:build:debug": "npm run cap:sync && cd android && gradlew.bat assembleDebug",
+    "android:build:apk": "npm run android:precheck && npm run cap:sync && cd android && gradlew.bat assembleRelease",
+    "android:build:aab": "npm run android:precheck && npm run cap:sync && cd android && gradlew.bat bundleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.1",
+    "@capacitor/core": "^7.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.0.1",
+    "sharp": "^0.33.5"
+  }
+}

@@ -1,0 +1,12 @@
+# Node
+node_modules/
+
+# Generated web staging for Capacitor
+web/
+
+# Optional local signing assets
+keystore/
+
+# OS / editor artifacts
+.DS_Store
+Thumbs.db

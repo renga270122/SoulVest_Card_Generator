@@ -1,0 +1,8 @@
+{
+  "appId": "com.soulvest.cardgenerator",
+  "appName": "SoulVest Cards",
+  "webDir": "web",
+  "server": {
+    "androidScheme": "https"
+  }
+}
