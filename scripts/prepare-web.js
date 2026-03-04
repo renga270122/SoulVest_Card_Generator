@@ -12,6 +12,8 @@ const filesToCopy = [
   'service-worker.js',
   'icon-192.png',
   'icon-512.png',
+  'icon-192-v2.png',
+  'icon-512-v2.png',
   'icon.svg',
   'soulvest_logo.png',
   'dhoni.jfif',
