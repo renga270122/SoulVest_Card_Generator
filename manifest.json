@@ -2,8 +2,8 @@
   "name": "SoulVest Card Generator",
   "short_name": "SoulVest",
   "description": "Create beautiful, personalized gift cards for any occasion",
-  "start_url": "/SoulVest_Card_Generator/",
-  "scope": "/SoulVest_Card_Generator/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#764ba2",
@@ -27,7 +27,7 @@
       "name": "Create Greeting Card",
       "short_name": "Create Card",
       "description": "Open SoulVest card generator",
-      "url": "/SoulVest_Card_Generator/",
+      "url": "/",
       "icons": [
         {
           "src": "icon-192.png",
@@ -40,7 +40,7 @@
   "protocol_handlers": [
     {
       "protocol": "web+soulvest",
-      "url": "/SoulVest_Card_Generator/?card=%s"
+      "url": "/?card=%s"
     }
   ],
   "categories": ["lifestyle", "entertainment", "social"],

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'soulvest-card-v3';
+const CACHE_NAME = 'soulvest-card-v4';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -36,8 +36,11 @@ self.addEventListener('fetch', event => {
           if (networkResponse && networkResponse.status === 200) {
             const networkCopy = networkResponse.clone();
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, networkCopy));
+            return networkResponse;
           }
-          return networkResponse;
+
+          return caches.match(event.request)
+            .then(cached => cached || caches.match('/index.html') || networkResponse);
         })
         .catch(() => caches.match(event.request).then(cached => cached || caches.match('/index.html')))
     );
