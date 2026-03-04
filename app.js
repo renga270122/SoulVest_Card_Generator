@@ -121,67 +121,67 @@ const messageTemplates = {
         `Dear {name}, wishing you a magical Valentine's Day! May it be filled with {hobbies_adjective} surprises and endless affection.`
     ],
     diwali: [
-        `Happy Diwali, {name}! 🪔 May your life shine with {hobbies_adjective} joy, prosperity, and beautiful new beginnings.`,
+        `Happy Diwali, {name}! 🪔 May your life shine with joy, prosperity, and beautiful new beginnings.`,
         `{name}, wishing you and your family a bright and blessed Diwali! ✨ May this festival fill your home with happiness and peace.`,
-        `May the lights of Diwali bring success, health, and {hobbies_adjective} memories to you, {name}! 🌟`
+        `May the lights of Diwali bring health, success, and happiness to you and your loved ones, {name}! 🌟`
     ],
     holi: [
-        `Happy Holi, {name}! 🎨 May your life be filled with vibrant colors, laughter, and {hobbies_adjective} celebrations.`,
-        `{name}, wishing you a joyful Holi full of fun, love, and unforgettable moments with loved ones! 🌈`,
-        `Let this Holi paint your year with happiness and success, {name}! Have a colorful and {hobbies_adjective} celebration!`
+        `Happy Holi, {name}! 🎨 Wishing you a day full of vibrant colors, laughter, and beautiful moments with your loved ones.`,
+        `{name}, may this Holi bring joy, peace, and togetherness to you and your family. Have a safe and colorful celebration! 🌈`,
+        `Wishing you a bright and joyful Holi, {name}! May your year be painted with happiness, good health, and success. ✨`
     ],
     eid: [
-        `Eid Mubarak, {name}! 🌙 May this blessed day bring you peace, prosperity, and {hobbies_adjective} happiness.`,
+        `Eid Mubarak, {name}! 🌙 May this blessed day bring you peace, prosperity, and happiness.`,
         `{name}, sending warm Eid wishes to you and your family. May your heart be filled with gratitude and joy. ✨`,
-        `On this Eid, may Allah bless you with health, love, and {hobbies_adjective} moments, {name}. Eid Mubarak!`
+        `On this Eid, may Allah bless you with health, love, and countless blessings, {name}. Eid Mubarak!`
     ],
     christmas: [
-        `Merry Christmas, {name}! 🎄 May your holiday season be filled with {hobbies_adjective} joy, love, and warmth.`,
+        `Merry Christmas, {name}! 🎄 May your holiday season be filled with joy, love, and warmth.`,
         `{name}, wishing you peace, happiness, and magical moments this Christmas and always! 🎁`,
-        `May your Christmas sparkle with laughter, family time, and {hobbies_adjective} memories, {name}!`
+        `May your Christmas sparkle with laughter, family time, and beautiful memories, {name}!`
     ],
     newyear: [
-        `Happy New Year, {name}! 🎉 Wishing you a year full of {hobbies_adjective} opportunities, success, and happiness.`,
+        `Happy New Year, {name}! 🎉 Wishing you a year full of new opportunities, success, and happiness.`,
         `{name}, may this New Year bring fresh energy, positivity, and wonderful memories with your loved ones. ✨`,
-        `Cheers to a bright and {hobbies_adjective} year ahead, {name}! Happy New Year! 🥳`
+        `Cheers to a bright and joyful year ahead, {name}! Happy New Year! 🥳`
     ],
     navratri: [
-        `Happy Navratri, {name}! 🙏 May Maa Durga bless you with strength, peace, and {hobbies_adjective} joy.`,
+        `Happy Navratri, {name}! 🙏 May Maa Durga bless you with strength, peace, and joy.`,
         `{name}, wishing you nine nights of devotion, celebration, and divine blessings. Happy Navratri! 🌸`,
-        `May this Navratri fill your life with positivity and {hobbies_adjective} energy, {name}!`
+        `May this Navratri fill your life with positivity and uplifting energy, {name}!`
     ],
     dussehra: [
-        `Happy Dussehra, {name}! 🏹 May good always triumph in your life and bring {hobbies_adjective} success.`,
+        `Happy Dussehra, {name}! 🏹 May good always triumph in your life and bring lasting success.`,
         `{name}, wishing you courage, happiness, and victory in every step this Dussehra. ✨`,
-        `May this Dussehra inspire new beginnings and {hobbies_adjective} moments for you, {name}.`
+        `May this Dussehra inspire new beginnings and meaningful moments for you, {name}.`
     ],
     ganeshchaturthi: [
-        `Happy Ganesh Chaturthi, {name}! 🐘 May Lord Ganesha remove obstacles and bless you with {hobbies_adjective} prosperity.`,
+        `Happy Ganesh Chaturthi, {name}! 🐘 May Lord Ganesha remove obstacles and bless you with peace and prosperity.`,
         `{name}, wishing you and your family joy, wisdom, and abundance this Ganesh Chaturthi! 🙏`,
-        `Ganpati Bappa Morya! May your life be filled with happiness and {hobbies_adjective} blessings, {name}.`
+        `Ganpati Bappa Morya! May your life be filled with happiness and divine blessings, {name}.`
     ],
     rakshabandhan: [
         `Happy Raksha Bandhan, {name}! 🎀 Celebrating the beautiful bond of love, trust, and lifelong support.`,
-        `{name}, may this Rakhi bring warmth, happiness, and {hobbies_adjective} memories with family.`,
+        `{name}, may this Rakhi bring warmth, happiness, and cherished memories with family.`,
         `Wishing you a joyful Raksha Bandhan filled with love and togetherness, {name}! 💖`
     ],
     janmashtami: [
-        `Happy Janmashtami, {name}! 🦚 May Lord Krishna bless you with peace, love, and {hobbies_adjective} joy.`,
+        `Happy Janmashtami, {name}! 🦚 May Lord Krishna bless you with peace, love, and joy.`,
         `{name}, wishing you a divine and cheerful Janmashtami filled with devotion and celebration. 🙏`,
-        `May this Janmashtami bring harmony, happiness, and {hobbies_adjective} blessings into your life, {name}.`
+        `May this Janmashtami bring harmony, happiness, and blessings into your life, {name}.`
     ],
     onam: [
-        `Happy Onam, {name}! 🌼 May this harvest festival bring abundance, happiness, and {hobbies_adjective} celebrations.`,
+        `Happy Onam, {name}! 🌼 May this harvest festival bring abundance, happiness, and joyful celebrations.`,
         `{name}, wishing you and your family a prosperous Onam filled with joy and togetherness.`,
-        `May your Onam be as colorful and {hobbies_adjective} as your dreams, {name}! 🌾`
+        `May your Onam be as colorful and joyful as your dreams, {name}! 🌾`
     ],
     pongal: [
-        `Happy Pongal, {name}! 🌾 Wishing you prosperity, health, and {hobbies_adjective} happiness this festive season.`,
+        `Happy Pongal, {name}! 🌾 Wishing you prosperity, health, and happiness this festive season.`,
         `{name}, may this Pongal bring sweet moments, new hopes, and joyful celebrations with loved ones.`,
         `Wishing you a bright and bountiful Pongal, {name}! ✨`
     ],
     lohri: [
-        `Happy Lohri, {name}! 🔥 May this festival fill your life with warmth, joy, and {hobbies_adjective} blessings.`,
+        `Happy Lohri, {name}! 🔥 May this festival fill your life with warmth, joy, and blessings.`,
         `{name}, wishing you a vibrant Lohri full of celebration, music, and happiness!`,
         `May the Lohri bonfire bring positivity and success to your year, {name}! 🎉`
     ]

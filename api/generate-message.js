@@ -8,6 +8,8 @@ const {
 
 function buildPrompt(payload) {
     const hobbies = Array.isArray(payload.selectedHobbies) ? payload.selectedHobbies.join(', ') : '';
+    const eventType = (payload.eventType || '').toLowerCase();
+    const eventGuidance = getEventGuidance(eventType);
     return [
         'Write one personalized greeting card message.',
         `Recipient name: ${payload.recipientName || 'Friend'}`,
@@ -16,6 +18,7 @@ function buildPrompt(payload) {
         `Tone: ${payload.messageTone || 'balanced'}`,
         `Hobbies/interests: ${hobbies || 'Not specified'}`,
         `User notes: ${payload.userMessage || 'None'}`,
+        eventGuidance,
         '',
         'Constraints:',
         '- 40 to 90 words',
@@ -24,6 +27,104 @@ function buildPrompt(payload) {
         '- No quotation marks around the full message',
         '- Return only the message text'
     ].join('\n');
+}
+
+function getEventGuidance(eventType) {
+    const guidanceByFestival = {
+        diwali: [
+            'Event guidance for Diwali:',
+            '- Open naturally with "Happy Diwali"',
+            '- Mention light, joy, prosperity, and new beginnings',
+            '- Keep it warm, respectful, and family-friendly',
+            '- Do not mention other festivals'
+        ],
+        holi: [
+            'Event guidance for Holi:',
+            '- Open naturally with "Happy Holi"',
+            '- Mention colors, joy, togetherness, and celebration',
+            '- Keep it culturally respectful and family-friendly',
+            '- Do not mention other festivals'
+        ],
+        eid: [
+            'Event guidance for Eid:',
+            '- Open naturally with "Eid Mubarak"',
+            '- Mention peace, gratitude, blessings, and togetherness',
+            '- Keep wording respectful and family-friendly',
+            '- Do not mention other festivals'
+        ],
+        christmas: [
+            'Event guidance for Christmas:',
+            '- Open naturally with "Merry Christmas"',
+            '- Mention joy, warmth, kindness, and family time',
+            '- Keep wording warm and festive',
+            '- Do not mention other festivals'
+        ],
+        newyear: [
+            'Event guidance for New Year:',
+            '- Open naturally with "Happy New Year"',
+            '- Mention fresh beginnings, hope, and success ahead',
+            '- Keep it positive and forward-looking',
+            '- Do not mention other festivals'
+        ],
+        navratri: [
+            'Event guidance for Navratri:',
+            '- Open naturally with "Happy Navratri"',
+            '- Mention devotion, celebration, and positive energy',
+            '- Keep wording respectful and uplifting',
+            '- Do not mention other festivals'
+        ],
+        dussehra: [
+            'Event guidance for Dussehra:',
+            '- Open naturally with "Happy Dussehra"',
+            '- Mention victory of good, courage, and new beginnings',
+            '- Keep wording respectful and optimistic',
+            '- Do not mention other festivals'
+        ],
+        ganeshchaturthi: [
+            'Event guidance for Ganesh Chaturthi:',
+            '- Open naturally with "Happy Ganesh Chaturthi"',
+            '- Mention blessings, wisdom, and prosperity',
+            '- Keep wording devotional and respectful',
+            '- Do not mention other festivals'
+        ],
+        rakshabandhan: [
+            'Event guidance for Raksha Bandhan:',
+            '- Open naturally with "Happy Raksha Bandhan"',
+            '- Mention sibling bond, love, trust, and support',
+            '- Keep wording warm and family-oriented',
+            '- Do not mention other festivals'
+        ],
+        janmashtami: [
+            'Event guidance for Janmashtami:',
+            '- Open naturally with "Happy Janmashtami"',
+            '- Mention devotion, peace, and divine blessings',
+            '- Keep wording respectful and serene',
+            '- Do not mention other festivals'
+        ],
+        onam: [
+            'Event guidance for Onam:',
+            '- Open naturally with "Happy Onam"',
+            '- Mention abundance, joy, and family togetherness',
+            '- Keep wording warm and celebratory',
+            '- Do not mention other festivals'
+        ],
+        pongal: [
+            'Event guidance for Pongal:',
+            '- Open naturally with "Happy Pongal"',
+            '- Mention harvest joy, gratitude, and prosperity',
+            '- Keep wording warm and family-friendly',
+            '- Do not mention other festivals'
+        ],
+        lohri: [
+            'Event guidance for Lohri:',
+            '- Open naturally with "Happy Lohri"',
+            '- Mention warmth, celebration, and festive joy',
+            '- Keep wording cheerful and respectful',
+            '- Do not mention other festivals'
+        ]
+    };
+
+    return guidanceByFestival[eventType]?.join('\n') || '';
 }
 
 async function generateWithOpenAI(prompt) {
