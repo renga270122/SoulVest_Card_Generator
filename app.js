@@ -1046,7 +1046,7 @@ function getEventFallbackImageData(eventType) {
         award: { emoji: '🏅', c1: '#f6d365', c2: '#fda085', accents: ['🏆', '👏'] },
         valentines: { emoji: '💌', c1: '#ff5f6d', c2: '#ffc371', accents: ['🌹', '💖'] },
         anniversary: { emoji: '💑', c1: '#ffafbd', c2: '#ffc3a0', accents: ['🥂', '✨'] },
-        wedding: { emoji: '💍', c1: '#fffbd5', c2: '#b7f8db', accents: ['💐', '🎊'] },
+        wedding: { emoji: '💍', c1: '#d96aa7', c2: '#7b6cf6', accents: ['💐', '🎊'] },
         graduation: { emoji: '🎓', c1: '#43e97b', c2: '#38f9d7', accents: ['📘', '🎉'] },
         newjob: { emoji: '🚀', c1: '#4facfe', c2: '#00f2fe', accents: ['💼', '⭐'] },
         housewarming: { emoji: '🏠', c1: '#fff5e1', c2: '#ffe4e1', accents: ['🪴', '🕯️'] },
@@ -1313,7 +1313,7 @@ function renderCard() {
         birthday: () => ({ gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', emoji: '🎂', tagline: 'Fun & Festive' }),
         award: () => ({ gradient: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)', emoji: '🏅', tagline: 'Pride & Achievement' }),
         anniversary: () => ({ gradient: 'linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%)', emoji: '💑', tagline: 'Cherished Memories' }),
-        wedding: () => ({ gradient: 'linear-gradient(135deg, #fffbd5 0%, #b7f8db 100%)', emoji: '💍', tagline: 'Elegant & Joyful' }),
+        wedding: () => ({ gradient: 'linear-gradient(135deg, #d96aa7 0%, #7b6cf6 100%)', emoji: '💍', tagline: 'Elegant & Joyful' }),
         graduation: () => ({ gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', emoji: '🎓', tagline: 'Bright Future' }),
         newjob: () => ({ gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', emoji: '🚀', tagline: 'New Beginnings' }),
         housewarming: () => ({ gradient: 'linear-gradient(135deg, #fff5e1 0%, #ffe4e1 100%)', emoji: '🏠', tagline: 'Warm & Welcoming' }),
@@ -1364,6 +1364,8 @@ function renderCard() {
     }
     const cardPreview = document.getElementById('cardPreview');
     cardPreview.style.background = designTheme.gradient;
+    const themePalette = getThemeTextPalette(designTheme.gradient);
+    cardPreview.style.color = themePalette.textColor;
     
     let photoHTML = '';
     if (state.photoData) {
@@ -1412,16 +1414,16 @@ function renderCard() {
     headerText = eventGreetings[state.eventType] || headerText;
     
     cardPreview.innerHTML = `
-        <div class="card-header">
+        <div class="card-header" style="border-bottom-color: ${themePalette.borderColor};">
             <h2>${headerEmoji} ${headerText}</h2>
         </div>
         <div class="card-body">
             ${photoHTML}
-            <div class="card-message">${state.generatedMessage}</div>
+            <div class="card-message" style="color: ${themePalette.textColor};">${state.generatedMessage}</div>
         </div>
-        <div class="card-footer">
-            <p>${designTheme.tagline}</p>
-            <p style="margin-top: 10px; font-size: 0.9em; font-style: italic; opacity: 0.9;">💖 Made with love using Soulvest Card</p>
+        <div class="card-footer" style="color: ${themePalette.mutedTextColor}; opacity: 1;">
+            <p style="color: ${themePalette.textColor};">${designTheme.tagline}</p>
+            <p style="margin-top: 10px; font-size: 0.9em; font-style: italic; opacity: 0.9; color: ${themePalette.mutedTextColor};">💖 Made with love using Soulvest Card</p>
         </div>
     `;
     
@@ -1648,6 +1650,85 @@ function parseDesignPreference(text) {
     }
     
     return { gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', emoji: '✨', tagline: 'Special & Memorable' };
+}
+
+function getThemeTextPalette(gradient) {
+    const hexColors = extractHexColorsFromGradient(gradient);
+    if (!hexColors.length) {
+        return {
+            textColor: '#ffffff',
+            mutedTextColor: 'rgba(255,255,255,0.85)',
+            borderColor: 'rgba(255,255,255,0.35)'
+        };
+    }
+
+    const luminanceValues = hexColors
+        .map(hexToRgb)
+        .filter(Boolean)
+        .map(getRelativeLuminance);
+
+    const averageLuminance = luminanceValues.reduce((sum, value) => sum + value, 0) / luminanceValues.length;
+    const isLightBackground = averageLuminance > 0.72;
+
+    if (isLightBackground) {
+        return {
+            textColor: '#1f2937',
+            mutedTextColor: 'rgba(31,41,55,0.78)',
+            borderColor: 'rgba(31,41,55,0.22)'
+        };
+    }
+
+    return {
+        textColor: '#ffffff',
+        mutedTextColor: 'rgba(255,255,255,0.85)',
+        borderColor: 'rgba(255,255,255,0.35)'
+    };
+}
+
+function extractHexColorsFromGradient(gradient) {
+    if (!gradient || typeof gradient !== 'string') return [];
+    const matches = gradient.match(/#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b/g) || [];
+    return matches.map(normalizeHexColor);
+}
+
+function normalizeHexColor(hex) {
+    if (!hex || typeof hex !== 'string') return null;
+    const value = hex.trim().replace('#', '');
+    if (value.length === 3) {
+        return `#${value[0]}${value[0]}${value[1]}${value[1]}${value[2]}${value[2]}`.toLowerCase();
+    }
+    if (value.length === 6) {
+        return `#${value}`.toLowerCase();
+    }
+    return null;
+}
+
+function hexToRgb(hex) {
+    if (!hex) return null;
+    const normalized = normalizeHexColor(hex);
+    if (!normalized) return null;
+
+    const value = normalized.slice(1);
+    return {
+        r: parseInt(value.slice(0, 2), 16),
+        g: parseInt(value.slice(2, 4), 16),
+        b: parseInt(value.slice(4, 6), 16)
+    };
+}
+
+function getRelativeLuminance({ r, g, b }) {
+    const toLinear = (channel) => {
+        const normalized = channel / 255;
+        return normalized <= 0.03928
+            ? normalized / 12.92
+            : ((normalized + 0.055) / 1.055) ** 2.4;
+    };
+
+    const red = toLinear(r);
+    const green = toLinear(g);
+    const blue = toLinear(b);
+
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 }
 
 async function downloadPNG() {
