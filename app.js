@@ -205,7 +205,7 @@ const eventDisplayNames = {
     newjob: 'New Job',
     housewarming: 'House Warming',
     promotion: 'Promotion',
-    retirement: 'Retirement',
+    retirement: 'Retirement Life Wishes',
     babyshower: 'Baby Shower',
     getwell: 'Get Well',
     exam: 'Exam Wishes',
