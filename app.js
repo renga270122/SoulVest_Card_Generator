@@ -360,6 +360,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDraftFeature();
     renderMessageHistory();
     updateAIConfigStatus();
+    // PWA Install Event Tracking
+    window.addEventListener('appinstalled', function() {
+        if (typeof gtag === 'function') {
+            gtag('event', 'pwa_installed', {
+                'event_category': 'engagement',
+                'event_label': 'PWA Install',
+                'value': 1
+            });
+        }
+    });
 });
 
 function applyEventPresetFromUrl() {
@@ -1046,7 +1056,7 @@ function getEventFallbackImageData(eventType) {
         award: { emoji: '🏅', c1: '#f6d365', c2: '#fda085', accents: ['🏆', '👏'] },
         valentines: { emoji: '💌', c1: '#ff5f6d', c2: '#ffc371', accents: ['🌹', '💖'] },
         anniversary: { emoji: '💑', c1: '#ffafbd', c2: '#ffc3a0', accents: ['🥂', '✨'] },
-        wedding: { emoji: '💍', c1: '#d96aa7', c2: '#7b6cf6', accents: ['💐', '🎊'] },
+        wedding: { emoji: '💍', c1: '#f093fb', c2: '#f5576c', accents: ['💐', '🎊'] },
         graduation: { emoji: '🎓', c1: '#43e97b', c2: '#38f9d7', accents: ['📘', '🎉'] },
         newjob: { emoji: '🚀', c1: '#4facfe', c2: '#00f2fe', accents: ['💼', '⭐'] },
         housewarming: { emoji: '🏠', c1: '#fff5e1', c2: '#ffe4e1', accents: ['🪴', '🕯️'] },
@@ -1287,7 +1297,16 @@ async function generateCard() {
         }
 
         addMessageToHistory(state.generatedMessage);
-        
+
+        // GA4 Event: Card Generated
+        if (typeof gtag === 'function') {
+            gtag('event', 'card_generated', {
+                'event_category': 'engagement',
+                'event_label': state.eventType || 'unknown',
+                'value': 1
+            });
+        }
+
         renderCard();
         showMessage('Card generated successfully! ✨', 'success');
         document.getElementById('exportButtons').classList.remove('hidden');
@@ -1313,7 +1332,7 @@ function renderCard() {
         birthday: () => ({ gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', emoji: '🎂', tagline: 'Fun & Festive' }),
         award: () => ({ gradient: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)', emoji: '🏅', tagline: 'Pride & Achievement' }),
         anniversary: () => ({ gradient: 'linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%)', emoji: '💑', tagline: 'Cherished Memories' }),
-        wedding: () => ({ gradient: 'linear-gradient(135deg, #d96aa7 0%, #7b6cf6 100%)', emoji: '💍', tagline: 'Elegant & Joyful' }),
+        wedding: () => ({ gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', emoji: '💍', tagline: 'Elegant & Joyful' }),
         graduation: () => ({ gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', emoji: '🎓', tagline: 'Bright Future' }),
         newjob: () => ({ gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', emoji: '🚀', tagline: 'New Beginnings' }),
         housewarming: () => ({ gradient: 'linear-gradient(135deg, #fff5e1 0%, #ffe4e1 100%)', emoji: '🏠', tagline: 'Warm & Welcoming' }),
@@ -1386,7 +1405,7 @@ function renderCard() {
         award: `Congratulations ${state.recipientName}!`,
         valentines: `Happy Valentine's Day ${state.recipientName}!`,
         anniversary: `Happy Wedding Anniversary ${state.recipientName}!`,
-        wedding: `Happy Wedding ${state.recipientName}!`,
+        wedding: `Congratulations ${state.recipientName}!`,
         graduation: `Congratulations ${state.recipientName}!`,
         newjob: `Welcome ${state.recipientName}!`,
         housewarming: `Welcome Home ${state.recipientName}!`,
@@ -1815,6 +1834,14 @@ function shareOnFacebook() {
     const text = `Check out this beautiful ${eventName} card I created for ${state.recipientName}! Created with SoulVest Card Generator 💖`;
     const url = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}&hashtag=%23SoulVest`;
     window.open(url, 'facebook-share', 'width=600,height=400');
+    // GA4 Event: Card Shared
+    if (typeof gtag === 'function') {
+        gtag('event', 'card_shared', {
+            'event_category': 'engagement',
+            'event_label': 'Facebook',
+            'value': 1
+        });
+    }
 }
 
 function shareOnInstagram() {
@@ -1827,6 +1854,14 @@ function shareOnInstagram() {
     }).catch(err => {
         console.log('Copy caption manually');
     });
+    // GA4 Event: Card Shared
+    if (typeof gtag === 'function') {
+        gtag('event', 'card_shared', {
+            'event_category': 'engagement',
+            'event_label': 'Instagram',
+            'value': 1
+        });
+    }
 }
 
 function shareOnWhatsApp() {
@@ -1834,6 +1869,14 @@ function shareOnWhatsApp() {
     const text = `Hi! 👋 I created a beautiful personalized ${eventName} card for ${state.recipientName}! 🎉 Check it out - made with SoulVest Card Generator! 💖`;
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
+    // GA4 Event: Card Shared
+    if (typeof gtag === 'function') {
+        gtag('event', 'card_shared', {
+            'event_category': 'engagement',
+            'event_label': 'WhatsApp',
+            'value': 1
+        });
+    }
 }
 
 function shareViaEmail() {
@@ -1842,6 +1885,14 @@ function shareViaEmail() {
     const body = `Hi!\n\nI created a personalized ${eventName} card for ${state.recipientName} using SoulVest Card Generator!\n\nMessage: ${state.generatedMessage || state.userMessage}\n\nDownload your card as PNG or PDF!\n\nMade with 💖\nSoulVest Card Generator`;
     const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = url;
+    // GA4 Event: Card Shared
+    if (typeof gtag === 'function') {
+        gtag('event', 'card_shared', {
+            'event_category': 'engagement',
+            'event_label': 'Email',
+            'value': 1
+        });
+    }
 }
 
 function shareOnLinkedIn() {
@@ -1849,6 +1900,14 @@ function shareOnLinkedIn() {
     const text = `Excited to share that I just created a personalized ${eventName} card using SoulVest Card Generator! 🎉 It's amazing how personalized digital greetings can bring people closer. Check it out! 💖 #PersonalizedCards #GiftCards`;
     const url = `https://www.linkedin.com/sharing/share-offsite/?url=soulvest.com`;
     window.open(url, 'linkedin-share', 'width=600,height=400');
+    // GA4 Event: Card Shared
+    if (typeof gtag === 'function') {
+        gtag('event', 'card_shared', {
+            'event_category': 'engagement',
+            'event_label': 'LinkedIn',
+            'value': 1
+        });
+    }
 }
 
 // Quick Event Selection
